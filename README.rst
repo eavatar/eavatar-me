@@ -26,6 +26,11 @@ a script do not support following features, just to name a few:
 All these restrictions are to make scripts easier to write and read.
 Other heavy-lifting actions are provided by modules and exposed to scripts.
 
+Screenshot
+====================
+
+.. image:: docs/screenshot1.png
+    :alt: EAvatar on Windows 7
 
 Checkout Source Codes
 ==============================
