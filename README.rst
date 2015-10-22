@@ -4,7 +4,7 @@ EAvatar ME
 EAvatar ME, or Avame for short, is an event-driven agent for task automation.
 It's designed with following scenarios in mind:
 
-* Web scrapping
+* Web scraping
 * Service monitoring
 * Cloud application integration
 
