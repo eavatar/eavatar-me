@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EAvatar ME</title>
+    <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="/css/jquery.mobile.min.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jquery.mobile.min.js"></script>
+</head>
+<body>
+<div data-role="page" id="home">
+  <div data-role="panel" id="mypanel">
+      <ul>
+          <li><a href="#notices">Notices</a></li>
+          <li><a href="#jobs">Jobs</a></li>
+          <li><a href="#logs">Logs</a></li>
+      </ul>
+  </div>
+
+  <div data-role="header" data-position="fixed">
+    <a href="/" data-icon="home">Home</a>
+    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+    <h1>EAvatar ME</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+      <ul data-role="listview" data-inset="true">
+          <li><a href="#notices">Notices</a></li>
+          <li><a href="#jobs">Jobs</a></li>
+          <li><a href="#logs">Logs</a></li>
+      </ul>
+
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <h1>EAvatar Technology Ltd.</h1>
+  </div>
+
+</div>
+
+
+<div data-role="page" id="notices" data-add-back-btn="true">
+  <div data-role="panel" id="mypanel">
+    <a href="#notices">Notices</a>
+    <a href="#jobs">Jobs</a>
+    <a href="#logs">Logs</a>
+  </div>
+
+  <div data-role="header" data-position="fixed">
+    <h1>Notices</h1>
+    <a href="/" data-icon="home">Home</a>
+    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+  </div>
+  <div data-role="main" class="ui-content">
+      Notices
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <h1>EAvatar Technology Ltd.</h1>
+  </div>
+
+</div>
+
+<div data-role="page" id="jobs" data-add-back-btn="true">
+  <div data-role="panel" id="mypanel">
+    <a href="#notices">Notices</a>
+    <a href="#jobs">Jobs</a>
+    <a href="#logs">Logs</a>
+  </div>
+
+  <div data-role="header" data-position="fixed">
+    <h1>Jobs</h1>
+    <a href="#mypanel" class="ui-btn ui-btn-icon-notext ui-icon-bars">Panel</a>
+    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+  </div>
+
+  <div data-role="main" class="ui-content">
+      Jobs
+
+      <a href="#submit_job" data-rel="dialog" data-transition="popup">New Job</a>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <h1>EAvatar Technology Ltd.</h1>
+  </div>
+
+</div>
+
+<div data-role="page" id="logs">
+  <div data-role="panel" id="mypanel">
+    <a href="#notices">Notices</a>
+    <a href="#jobs">Jobs</a>
+    <a href="#logs">Logs</a>
+  </div>
+
+  <div data-role="header" data-position="fixed">
+    <h1>Logs</h1>
+    <a href="#mypanel" class="ui-btn ui-btn-icon-notext ui-icon-bars">Panel</a>
+    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+  </div>
+  <div data-role="main" class="ui-content">
+      Logs
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <h1>EAvatar Technology Ltd.</h1>
+  </div>
+
+</div>
+
+<div data-role="page" data-dialog="true" id="options">
+    <div data-role="header" data-position="fixed" >
+        <h1>Options</h1>
+        <a href="" data-rel="back" data-icon="back">Cancel</a>
+        <a href="" data-rel="back" data-icon="check">OK</a>
+    </div>
+    <div data-role="main" class="ui-content">
+      Options
+    </div>
+  <div data-role="footer" data-position="fixed">
+    <h1>EAvatar Technology Ltd.</h1>
+  </div>
+</div>
+
+<!-- popups -->
+<div data-role="page" id="submit_job">
+  <div data-role="main" class="ui-content">
+    <form method="post">
+      <label for="script">Instructions:</label>
+      <textarea  name="script" id="script" ></textarea>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+</div>
+
+
+</body>
+</html>
