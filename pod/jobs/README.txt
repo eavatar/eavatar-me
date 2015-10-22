@@ -1,0 +1,1 @@
+The folder where avatars are stored.

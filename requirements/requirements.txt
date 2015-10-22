@@ -1,0 +1,17 @@
+base58==0.2.2
+beautifulsoup4==4.4.1
+click==5.1
+gevent==1.0.2
+greenlet==0.4.9
+libnacl==1.4.3
+lxml==3.4.4
+py==1.4.30
+pycrypto==2.6.1
+PyDispatcher==2.0.5
+PyInstaller==3.0
+pyscrypt==1.6.2
+pytest==2.8.2
+requests==2.8.0
+six==1.10.0
+wheel==0.24.0
+wsaccel==0.6.2
