@@ -39,6 +39,4 @@ def task_key(mod_name, func_name):
         return mod_name[idx+1:] + '.' + func_name
 
 
-__all__ =[
-    'task',
-]
+__all__ = ['task', 'task_key', ]

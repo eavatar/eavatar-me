@@ -76,6 +76,9 @@ class JobContext(object):
     def sleep(self, secs):
         time.sleep(secs)
 
+    def do(self, task, *args, **kwargs):
+        pass
+
 
 class JobRunner(Greenlet):
     def __init__(self, engine, job_info, job_context):
