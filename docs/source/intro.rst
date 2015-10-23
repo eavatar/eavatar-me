@@ -27,8 +27,4 @@ a script do not support following features, just to name a few:
 All these restrictions are to make scripts easier to write and read.
 Other heavy-lifting actions are provided by modules and exposed to scripts.
 
-
-License
-^^^^^^^
-
-Apache license 2.0
+The source code of Avame project is released with Apache license 2.0
