@@ -14,7 +14,7 @@ Basically speaking, Avame runs tasks on behalf of the user in the background.
 A task is a unit of work that performs one action only.
 Related tasks are grouped as a job for complicated workflow.
 Incidentally, a job is the unit for submission and is described by a script.
-The scripts are nothing but restrictive Python codes. Compared to regular Python codes,
+The scripts are nothing but restrictive Python code. Compared to regular Python code,
 a script do not support following features, just to name a few:
 
 #. No import statement
