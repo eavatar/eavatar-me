@@ -27,88 +27,17 @@ All these restrictions are to make scripts easier to write and read.
 Other heavy-lifting actions are provided by modules and exposed to scripts.
 
 Screenshot
-====================
+==========
 
 .. image:: docs/source/_static/screenshot1.png
     :alt: EAvatar on Windows 7
 
-Checkout Source Codes
-==============================
+Documentation
+================
 
-.. code-block:: bash
-
-    git clone https://github.com/eavatar/eavatar-me.git
-    cd eavatar-me
-
-Dependencies
-===================================
-
-All Python versions are 2.7.x.
-
-Windows
-----------------
-
-* PyWin32
-
-Tested with Anaconda distribution only.
-
-OS X
----------------
-
-* PyObjc
-
-Tested with Python installed via Homebrew.
-
-Ubuntu
----------------
-
-* PyGObject
-
-Tested with system Python package.
-
-Build the Distribution Package
-===================================
-
-.. code-block:: bash
-
-    pyinstaller pack/avame.spec --clean -y
-
-
-Launch the Application
-=================================
-
-Windows
---------------------
-
-Launch the application from command line.
-.. code-block:: bash
-
-    dist\\avame\\avame.exe
-
-OS X
---------------------
-
-Launch from the console
-.. code-block:: bash
-
-    ./dist/avame/avame
-
-or run the app bundle:
-
-.. code-block:: bash
-    open dist/EAvatar.app
-
-Ubuntu
---------------
-
-Launch from the console
-.. code-block:: bash
-
-    ./dist/avame/avame
-
-
+http://docs.eavatar.me
 
 License
--------------
+=======
 
 Apache license 2.0
