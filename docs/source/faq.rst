@@ -20,7 +20,7 @@ The location is dependent on the operating system, following are the typical pat
 
 
 How do I add auto-run jobs when Avame starts?
---------------------------------------------------
+---------------------------------------------
 
 Simply add the script file (with extension .py) to the subfolder 'jobs' under the
 Avame's working folder, and then restart Avame. It will be started if it's a correct script.

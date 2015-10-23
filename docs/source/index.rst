@@ -14,13 +14,7 @@ Contents:
    intro
    userguide
    development
-   installing
    faq
    internals
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
 

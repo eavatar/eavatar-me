@@ -1,11 +1,14 @@
 User Guide
 ==========
 
-**Avame not yet released, the document is for reference only.**
+**Avame not yet released, the document is for your information only.**
 
+
+System Requirements
+-------------------
 
 Supported Environments
-----------------------
+^^^^^^^^^^^^^^^^^^^^^^
 
 Avame is a cross-platform application which supports following desktop environments:
 
@@ -14,6 +17,15 @@ Avame is a cross-platform application which supports following desktop environme
 2. OS X 10.8+ (X86-64 architecture)
 
 3. Ubuntu 14.04+ Unity desktop (X86-64 architecture)
+
+Web Browsers
+^^^^^^^^^^^^
+
+Avame uses your default web browser to access the web user interface (a.k.a. webfront).
+
+* Google Chrome 46.0+
+* Firefox 41.0+
+* Internet Explorer 11
 
 Installation
 ------------
@@ -206,5 +218,25 @@ From the context menu, choose the 'Open Folder...' option to open Avame applicat
 
 .. image:: _static/app-folder.png
     :alt: Avame application folder
+
+
+Writing Scripts
+---------------
+
+To tell Avame to do your jobs, you need to tell Avame how to do it imperatively.
+The instructions are expressed as a script in Python-like programming language.
+It sounds scary at the first place to writing scripts in a programming language
+for regular users. It ends up not so hard at all.
+
+The syntax is intentionally very limited so that it's more approachable than full-featured
+Python codes. The document is not intended to describe all the syntax as it's a proper
+subset of Python's. Compared to regular Python, following are removed features:
+
+#. No import statement
+#. No while control loop
+#. No print statement
+#. Names start with double underscores are prohibited, e.g. '__class__'.
+#. No function definition
+#. No class definition
 
 
