@@ -181,7 +181,7 @@ which may be launched from the command line with following instruction:
 
     open ./dist/EAvatar.app
 
-For Ubuntu Platform
+On Ubuntu Platform
 -------------------
 
 System Requirements
