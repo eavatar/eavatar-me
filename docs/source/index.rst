@@ -12,8 +12,10 @@ Contents:
    :maxdepth: 2
 
    intro
+   userguide
    development
    installing
+   faq
    internals
 
 Indices and tables

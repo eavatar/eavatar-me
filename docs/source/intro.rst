@@ -74,39 +74,6 @@ Build the Distribution Package
     pyinstaller pack/avame.spec --clean -y
 
 
-Launch the Application
------------------------------
-
-Windows
-^^^^^^^^^^^^
-
-Launch the application from command line.
-.. code-block:: bash
-
-    dist\\avame\\avame.exe
-
-OS X
-^^^^^^^^^^^
-
-Launch from the console
-.. code-block:: bash
-
-    ./dist/avame/avame
-
-or run the app bundle:
-
-.. code-block:: bash
-    open dist/EAvatar.app
-
-Ubuntu
-^^^^^^^^^^^^^^
-
-Launch from the console
-.. code-block:: bash
-
-    ./dist/avame/avame
-
-
 
 License
 ^^^^^^^^^^^^
