@@ -59,7 +59,7 @@ class ShellBase(object):
 
         self._run()
 
-    def notify_user(self, msg, title):
+    def on_user_notified(self, msg, title):
         """
         :param msg: Message
         :param title: Title
@@ -68,16 +68,16 @@ class ShellBase(object):
         print('-' * len(title))
         print(msg)
 
-    def job_accepted(self, job_name):
+    def on_job_accepted(self, job_name):
         _logger.info("Job accepted: %s", job_name)
 
-    def job_rejected(self, reason):
+    def on_job_rejected(self, reason):
         _logger.error("Job rejected: %s", reason)
 
-    def job_failed(self, job_ctx):
+    def on_job_failed(self, job_ctx):
         _logger.error("Job '%s' cannot be done: %r", job_ctx.name, job_ctx.exception)
 
-    def job_finished(self, job_ctx):
+    def on_job_finished(self, job_ctx):
         _logger.info("Job '%s' finished.", job_ctx.name)
 
     def get_notice_at(self, index):
@@ -99,15 +99,15 @@ class ShellBase(object):
             _logger.debug("Got item from the agent")
             event = item[0]
             if event == USER_NOTIFIED:
-                self.notify_user(**item[1])
+                self.on_user_notified(**item[1])
             elif event == JOB_ACCEPTED:
-                self.job_accepted(**item[1])
+                self.on_job_accepted(**item[1])
             elif event == JOB_REJECTED:
-                self.job_rejected(**item[1])
+                self.on_job_rejected(**item[1])
             elif event == JOB_FINISHED:
-                self.job_finished(**item[1])
+                self.on_job_finished(**item[1])
             elif event == JOB_FAILED:
-                self.job_failed(**item[1])
+                self.on_job_failed(**item[1])
 
         except Queue.Empty:
             # ignored.

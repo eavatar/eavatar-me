@@ -75,9 +75,6 @@ class JobContext(object):
     def logger(self):
         return self._logger
 
-    def notify_user(self, msg, title="Ava Message"):
-        self._core.notify_user(msg, title)
-
     def sleep(self, secs):
         time.sleep(secs)
 

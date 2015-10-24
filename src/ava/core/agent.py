@@ -22,7 +22,6 @@ from pydispatch import dispatcher
 
 
 # from ava.util import crypto
-from ..user.signals import USER_NOTIFIED
 from . import context
 from .defines import INSTALLED_ENGINES, AVA_AGENT_SECRET, AVA_SWARM_SECRET
 from .signals import AGENT_STARTED, AGENT_STOPPING
@@ -174,7 +173,7 @@ class Agent(object):
         self.__secret_key = crypto.derive_secret_key(self.__swarm_secret,
                                                      self.__swarm_key)
 
-    def send(self, signal, *args, **kwargs):
+    def send(self, signal=dispatcher.Any, sender=dispatcher.Anonymous, *args, **kwargs):
         """
         Send signal/event to registered receivers.
 
@@ -182,37 +181,51 @@ class Agent(object):
         :param kwargs:
         :return:
         """
-        self._dispatcher.send(*args, **kwargs)
+        if signal is None:
+            signal = dispatcher.Any
+        if sender is None:
+            sender = dispatcher.Anonymous
+
+        self._dispatcher.send(signal, sender, *args, **kwargs)
 
         # dispatch this signal to the shell.
         if self._outbox:
             self._outbox.put_nowait((signal, kwargs))
 
-    def connect(self, receiver, *args, **kwargs):
+    def connect(self, receiver, signal=dispatcher.Any, sender=dispatcher.Any):
         """
         Connect the receiver to listen for signals/events.
+
+        :param receiver
         :param signal:
         :param sender:
-        :return:
         """
-        self._dispatcher.connect(receiver, *args, **kwargs)
+        if signal is None:
+            signal = dispatcher.Any
 
-    def disconnect(self, receiver, *args, **kwargs):
+        if sender is None:
+            sender = dispatcher.Anonymous
+
+        self._dispatcher.connect(receiver, signal, sender)
+
+    def disconnect(self, receiver, signal=dispatcher.Any, sender=dispatcher.Any):
         """
         Disconnect the specified receiver.
-        :return:
+
+        :param receiver
+        :param signal:
+        :param sender:
         """
-        self._dispatcher.disconnect(receiver, *args, **kwargs)
+        if signal is None:
+            signal = dispatcher.Any
+
+        if sender is None:
+            sender = dispatcher.Anonymous
+
+        self._dispatcher.disconnect(receiver, signal, sender)
 
     def add_child_greenlet(self, child):
         self._greenlets.append(child)
-
-    def notify_user(self, msg, title):
-        self.send(signal=USER_NOTIFIED, msg=msg, title=title)
-        #kwargs = dict(msg=msg, title=title)
-        #if self._outbox:
-        #    logger.debug("Notify user: %s, %s", title, msg)
-        #    self._outbox.put_nowait((USER_NOTIFIED, kwargs))
 
     def _start_engines(self):
         for it in INSTALLED_ENGINES:

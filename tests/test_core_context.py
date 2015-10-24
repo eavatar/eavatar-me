@@ -14,31 +14,32 @@ class MockAgent(object):
     def add_child_greenlet(self, child):
         self.greenlets.append(child)
 
-    def send(self, *args, **kwargs):
-        """
-        Send signal/event to registered receivers.
+    def send(self, signal=dispatcher.Any, sender=dispatcher.Anonymous, *args, **kwargs):
+        if signal is None:
+            signal = dispatcher.Any
+        if sender is None:
+            sender = dispatcher.Anonymous
 
-        :param args:
-        :param kwargs:
-        :return:
-        """
-        self._dispatcher.send(*args, **kwargs)
+        self._dispatcher.send(signal, sender, *args, **kwargs)
 
-    def connect(self, receiver, *args, **kwargs):
-        """
-        Connect the receiver to listen for signals/events.
-        :param signal:
-        :param sender:
-        :return:
-        """
-        self._dispatcher.connect(receiver, *args, **kwargs)
+    def connect(self, receiver, signal=dispatcher.Any, sender=dispatcher.Any):
+        if signal is None:
+            signal = dispatcher.Any
 
-    def disconnect(self, receiver, *args, **kwargs):
-        """
-        Disconnect the specified receiver.
-        :return:
-        """
-        self._dispatcher.disconnect(receiver, *args, **kwargs)
+        if sender is None:
+            sender = dispatcher.Anonymous
+
+        self._dispatcher.connect(receiver, signal, sender)
+
+    def disconnect(self, receiver, signal=dispatcher.Any, sender=dispatcher.Any):
+        if signal is None:
+            signal = dispatcher.Any
+
+        if sender is None:
+            sender = dispatcher.Anonymous
+
+
+        self._dispatcher.disconnect(receiver, signal, sender)
 
 
 @pytest.fixture
@@ -49,9 +50,13 @@ def context():
 class Receiver(object):
     def __init__(self):
         self.called = False
+        self.args = None
+        self.kwargs = None
 
     def __call__(self, *args, **kwargs):
         self.called = True
+        self.args = args
+        self.kwargs = kwargs
 
 
 class TestCoreContext(object):
@@ -75,9 +80,11 @@ class TestCoreContext(object):
         SIGNAL = 'my-second-signal'
         receiver = Receiver()
         context.connect(receiver)
-        context.send(signal=SIGNAL)
+        context.send(SIGNAL, msg="message", title="1234")
         assert receiver.called
         receiver.called = False
+        print(receiver.args, receiver.kwargs)
+
         context.disconnect(receiver)
         context.send(signal=SIGNAL)
         assert not receiver.called

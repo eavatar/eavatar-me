@@ -23,6 +23,7 @@ AGENT_INFO = {
 INSTALLED_ENGINES = [
     "ava.task.engine:TaskEngine",
     "ava.mod.engine:ModuleEngine",
+    "ava.user.engine:UserEngine",
     "ava.job.engine:JobEngine",
     "ava.web.webfront:WebfrontEngine",
 ]

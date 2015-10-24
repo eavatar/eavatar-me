@@ -66,7 +66,7 @@ class Context(object):
         """
         self._agent.add_child_greenlet(child)
 
-    def send(self, *args, **kwargs):
+    def send(self, signal=None, sender=None, *args, **kwargs):
         """
         Send signal/event to registered receivers.
 
@@ -74,23 +74,25 @@ class Context(object):
         :param kwargs:
         :return:
         """
-        self._agent.send(*args, **kwargs)
+        self._agent.send(signal, sender, *args, **kwargs)
 
-    def connect(self, receiver, *args, **kwargs):
+    def connect(self, receiver, signal=None, sender=None):
         """
         Connect the receiver to listen for signals/events.
+        :param receiver
         :param signal:
         :param sender:
-        :return:
         """
-        self._agent.connect(receiver, *args, **kwargs)
+        self._agent.connect(receiver, signal, sender)
 
-    def disconnect(self, receiver, *args, **kwargs):
+    def disconnect(self, receiver, signal=None, sender=None):
         """
         Disconnect the specified receiver.
-        :return:
+        :param receiver
+        :param signal:
+        :param sender:
         """
-        self._agent.disconnect(receiver, *args, **kwargs)
+        self._agent.disconnect(receiver, signal, sender)
 
     def stop(self):
         """ Requests to stop the agent properly.
@@ -107,10 +109,8 @@ class Context(object):
         """
         return self._agent.decrypt(cipherdata)
 
-    def notify_user(self, msg, title="Ava Message"):
-        self._agent.notify_user(msg, title)
 
-####  Singleton construction  ####
+#  Singleton construction
 _context = None
 
 
