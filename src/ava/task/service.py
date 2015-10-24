@@ -10,9 +10,9 @@ def _get_task_engine():
     return get_core_context().lookup('taskengine')
 
 
-def task(func):
+def action(func):
     """
-    Decorate a function as a task definition.
+    Decorate a function as a callable action.
 
     :param func: the function to be called.
     :return: the task wrapping given function object.
@@ -20,13 +20,13 @@ def task(func):
     return _get_task_engine().register(func)
 
 
-def task_key(mod_name, func_name):
+def action_key(mod_name, func_name):
     """
-    Generate a key uniquely identify the task defined by the module and function.
+    Generate a key uniquely identify the action defined by the module and function.
 
     :param mod_name: the module's full package name
     :param func_name: the function name
-    :return: the key for identifying the task.
+    :return: the key for identifying the action.
     """
     try:
         idx = mod_name.rindex('.')
@@ -39,4 +39,4 @@ def task_key(mod_name, func_name):
         return mod_name[idx+1:] + '.' + func_name
 
 
-__all__ = ['task', 'task_key', ]
+__all__ = ['action', 'action_key', ]

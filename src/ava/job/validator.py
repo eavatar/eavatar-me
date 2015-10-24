@@ -180,7 +180,7 @@ class ScriptValidator(ast.NodeVisitor):
         "comparison operators"
         self.visit(node.left)
         for op, rnode in zip(node.ops, node.comparators):
-            self.vitit(rnode)
+            self.visit(rnode)
 
     def on_print(self, node):    # ('dest', 'values', 'nl')
         """ note: implements Python2 style print statement, not

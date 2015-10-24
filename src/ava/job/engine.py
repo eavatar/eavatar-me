@@ -13,6 +13,7 @@ import gevent
 import uuid
 from gevent import Greenlet
 
+from avame.schedule import Schedule
 from .validator import ScriptValidator
 from ava import launcher
 
@@ -59,6 +60,10 @@ class JobContext(object):
         self._scope = {}
         self._core = core_context
         self._scope['ava'] = self
+        self._scope['parent'] = None
+        self._scope['args'] = []
+        self._scope['kwargs'] = {}
+        self._task_engine = core_context.lookup('taskengine')
         self.exception = None
         self.result = None
 
@@ -76,8 +81,31 @@ class JobContext(object):
     def sleep(self, secs):
         time.sleep(secs)
 
-    def do(self, task, *args, **kwargs):
-        pass
+    def localtime(self):
+        """
+        Gets the local time in seconds since epoch.
+        """
+        time.localtime()
+
+    def gmtime(self):
+        return time.gmtime()
+
+    def do(self, action, *args, **kwargs):
+        return self._task_engine.do_task(action, *args, **kwargs)
+
+    def wait(self, tasks, timeout=None, count=None):
+        """
+        Wait for tasks to finished with optional timeout.
+        """
+
+        assert isinstance(tasks, list)
+        assert len(tasks) > 0
+
+        gevent.wait(tasks, timeout, count)
+
+    @property
+    def schedule(self):
+        return Schedule()
 
 
 class JobRunner(Greenlet):

@@ -24,17 +24,6 @@ class TaskProxy(object):
     def __call__(self, *args, **kwargs):
         return self.func(*args, **kwargs)
 
-    def run_once(self, delayed_secs=0, args=[], kwargs={}):
-        return self.task_engine.run_once(self.key, delayed_secs, args, kwargs)
-
-    def run_periodic(self, interval,
-                     start_time=None, stop_time=None,
-                     args=[], kwargs={}):
-        return self.task_engine.run_periodic(self.key, interval,
-                                             start_time=start_time,
-                                             stop_time=stop_time,
-                                             args=args, kwargs=kwargs)
-
 
 class TaskRunner(Greenlet):
     """ Represent running tasks, each of which is an invocation to a procedure.
@@ -60,25 +49,7 @@ class TaskRunner(Greenlet):
             else:
                 return self.get()
         except Exception:
-            return None
-
-    def exception(self, timeout=None):
-        if self._exception:
-            return self._exception
-        if self.value:
-            return None
-
-        try:
-            if timeout:
-                self.get(block=True, timeout=timeout)
-                return None
-            else:
-                self.get()
-                return None
-        except Exception as ex:
-            if self._exception:
-                return self._exception
-            return ex
+            raise
 
     def __hash__(self):
         return hash(self._task_id)
@@ -172,7 +143,7 @@ class TaskEngine(object):
         gevent.joinall(self._schedules.values())
 
     def register(self, func):
-        task_key = service.task_key(func.__module__, func.func_name)
+        task_key = service.action_key(func.__module__, func.func_name)
         if self._task_proxies.get(task_key) is not None:
             raise TaskAlreadyRegistered(task_key)
 
@@ -187,6 +158,14 @@ class TaskEngine(object):
 
     def get_task_proxy(self, task_key):
         return self._task_proxies.get(task_key)
+
+    def do_task(self, action_key, *args, **kwargs):
+        action = self._task_proxies[action_key]
+        task_id = uuid1().hex
+        runner = TaskRunner(task_id, action, *args, **kwargs)
+        self._task_runners[task_id] = runner
+        runner.start()
+        return runner
 
     def run_once(self, task_key, delayed_secs, args, kwargs):
         """
