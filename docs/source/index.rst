@@ -16,5 +16,6 @@ Contents:
    development
    faq
    internals
+   glossary
 
 
