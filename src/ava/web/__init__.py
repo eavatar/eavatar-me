@@ -6,5 +6,5 @@ from .bottle import HTTPError
 from .bottle import Bottle as create_app
 
 
-from .webfront import dispatcher
+from .dispatcher import dispatcher
 from .service import *

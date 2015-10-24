@@ -9,30 +9,47 @@
     <link rel="stylesheet" href="/css/jquery.mobile.min.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/jquery.mobile.min.js"></script>
+    <script src="/js/lodash.min.js"></script>
+    <script src="/js/backbone.min.js"></script>
+    <script src="/js/app.js"></script>
 </head>
 <body>
 <div data-role="page" id="home">
-  <div data-role="panel" id="mypanel">
-      <ul>
-          <li><a href="#notices">Notices</a></li>
-          <li><a href="#jobs">Jobs</a></li>
-          <li><a href="#logs">Logs</a></li>
-      </ul>
-  </div>
-
   <div data-role="header" data-position="fixed">
-    <a href="/" data-icon="home">Home</a>
-    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+    <a href="#about" data-icon="info">About</a>
+    <a href="#options" class="ui-btn ui-btn-right ui-btn-icon-notext ui-icon-gear">Options</a>
     <h1>EAvatar ME</h1>
   </div>
 
   <div data-role="main" class="ui-content">
       <ul data-role="listview" data-inset="true">
           <li><a href="#notices">Notices</a></li>
+          <li><a href="#scripts">Scripts</a></li>
           <li><a href="#jobs">Jobs</a></li>
           <li><a href="#logs">Logs</a></li>
       </ul>
 
+    <form method="post">
+      <label for="script">Instructions:</label>
+      <textarea  name="script" id="script" ></textarea>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+
+  <div data-role="footer" data-position="fixed">
+    <h1>EAvatar Technology Ltd.</h1>
+  </div>
+
+</div>
+
+<div data-role="page" id="scripts" data-add-back-btn="true">
+  <div data-role="header" data-position="fixed">
+    <h1>Scripts</h1>
+    <a href="/" data-icon="home">Home</a>
+    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+  </div>
+  <div data-role="main" class="ui-content">
+      List of scripts
   </div>
 
   <div data-role="footer" data-position="fixed">
@@ -43,12 +60,6 @@
 
 
 <div data-role="page" id="notices" data-add-back-btn="true">
-  <div data-role="panel" id="mypanel">
-    <a href="#notices">Notices</a>
-    <a href="#jobs">Jobs</a>
-    <a href="#logs">Logs</a>
-  </div>
-
   <div data-role="header" data-position="fixed">
     <h1>Notices</h1>
     <a href="/" data-icon="home">Home</a>
@@ -65,15 +76,9 @@
 </div>
 
 <div data-role="page" id="jobs" data-add-back-btn="true">
-  <div data-role="panel" id="mypanel">
-    <a href="#notices">Notices</a>
-    <a href="#jobs">Jobs</a>
-    <a href="#logs">Logs</a>
-  </div>
-
   <div data-role="header" data-position="fixed">
     <h1>Jobs</h1>
-    <a href="#mypanel" class="ui-btn ui-btn-icon-notext ui-icon-bars">Panel</a>
+    <a href="/" data-icon="home">Home</a>
     <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
   </div>
 
@@ -90,15 +95,10 @@
 </div>
 
 <div data-role="page" id="logs">
-  <div data-role="panel" id="mypanel">
-    <a href="#notices">Notices</a>
-    <a href="#jobs">Jobs</a>
-    <a href="#logs">Logs</a>
-  </div>
 
   <div data-role="header" data-position="fixed">
     <h1>Logs</h1>
-    <a href="#mypanel" class="ui-btn ui-btn-icon-notext ui-icon-bars">Panel</a>
+    <a href="/" data-icon="home">Home</a>
     <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
   </div>
   <div data-role="main" class="ui-content">
@@ -123,6 +123,16 @@
   <div data-role="footer" data-position="fixed">
     <h1>EAvatar Technology Ltd.</h1>
   </div>
+</div>
+
+<div data-role="page" data-dialog="true" id="about">
+    <div data-role="header" data-position="fixed" >
+        <h1>About</h1>
+    </div>
+    <div data-role="main" class="ui-content">
+        <h3>EAvatar ME versino 0.1.0</h3>
+        EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.
+    </div>
 </div>
 
 <!-- popups -->
