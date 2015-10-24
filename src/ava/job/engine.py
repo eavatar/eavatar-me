@@ -28,10 +28,15 @@ class JobInfo(object):
     """ Metadata of a task definition
     """
 
-    def __init__(self, name, script, acode):
+    def __init__(self, job_id, name, script, acode):
+        self._id = job_id
         self._name = name
         self._script = script
         self._code = acode
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def name(self):
@@ -55,12 +60,12 @@ class JobContext(object):
 
     _logger = logging.getLogger('ava.job')
 
-    def __init__(self, job_name, core_context):
-        self._job_name = job_name
+    def __init__(self, job_info, core_context, parent=None):
+        self._job_info = job_info
         self._scope = {}
         self._core = core_context
         self._scope['ava'] = self
-        self._scope['parent'] = None
+        self._scope['parent'] = parent
         self._scope['args'] = []
         self._scope['kwargs'] = {}
         self._task_engine = core_context.lookup('taskengine')
@@ -69,7 +74,11 @@ class JobContext(object):
 
     @property
     def name(self):
-        return self._job_name
+        return self._job_info.name
+
+    @property
+    def job_id(self):
+        return self._job_info.id
 
     @property
     def logger(self):
@@ -88,7 +97,7 @@ class JobContext(object):
         return time.gmtime()
 
     def do(self, action, *args, **kwargs):
-        return self._task_engine.do_task(action, *args, **kwargs)
+        return self._task_engine.do_task(self._job_info.id, action, *args, **kwargs)
 
     def wait(self, tasks, timeout=None, count=None):
         """
@@ -144,6 +153,7 @@ class JobEngine(object):
         self.validator = ScriptValidator()
         self._core_context = None
         self._stopping = False
+        self._task_engine = False
 
     def _scan_jobs(self):
         pattern = os.path.join(self.jobs_path, '[a-zA-Z][a-zA-Z0-9_]*.py')
@@ -171,20 +181,21 @@ class JobEngine(object):
                 node = ast.parse(script, filename=name, mode='exec')
                 self.validator.visit(node)
                 acode = compile(node, filename=name, mode='exec')
-                job_info = JobInfo(name, script, acode)
-                self.jobs[name] = job_info
-                self.contexts[name] = JobContext(name, self._core_context)
+                jid = self._gen_job_id()
+                job_info = JobInfo(jid, name, script, acode)
+                self.jobs[jid] = job_info
+                self.contexts[jid] = JobContext(job_info, self._core_context)
             except Exception:
                 logger.error("Failed to load job: %s", name, exc_info=True)
 
     def _run_jobs(self):
 
         logger.debug("Starting jobs...")
-        for task_name in self.jobs:
-            info = self.jobs[task_name]
-            ctx = self.contexts[task_name]
+        for job_id in self.jobs:
+            info = self.jobs[job_id]
+            ctx = self.contexts[job_id]
             runner = JobRunner(self, info, ctx)
-            self.runners[task_name] = runner
+            self.runners[job_id] = runner
             runner.start()
 
         while not self._stopping:
@@ -192,31 +203,31 @@ class JobEngine(object):
 
         logger.info("All jobs stopped.")
 
-    def _gen_job_name(self):
+    def _gen_job_id(self):
         while True:
             name = 'J' + uuid.uuid1().hex[:8]
             if name not in self.jobs:
                 return name
 
     def submit_job(self, job):
-        job_name = self._gen_job_name()
+        job_id = self._gen_job_id()
 
         try:
             script = job['script']
-            node = ast.parse(script, filename=job_name, mode='exec')
+            node = ast.parse(script, filename=job_id, mode='exec')
             self.validator.visit(node)
-            acode = compile(node, filename=job_name, mode='exec')
-            job_info = JobInfo(job_name, script, acode)
-            self.jobs[job_name] = job_info
-            ctx = JobContext(job_name, self._core_context)
-            self.contexts[job_name] = ctx
+            acode = compile(node, filename=job_id, mode='exec')
+            job_info = JobInfo(job_id, job_id, script, acode)
+            self.jobs[job_id] = job_info
+            ctx = JobContext(job_info, self._core_context)
+            self.contexts[job_id] = ctx
             runner = JobRunner(self, job_info, ctx)
-            self.runners[job_name] = runner
+            self.runners[job_id] = runner
             runner.start()
-            self._core_context.send(signals.JOB_ACCEPTED, job_name=job_name)
-            return job_name
+            self._core_context.send(signals.JOB_ACCEPTED, job_name=job_id)
+            return job_id
         except (Exception, SyntaxError) as ex:
-            logger.error("Failed to run job: %s", job_name, exc_info=True)
+            logger.error("Failed to run job: %s", job_id, exc_info=True)
             if ex.message is not None and len(ex.message) > 0:
                 reason = ex.message
             else:
@@ -231,20 +242,27 @@ class JobEngine(object):
         :param job_context:
         :return:
         """
-        name = job_context.name
-        if name in self.jobs:
-            del self.jobs[name]
 
-        if name in self.runners:
-            del self.runners[name]
+        logger.debug("Job done: '%s'", job_context.job_id)
 
-        if job_context.exception is not None:
-            self._core_context.send(signals.JOB_FAILED, job_ctx=job_context)
-        else:
-            self._core_context.send(signals.JOB_FINISHED, job_ctx=job_context)
+        job_id = job_context.job_id
+        if job_id in self.jobs:
+            del self.jobs[job_id]
+
+        if job_id in self.runners:
+            del self.runners[job_id]
+
+        try:
+            if job_context.exception is not None:
+                self._core_context.send(signals.JOB_FAILED, job_ctx=job_context)
+            else:
+                self._core_context.send(signals.JOB_FINISHED, job_ctx=job_context)
+        finally:
+            self._task_engine.release_for_job(job_id)
 
     def start(self, ctx):
         logger.debug("Starting job engine...")
+        self._task_engine = ctx.lookup('taskengine')
         ctx.bind('jobengine', self)
         self._core_context = ctx
         self._load_jobs(ctx)

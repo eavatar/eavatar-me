@@ -5,7 +5,6 @@ from gevent import monkey
 #monkey.patch_all()
 monkey.patch_all(thread=False)
 
-import os
 import logging
 import click
 import Queue
@@ -13,7 +12,6 @@ from abc import abstractmethod
 from threading import Thread
 from collections import deque
 import webbrowser
-import subprocess
 
 from ava import wrapper
 from ava.core import get_core_context
