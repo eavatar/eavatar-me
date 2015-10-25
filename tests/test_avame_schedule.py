@@ -7,8 +7,8 @@ from avame.schedule import Schedule
 
 def test_schedule_seconds():
 
-    count = 3
-    for it in Schedule().every(2).seconds:
+    count = 2
+    for it in Schedule().every(1).second:
         print(it)
         count -= 1
         if count <= 0:

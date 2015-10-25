@@ -21,6 +21,7 @@ AGENT_INFO = {
 # activated engines
 
 INSTALLED_ENGINES = [
+    "ava.data.engine:DataEngine",
     "ava.task.engine:TaskEngine",
     "ava.mod.engine:ModuleEngine",
     "ava.user.engine:UserEngine",

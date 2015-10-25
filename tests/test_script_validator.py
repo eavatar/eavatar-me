@@ -92,7 +92,7 @@ c = func2(1, 2, 3)
 def test_for_loop_is_allowed():
     script = """
 for i in range(10):
-    print(i)
+    pass
     """
 
     node = ast.parse(script, filename='script1', mode='exec')
