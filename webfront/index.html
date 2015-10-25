@@ -5,16 +5,26 @@
     <title>EAvatar ME</title>
     <link rel='shortcut icon' type='image/x-icon' href='/favicon.ico' />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="/css/jquery.mobile.min.css">
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/jquery.mobile.min.js"></script>
-    <script src="/js/lodash.min.js"></script>
-    <script src="/js/backbone.min.js"></script>
-    <script src="/js/app.js"></script>
-</head>
-<body>
-<div data-role="page" id="home">
+
+    <script id="header-template" type="text/template">
+        <div data-role="header">
+          <h1>{{= title }}</h1>
+        </div>
+    </script>
+
+    <script id="footer-template" type="text/template">
+        <div data-role="footer">
+          <div data-role="navbar">
+          <ul>
+            <li><a href="#" class="ui-btn">Home</a></li>
+            <li><a href="#b" class="ui-btn">B</a></li>
+          </ul>
+          </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="homePage">
   <div data-role="header" data-position="fixed">
     <a href="#about" data-icon="info">About</a>
     <a href="#options" class="ui-btn ui-btn-right ui-btn-icon-notext ui-icon-gear">Options</a>
@@ -39,113 +49,117 @@
   <div data-role="footer" data-position="fixed">
     <h1>EAvatar Technology Ltd.</h1>
   </div>
+    </script>
 
-</div>
+    <script type="text/template" id="noticesPage">
+        <div id="notices">
+          <div data-role="header" data-position="fixed">
+            <h1>Notices</h1>
+            <a href="/" data-icon="home">Home</a>
+            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+          </div>
+          <div data-role="main" class="ui-content">
+            Notices
+          </div>
+          <div data-role="footer" data-position="fixed">
+            <h1>EAvatar Technology Ltd.</h1>
+          </div>
+        </div>
+    </script>
+    <script type="text/template" id="scriptsPage">
+        <div id="scripts">
+          <div data-role="header" data-position="fixed">
+            <h1>Notices</h1>
+            <a href="/" data-transition="slide" data-icon="home">Home</a>
+            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+          </div>
+          <div data-role="main" class="ui-content">
+            Scripts
+          </div>
+          <div data-role="footer" data-position="fixed">
+            <h1>EAvatar Technology Ltd.</h1>
+          </div>
+        </div>
+    </script>
 
-<div data-role="page" id="scripts" data-add-back-btn="true">
-  <div data-role="header" data-position="fixed">
-    <h1>Scripts</h1>
-    <a href="/" data-icon="home">Home</a>
-    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-  </div>
-  <div data-role="main" class="ui-content">
-      List of scripts
-  </div>
+    <script type="text/template" id="jobsPage">
+        <div id="jobs">
+          <div data-role="header" data-position="fixed">
+            <h1>Notices</h1>
+            <a href="/" data-transition="slide" data-icon="home">Home</a>
+            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+          </div>
+          <div data-role="main" class="ui-content">
+            Jobs
+          </div>
+          <div data-role="footer" data-position="fixed">
+            <h1>EAvatar Technology Ltd.</h1>
+          </div>
+        </div>
+    </script>
 
-  <div data-role="footer" data-position="fixed">
-    <h1>EAvatar Technology Ltd.</h1>
-  </div>
+    <script type="text/template" id="logsPage">
+        <div id="logs">
+          <div data-role="header" data-position="fixed">
+            <h1>Notices</h1>
+            <a href="/" data-transition="slide" data-icon="home">Home</a>
+            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+          </div>
+          <div data-role="main" class="ui-content">
+            List of logs
+          </div>
+          <div data-role="footer" data-position="fixed">
+            <h1>EAvatar Technology Ltd.</h1>
+          </div>
+        </div>
+    </script>
 
-</div>
+    <script type="text/template" id="optionsPage">
+        <div id="options" data-dialog="true">
+          <div data-role="header">
+            <h1>Options</h1>
+                <a href="" data-rel="back" data-icon="back">Cancel</a>
+                <a href="" data-rel="back" data-icon="check">OK</a>
+          </div>
+          <div data-role="main" class="ui-content">
+            <form action="#" method="get">
+              <div data-role="fieldcontain">
+	            <label for="name">Text Input:</label>
+	            <input type="text" name="name" id="name" value=""  />
+			  </div>
 
+			  <div data-role="fieldcontain">
+			    <label for="textarea">Textarea:</label>
+			    <textarea cols="40" rows="8" name="textarea" id="textarea"></textarea>
+			  </div>
+            </form>
+          </div>
+        </div>
+    </script>
 
-<div data-role="page" id="notices" data-add-back-btn="true">
-  <div data-role="header" data-position="fixed">
-    <h1>Notices</h1>
-    <a href="/" data-icon="home">Home</a>
-    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-  </div>
-  <div data-role="main" class="ui-content">
-      Notices
-  </div>
+    <script type="text/template" id="aboutPage">
+        <div id="about">
+          <div data-role="header">
+            <h1>About</h1>
+          </div>
+          <div data-role="main" class="ui-content">
+            <h3>EAvatar ME versino 0.1.0</h3>
+            EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.
+              <a href="#" class="ui-btn ui-corner-all" data-rel="back">OK</a>
+          </div>
+        </div>
+    </script>
 
-  <div data-role="footer" data-position="fixed">
-    <h1>EAvatar Technology Ltd.</h1>
-  </div>
-
-</div>
-
-<div data-role="page" id="jobs" data-add-back-btn="true">
-  <div data-role="header" data-position="fixed">
-    <h1>Jobs</h1>
-    <a href="/" data-icon="home">Home</a>
-    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-  </div>
-
-  <div data-role="main" class="ui-content">
-      Jobs
-
-      <a href="#submit_job" data-rel="dialog" data-transition="popup">New Job</a>
-  </div>
-
-  <div data-role="footer" data-position="fixed">
-    <h1>EAvatar Technology Ltd.</h1>
-  </div>
-
-</div>
-
-<div data-role="page" id="logs">
-
-  <div data-role="header" data-position="fixed">
-    <h1>Logs</h1>
-    <a href="/" data-icon="home">Home</a>
-    <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-  </div>
-  <div data-role="main" class="ui-content">
-      Logs
-  </div>
-
-  <div data-role="footer" data-position="fixed">
-    <h1>EAvatar Technology Ltd.</h1>
-  </div>
-
-</div>
-
-<div data-role="page" data-dialog="true" id="options">
-    <div data-role="header" data-position="fixed" >
-        <h1>Options</h1>
-        <a href="" data-rel="back" data-icon="back">Cancel</a>
-        <a href="" data-rel="back" data-icon="check">OK</a>
-    </div>
-    <div data-role="main" class="ui-content">
-      Options
-    </div>
-  <div data-role="footer" data-position="fixed">
-    <h1>EAvatar Technology Ltd.</h1>
-  </div>
-</div>
-
-<div data-role="page" data-dialog="true" id="about">
-    <div data-role="header" data-position="fixed" >
-        <h1>About</h1>
-    </div>
-    <div data-role="main" class="ui-content">
-        <h3>EAvatar ME versino 0.1.0</h3>
-        EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.
-    </div>
-</div>
-
-<!-- popups -->
-<div data-role="page" id="submit_job">
-  <div data-role="main" class="ui-content">
-    <form method="post">
-      <label for="script">Instructions:</label>
-      <textarea  name="script" id="script" ></textarea>
-      <input type="submit" value="Submit">
-    </form>
-  </div>
-</div>
-
-
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/jqm-config.js"></script>
+    <script src="/js/jquery.mobile.min.js"></script>
+    <script src="/js/lodash.min.js"></script>
+    <script src="/js/backbone.min.js"></script>
+    <script src="/js/setup.js"></script>
+    <script src="/js/models.js"></script>
+    <script src="/js/views.js"></script>
+    <script src="/js/app.js"></script>
+</head>
+<body>
 </body>
 </html>
