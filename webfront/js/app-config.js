@@ -3,9 +3,14 @@ _.templateSettings = {
     evaluate: /\{\{(.+?)\}\}/g
 };
 
-var avame = {};
+var ava = ava || {};
 
-avame.Router = null;
-avame.Views = {};
+ava.router = null;
+ava.views = {};
+ava.models = {};
+ava.config = {
+    version: '0.1.0',
+    api_base_url: '/api'
+};
 
 

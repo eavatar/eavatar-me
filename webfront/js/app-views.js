@@ -1,25 +1,66 @@
 // views
-avame.Views.Home = Backbone.View.extend({
+
+ava.views.Header = Backbone.View.extend({
+    render: function (params) {
+        var template = _.template($("#header-template").html());
+        $(this.el).html(template(params));
+
+        return this;
+    },
+});
+
+ava.views.Footer = Backbone.View.extend({
+    render: function () {
+        var template = _.template($("#footer-template").html());
+        $(this.el).html(template);
+
+        return this;
+    },
+});
+
+ava.views.Home = Backbone.View.extend({
 
     render: function () {
-        var params = { message: "page one sub heading" };
+        var params = { title: "EAvatar " + Math.random(),
+            header: this.header,
+            footer: this.footer
+         };
 
         var template = _.template($("#homePage").html());
-        $(this.el).html(template);
-        console.log($(this.el))
+        $(this.el).html(template(params));
 
         return this;
     },
 
     events: {
         "change #drpOne": "handleChange",
-        "click #button1": "handleClick"
+        "submit #submit_form": "handleClick"
     },
 
     handleClick: function (e) {
         e.preventDefault();
 
-        alert("clicked");
+        notify({
+            type: "info",
+            title: "Ava Message",
+            message: "Super simple Notify plugin.",
+
+            position: { x: "right", y: "top" },
+            icon: '<img src="/img/paper_plane.png" />',
+            size: "normal",
+            overlay: false,
+            closeBtn: true,
+            overflowHide: false,
+            spacing: 20,
+            theme: "dark-theme",
+            autoHide: true,
+            delay: 2500,
+            onShow: null,
+            onClick: null,
+            onHide: null,
+            template: '<div class="notify"><div class="notify-text"></div></div>'
+
+        });
     },
 
     handleChange: function (e) {
@@ -31,13 +72,21 @@ avame.Views.Home = Backbone.View.extend({
     },
 
     initialize: function (options) {
-        _.bindAll(this, "render");
+        console.log('Home.initialize')
 
+        _.bindAll(this, "render");
+        header = new ava.views.Header()
+        header.render({title: "EAvatar ME"})
+
+        this.header = header.$el.html()
+        footer = new ava.views.Footer()
+        footer.render()
+        this.footer = footer.$el.html()
         this.render();
     }
 });
 
-avame.Views.Notices = Backbone.View.extend({
+ava.views.Notices = Backbone.View.extend({
 
     render: function () {
         var params = { message: "page two sub heading" };
@@ -74,7 +123,7 @@ avame.Views.Notices = Backbone.View.extend({
     }
 });
 
-avame.Views.Scripts = Backbone.View.extend({
+ava.views.Scripts = Backbone.View.extend({
 
     render: function () {
         var template = _.template($("#scriptsPage").html());
@@ -109,7 +158,7 @@ avame.Views.Scripts = Backbone.View.extend({
     }
 });
 
-avame.Views.Jobs = Backbone.View.extend({
+ava.views.Jobs = Backbone.View.extend({
 
     render: function () {
         var template = _.template($("#jobsPage").html());
@@ -144,7 +193,7 @@ avame.Views.Jobs = Backbone.View.extend({
     }
 });
 
-avame.Views.Logs = Backbone.View.extend({
+ava.views.Logs = Backbone.View.extend({
 
     render: function () {
         var template = _.template($("#logsPage").html());
@@ -179,7 +228,7 @@ avame.Views.Logs = Backbone.View.extend({
     }
 });
 
-avame.Views.Options = Backbone.View.extend({
+ava.views.Options = Backbone.View.extend({
 
     render: function () {
         var template = _.template($("#optionsPage").html());
@@ -215,7 +264,7 @@ avame.Views.Options = Backbone.View.extend({
     }
 });
 
-avame.Views.About = Backbone.View.extend({
+ava.views.About = Backbone.View.extend({
 
     render: function () {
         var template = _.template($("#aboutPage").html());

@@ -1,5 +1,5 @@
 // main
-avame.Router = Backbone.Router.extend({
+ava.router = Backbone.Router.extend({
     routes:{
         "":"home",
         "home": "home",
@@ -22,32 +22,32 @@ avame.Router = Backbone.Router.extend({
 
         console.log('routing to page1')
 
-        this.changePage(new avame.Views.Home( {} ));
+        this.changePage(new ava.views.Home( {} ));
 
     },
 
     notices: function () {
-        this.changePage(new avame.Views.Notices( {} ));
+        this.changePage(new ava.views.Notices( {} ));
     },
 
     scripts: function () {
-        this.changePage(new avame.Views.Scripts( {} ));
+        this.changePage(new ava.views.Scripts( {} ));
     },
 
     jobs: function () {
-        this.changePage(new avame.Views.Jobs( {} ));
+        this.changePage(new ava.views.Jobs( {} ));
     },
 
     logs: function () {
-        this.changePage(new avame.Views.Logs( {} ));
+        this.changePage(new ava.views.Logs( {} ));
     },
 
     options: function () {
-        this.changePage(new avame.Views.Options({}), 'pop');
+        this.changePage(new ava.views.Options({}), 'pop');
     },
 
     about: function () {
-        this.changePage(new avame.Views.About( {} ), 'pop');
+        this.changePage(new ava.views.About( {} ), 'pop');
     },
 
 
@@ -69,12 +69,11 @@ avame.Router = Backbone.Router.extend({
         }
         $(":mobile-pagecontainer").pagecontainer( "change", $(page.el),
                 { changeHash: false, transition: transition });
-        //$.mobile.changePage($(page.el), { reverse:false, changeHash:false, transition: transition });
     }
 });
 
 $(document).ready(function () {
     console.log('document ready');
-    app = new avame.Router();
+    app = new ava.router();
 });
 
