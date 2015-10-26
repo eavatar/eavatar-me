@@ -12,8 +12,8 @@
     <script id="header-template" type="text/template">
         <div data-role="header">
             <h1>{{= title }}</h1>
-            <a href="/" data-icon="home">Home</a>
-            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
+            <a href="#home" data-icon="home">Home</a>
+            <a href="#logout" data-transition="pop" class="ui-btn ui-btn-icon-notext ui-icon-bullets">Logout</a>
         </div>
     </script>
 
@@ -21,10 +21,23 @@
         <div data-role="footer" data-position="fixed">
           <div data-role="navbar">
           <ul>
-            <li><a href="#home" class="ui-btn">Home</a></li>
-            <li><a href="#about" class="ui-btn">About</a></li>
-            <li><a href="#options" class="ui-btn">Options</a></li>
+            <li><a href="#notices" class="ui-btn">Notices</a></li>
+            <li><a href="#scripts" class="ui-btn">Scripts</a></li>
+            <li><a href="#jobs" class="ui-btn">Jobs</a></li>
+            <li><a href="#logs" class="ui-btn">Logs</a></li>
           </ul>
+          </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="messageBox">
+        <div id="message">
+          <div data-role="header" data-position="fixed">
+            <h1>{{= title }}</h1>
+          </div>
+          <div data-role="main" class="ui-content">
+              <h1>{{= title }}</h1>
+            <h3>{{= message }}</h3>
           </div>
         </div>
     </script>
@@ -53,58 +66,47 @@
 
     <script type="text/template" id="noticesPage">
         <div id="notices">
-          <div data-role="header" data-position="fixed">
-            <h1>Notices</h1>
-            <a href="/" data-icon="home">Home</a>
-            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-          </div>
+        {{= header }}
+
           <div data-role="main" class="ui-content">
             Notices
           </div>
-          <div data-role="footer" data-position="fixed">
-            <h1>EAvatar Technology Ltd.</h1>
-          </div>
+
+        {{= footer }}
         </div>
     </script>
     <script type="text/template" id="scriptsPage">
         <div id="scripts">
-          <div data-role="header" data-position="fixed">
-            <h1>Notices</h1>
-            <a href="/" data-transition="slide" data-icon="home">Home</a>
-            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-          </div>
+        {{= header }}
+
           <div data-role="main" class="ui-content">
             Scripts
           </div>
-          <div data-role="footer" data-position="fixed">
-            <h1>EAvatar Technology Ltd.</h1>
-          </div>
+
+        {{= footer }}
         </div>
     </script>
 
     <script type="text/template" id="jobsPage">
         <div id="jobs">
-          <div data-role="header" data-position="fixed">
-            <h1>Notices</h1>
-            <a href="/" data-transition="slide" data-icon="home">Home</a>
-            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-          </div>
+        {{= header }}
+
           <div data-role="main" class="ui-content">
-            Jobs
+              <ul data-role="listview">
+              {{ jobs.forEach(function(job) { }}
+                <li>{{= job.id }}:  {{= job.name }} : {{= job.st }}</li>
+              {{ }); }}
+              </ul>
           </div>
-          <div data-role="footer" data-position="fixed">
-            <h1>EAvatar Technology Ltd.</h1>
-          </div>
+
+        {{= footer }}
         </div>
     </script>
 
     <script type="text/template" id="logsPage">
         <div id="logs">
-          <div data-role="header" data-position="fixed">
-            <h1>Recent Log Records</h1>
-            <a href="/" data-transition="slide" data-icon="home">Home</a>
-            <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
-          </div>
+        {{= header }}
+
           <div data-role="main" class="ui-content">
               <ul data-role="listview">
               {{ logs.forEach(function(log) { }}
@@ -112,9 +114,7 @@
               {{ }); }}
               </ul>
           </div>
-          <div data-role="footer" data-position="fixed">
-            <h1>EAvatar Technology Ltd.</h1>
-          </div>
+        {{= footer }}
         </div>
     </script>
 
@@ -144,12 +144,12 @@
     <script type="text/template" id="aboutPage">
         <div id="about">
           <div data-role="header">
-            <h1>About</h1>
+            <h1>EAvatar Me</h1>
           </div>
           <div data-role="main" class="ui-content">
-            <h3>EAvatar ME versino 0.1.0</h3>
-            EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.
-              <a href="#" class="ui-btn ui-corner-all" data-rel="back">OK</a>
+            <h3>EAvatar ME version 0.1.0</h3>
+           <p>EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.</p>
+           <h4>You're accessing the web UI without a valid token.</h4>
           </div>
         </div>
     </script>

@@ -3,7 +3,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 import os
 import logging
-
+import base58
 import gevent
 from gevent.pywsgi import WSGIServer
 from ava.runtime import settings
@@ -20,6 +20,8 @@ logger = logging.getLogger(__name__)
 
 _CONF_SECTION = 'WEBFRONT'
 
+webfront = None
+
 
 class WebfrontEngine(object):
     """
@@ -27,12 +29,21 @@ class WebfrontEngine(object):
     """
     def __init__(self):
         logger.debug("Initializing webfront engine...")
+        global webfront
+        webfront = self
+
         self._http_listener = None
         self._https_listener = None
         self.listen_port = 5000
         self.listen_addr = '127.0.0.1'
         self.secure_listen_port = 0  # 0 means not binding
         self.local_base_url = "http://127.0.0.1:%d/" % (self.listen_port,)
+        self.secure_base_url = "https://127.0.0.1:%d/" % (self.secure_listen_port,)
+        self._token = base58.b58encode(os.urandom(16))
+
+    @property
+    def access_token(self):
+        return self._token
 
     def start(self, ctx=None):
         logger.debug("Starting webfront engine...")

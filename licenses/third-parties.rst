@@ -27,3 +27,15 @@ jQuery notify.js
 
 * License: MIT
     https://github.com/CreativeDream/jquery.notify/blob/master/LICENSE
+
+
+werkzeug
+--------
+
+A portion of module 'webutils' is copied from this libraries.
+
+* Website:
+    http://werkzeug.pocoo.org/
+
+* License:
+    https://github.com/mitsuhiko/werkzeug/blob/master/LICENSE

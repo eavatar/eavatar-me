@@ -12,12 +12,14 @@ import logging
 import gevent
 import uuid
 from gevent import Greenlet
+from datetime import datetime
 
 from avame.schedule import Schedule
 from .validator import ScriptValidator
 from ava import launcher
 
 from . import signals
+from .defines import ENGINE_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -33,6 +35,7 @@ class JobInfo(object):
         self._name = name
         self._script = script
         self._code = acode
+        self._started_at = datetime.now()
 
     @property
     def id(self):
@@ -52,6 +55,14 @@ class JobInfo(object):
     @property
     def code(self):
         return self._code
+
+    @property
+    def started_time(self):
+        return self._started_at
+
+    @property
+    def started_time_iso(self):
+        return self._started_at.isoformat()
 
 
 class JobContext(object):
@@ -263,7 +274,7 @@ class JobEngine(object):
     def start(self, ctx):
         logger.debug("Starting job engine...")
         self._task_engine = ctx.lookup('taskengine')
-        ctx.bind('jobengine', self)
+        ctx.bind(ENGINE_NAME, self)
         self._core_context = ctx
         self._load_jobs(ctx)
         ctx.add_child_greenlet(gevent.spawn(self._run_jobs))

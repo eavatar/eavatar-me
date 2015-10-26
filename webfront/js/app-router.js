@@ -1,29 +1,62 @@
 // main
 ava.router = Backbone.Router.extend({
     routes:{
-        "":"home",
+        "":"about",
         "home": "home",
         "notices": "notices",
         "scripts": "scripts",
         "jobs": "jobs",
         "logs": "logs",
         "options": "options",
-        "about": "about"
+        "login/:token": "login",
+        "logout": "logout",
+        "denied": "denied",
+        "*other" : "about"
+    },
+
+    route: function(route, name, callback) {
+        var router = this;
+        if (!callback) callback = this[name];
+
+        var f = function() {
+            // check token existence for all except 'login' page.
+            if(name != 'login' && ava.session.get('token') == null) {
+                this.changePage(new ava.views.About());
+                return
+            }
+            callback.apply(router, arguments);
+        };
+        return Backbone.Router.prototype.route.call(this, route, name, f);
     },
 
     initialize: function () {
-        console.log('initialize')
+        console.log('router.initialize')
         this.firstPage = true;
+        ava.session = new ava.models.Session()
+    },
 
-        Backbone.history.start();
+    message: function(message, title) {
+        this.changePage(new ava.views.Message(message, title), 'pop');
+    },
+
+    login: function(token) {
+        console.log("router.login")
+        ava.session.set('token', token)
+        ava.session.fetch()
+        window.location.hash = 'home'
+    },
+
+    logout: function() {
+        ava.session.logout()
+        this.message("You have logged out successfully.")
+    },
+
+    denied: function() {
+        this.message("Authorization is required to access.", "Access Denied")
     },
 
     home: function () {
-
-        console.log('routing to page1')
-
-        this.changePage(new ava.views.Home( {} ));
-
+        this.changePage(new ava.views.Home());
     },
 
     notices: function () {
@@ -47,7 +80,11 @@ ava.router = Backbone.Router.extend({
     },
 
     about: function () {
-        this.changePage(new ava.views.About( {} ), 'pop');
+        this.changePage(new ava.views.About( {} ));
+    },
+
+    defaultRoute: function() {
+
     },
 
 
@@ -75,5 +112,7 @@ ava.router = Backbone.Router.extend({
 $(document).ready(function () {
     console.log('document ready');
     app = new ava.router();
+    Backbone.history.start();
+
 });
 

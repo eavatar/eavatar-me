@@ -2,10 +2,13 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
-from ava.runtime import environ
-import logging
-from .bottle import request, response, HTTPError, static_file as _static_file
 
+import logging
+from ..core import get_core_context
+from ava.runtime import environ
+
+from .bottle import request, response, HTTPError, static_file as _static_file
+from .defines import WEBFRONT_CONTEXT_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +16,32 @@ logger = logging.getLogger(__name__)
 static_folder = os.path.join(environ.pod_dir(), 'webroot')
 
 
-def _raise_unauthorized(desc=b'Authentication required.'):
+def get_webfront_engine():
+    return get_core_context().lookup(WEBFRONT_CONTEXT_NAME)
+
+
+def raise_unauthorized(desc=b'Authentication required.'):
     raise HTTPError(401, desc)
+
+
+def get_access_token():
+    return get_webfront_engine().access_token
+
+
+def require_auth(callback):
+
+    def wrapper(*args, **kwargs):
+        auth = request.get_header('Authorization')
+        logger.debug("Authorization: %s", auth)
+
+        if get_webfront_engine().access_token != auth:
+            logger.warning("Access token mismatched.")
+            raise_unauthorized()
+
+        body = callback(*args, **kwargs)
+        return body
+
+    return wrapper
 
 
 def static_file(filepath, root=static_folder, mimetype='auto', download=False, charset='utf-8'):
@@ -53,3 +80,6 @@ def set_cors_headers():
     response.set_header(b'Access-Control-Allow-Origin', client_origin)
 
 
+__all__ = ['raise_unauthorized', 'static_file',
+           'swap_root_app', 'set_cors_headers', 'get_webfront_engine',
+           'get_access_token']

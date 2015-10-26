@@ -4,10 +4,12 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import json
 from datetime import datetime
 from ava import log
+from ava.job import get_job_engine
 from ava.web.bottle import response
 
 from .dispatcher import dispatcher
 from .bottle import Bottle
+from .service import require_auth, get_access_token
 
 api = Bottle()
 
@@ -15,13 +17,21 @@ dispatcher.mount('/api', api)
 
 
 @api.route("/")
+@require_auth
 def hello():
     return "Hello"
 
 
+@api.route("/auth")
+@require_auth
+def auth():
+    print("Authenticated")
+    return dict(status="success", token=get_access_token())
+
 # logs
 @api.route("/logs")
-def get_logs():
+@require_auth
+def log_list():
     entries = []
     i = 1
     for it in log.recent_log_entries():
@@ -34,3 +44,15 @@ def get_logs():
     return dict(data=entries, status='success')
 
 
+# jobs
+@api.route("/jobs")
+@require_auth
+def job_list():
+    jobs = get_job_engine().jobs.values()
+
+    entries = []
+    for it in jobs:
+        rec = dict(id=it.id, name=it.name, st=it.started_time_iso)
+        entries.append(rec)
+
+    return dict(data=entries, status='success')

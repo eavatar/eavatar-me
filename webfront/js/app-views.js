@@ -12,10 +12,32 @@ ava.views.Header = Backbone.View.extend({
 ava.views.Footer = Backbone.View.extend({
     render: function () {
         var template = _.template($("#footer-template").html());
-        $(this.el).html(template);
+        $(this.el).html(template());
 
         return this;
     },
+});
+
+ava.views.Message = Backbone.View.extend({
+    render: function () {
+        var template = _.template($("#messageBox").html());
+        params = {
+            'message': this.message,
+            'title': this.title
+        }
+        $(this.el).html(template(params));
+        $(this.el).trigger("create");
+        return this;
+    },
+
+    initialize: function(message, title) {
+        console.log('Message.initialize')
+        this.message = message || ''
+        this.title = title || 'Message'
+        $(this.el).attr('data-dialog', 'true');
+
+        //this.render();
+    }
 });
 
 ava.views.Home = Backbone.View.extend({
@@ -89,11 +111,14 @@ ava.views.Home = Backbone.View.extend({
 ava.views.Notices = Backbone.View.extend({
 
     render: function () {
-        var params = { message: "page two sub heading" };
+        var params = {
+            header: this.header,
+            footer: this.footer
+         };
 
         var template = _.template($("#noticesPage").html());
 
-        $(this.el).html(template);
+        $(this.el).html(template(params));
         return this;
     },
 
@@ -118,6 +143,12 @@ ava.views.Notices = Backbone.View.extend({
 
     initialize: function (options) {
         _.bindAll(this, "render");
+        header = new ava.views.Header()
+        header.render({title: "User Notices"})
+        this.header = header.$el.html()
+        footer = new ava.views.Footer()
+        footer.render()
+        this.footer = footer.$el.html()
 
         this.render();
     }
@@ -126,9 +157,14 @@ ava.views.Notices = Backbone.View.extend({
 ava.views.Scripts = Backbone.View.extend({
 
     render: function () {
+        var params = {
+            header: this.header,
+            footer: this.footer
+         };
+
         var template = _.template($("#scriptsPage").html());
 
-        $(this.el).html(template);
+        $(this.el).html(template(params));
         return this;
     },
 
@@ -154,6 +190,12 @@ ava.views.Scripts = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, "render");
 
+        header = new ava.views.Header()
+        header.render({title: "Job Scripts"})
+        this.header = header.$el.html()
+        footer = new ava.views.Footer()
+        footer.render()
+        this.footer = footer.$el.html()
         this.render();
     }
 });
@@ -161,9 +203,17 @@ ava.views.Scripts = Backbone.View.extend({
 ava.views.Jobs = Backbone.View.extend({
 
     render: function () {
-        var template = _.template($("#jobsPage").html());
+        data = this.jobs.toJSON()
 
-        $(this.el).html(template());
+        var params = {
+            header: this.header,
+            footer: this.footer,
+            'jobs': data
+         };
+
+        var template = _.template($("#jobsPage").html());
+        this.$el.html(template(params));
+        $(this.el).trigger("create");  // trigger JQM to re-style the page
         return this;
     },
 
@@ -188,19 +238,34 @@ ava.views.Jobs = Backbone.View.extend({
 
     initialize: function (options) {
         _.bindAll(this, "render");
+        this.jobs = new ava.models.Jobs()
+        this.jobs.fetch()
+        this.jobs.on('sync', this.render)
 
-        this.render();
+        header = new ava.views.Header()
+        header.render({title: "Running Jobs"})
+        this.header = header.$el.html()
+        footer = new ava.views.Footer()
+        footer.render()
+        this.footer = footer.$el.html()
+        // this.render();
     }
 });
 
 ava.views.Logs = Backbone.View.extend({
 
     render: function () {
+        data = this.logs.toJSON()
+
+        var params = {
+            header: this.header,
+            footer: this.footer,
+            'logs': data
+         };
+
         var template = _.template($("#logsPage").html());
         //this.logs.fetch()
-        console.log("Logs.render")
-        data = this.logs.toJSON()
-        this.$el.html(template({'logs': data}));
+        this.$el.html(template(params));
         $(this.el).trigger("create");  // trigger JQM to re-style the page
 
         return this;
@@ -227,6 +292,13 @@ ava.views.Logs = Backbone.View.extend({
 
     initialize: function (options) {
         _.bindAll(this, "render");
+        header = new ava.views.Header()
+        header.render({title: "Recent Logs"})
+        this.header = header.$el.html()
+        footer = new ava.views.Footer()
+        footer.render()
+        this.footer = footer.$el.html()
+
         this.logs = new ava.models.Logs()
         this.logs.fetch()
         this.logs.on('sync', this.render)

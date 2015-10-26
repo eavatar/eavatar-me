@@ -36,11 +36,12 @@ class ShellBase(object):
         webbrowser.open('https://samkuo.me')  # changed to wherever your doc is
 
     def open_ui(self):
-        url = 'http://127.0.0.1:5080'
+        url = 'http://127.0.0.1:5080/'
         webfront = get_core_context().lookup('webfront')
         if webfront is not None:
             url = webfront.local_base_url
 
+        url += "#login/" + webfront.access_token
         webbrowser.open(url)
 
     def open_folder(self):
