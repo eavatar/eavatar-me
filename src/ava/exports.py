@@ -22,6 +22,9 @@ import wsaccel
 # gevent
 import gevent
 
+# lmdb
+import lmdb
+
 # libnacl
 #import libnacl
 #from libnacl import _get_nacl
@@ -41,6 +44,10 @@ import ava.wrapper
 import ava.job.engine
 import ava.task.engine
 import ava.mod.engine
+import ava.user.engine
 import ava.runtime
 import ava.util
 import ava.web
+
+# Avame
+import avame

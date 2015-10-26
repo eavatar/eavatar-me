@@ -17,3 +17,13 @@ bottle.py
 
 * License: MIT
     https://github.com/bottlepy/bottle/blob/master/LICENSE
+
+
+jQuery notify.js
+----------------
+
+* Website:
+    https://github.com/CreativeDream/jquery.notify
+
+* License: MIT
+    https://github.com/CreativeDream/jquery.notify/blob/master/LICENSE

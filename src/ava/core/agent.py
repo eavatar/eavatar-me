@@ -34,10 +34,8 @@ try:
 except AttributeError:
     _ssl = __ssl__._ssl2
 
-
-
-
 KEYFILE = 'ava-keys.yml'
+
 
 logger = logging.getLogger(__name__)
 
@@ -189,6 +187,9 @@ class Agent(object):
         self._dispatcher.send(signal, sender, *args, **kwargs)
 
         # dispatch this signal to the shell.
+
+        logger.info("sending signal: %s", signal)
+
         if self._outbox:
             self._outbox.put_nowait((signal, kwargs))
 

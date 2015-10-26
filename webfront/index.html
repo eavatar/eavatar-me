@@ -101,12 +101,16 @@
     <script type="text/template" id="logsPage">
         <div id="logs">
           <div data-role="header" data-position="fixed">
-            <h1>Notices</h1>
+            <h1>Recent Log Records</h1>
             <a href="/" data-transition="slide" data-icon="home">Home</a>
             <a href="#options" class="ui-btn ui-btn-icon-notext ui-icon-gear">Options</a>
           </div>
           <div data-role="main" class="ui-content">
-            List of logs
+              <ul data-role="listview">
+              {{ logs.forEach(function(log) { }}
+                <li>{{= log.ts }} - {{= log.lvl_name }} - {{= log.msg }}</li>
+              {{ }); }}
+              </ul>
           </div>
           <div data-role="footer" data-position="fixed">
             <h1>EAvatar Technology Ltd.</h1>

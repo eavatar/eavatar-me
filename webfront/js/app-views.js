@@ -163,7 +163,7 @@ ava.views.Jobs = Backbone.View.extend({
     render: function () {
         var template = _.template($("#jobsPage").html());
 
-        $(this.el).html(template);
+        $(this.el).html(template());
         return this;
     },
 
@@ -197,8 +197,12 @@ ava.views.Logs = Backbone.View.extend({
 
     render: function () {
         var template = _.template($("#logsPage").html());
+        //this.logs.fetch()
+        console.log("Logs.render")
+        data = this.logs.toJSON()
+        this.$el.html(template({'logs': data}));
+        $(this.el).trigger("create");  // trigger JQM to re-style the page
 
-        $(this.el).html(template);
         return this;
     },
 
@@ -223,8 +227,10 @@ ava.views.Logs = Backbone.View.extend({
 
     initialize: function (options) {
         _.bindAll(this, "render");
-
-        this.render();
+        this.logs = new ava.models.Logs()
+        this.logs.fetch()
+        this.logs.on('sync', this.render)
+        //this.render();
     }
 });
 

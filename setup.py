@@ -15,6 +15,11 @@ setup(
     include_package_data=True,
 
     zip_safe=False,
+    entry_points={
+        'console_scripts': [
+            'ava = avacli.main:main',
+        ],
+    },
 
     author="EAvatar Technology Ltd.",
     url="http://www.EAvatar.com",

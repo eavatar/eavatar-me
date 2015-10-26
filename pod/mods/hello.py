@@ -2,10 +2,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 
-from ava.task import task
+from ava.task import action
 
 
-@task
+@action
 def hello(name=None):
     if name is None:
         print("Hello, there.")
