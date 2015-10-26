@@ -81,6 +81,21 @@ Use following instruction to install
 Avame needs `pywin32', 'lxml' packages on Windows platform, which should be already provided by
 Anaconda Python Distribution.
 
+Run from the Source
+^^^^^^^^^^^^^^^^^^^
+
+To run the program form the source, please ensure following paths are in the `sys.path`.
+This can be done by setting an environment variable `PYTHONPATH` to be like this:
+
+.. code-block:: bash
+
+    export PYTHONPATH=".;./src"
+
+Note that this is assumed to be run from the `Git for Windows` shell.
+If you use an IDE, the root and the 'src' sub-folder of the project should be in the paths
+as mentioned above.
+
+
 Build the Binaries
 ^^^^^^^^^^^^^^^^^^
 
@@ -159,6 +174,19 @@ Installing Dependencies
     brew install libxml2
     pip install lxml
 
+Run from the Source
+^^^^^^^^^^^^^^^^^^^
+
+To run the program form the source, please ensure following paths are in the `sys.path`.
+This can be done by setting an environment variable `PYTHONPATH` to be like this:
+
+.. code-block:: bash
+
+    export PYTHONPATH=".:./src"
+
+If you use an IDE, the root and the 'src' subfolder of the project should be in the paths
+as mentioned above.
+
 Build the Binaries
 ^^^^^^^^^^^^^^^^^^
 
@@ -182,7 +210,7 @@ which may be launched from the command line with following instruction:
     open ./dist/EAvatar.app
 
 On Ubuntu Platform
--------------------
+------------------
 
 System Requirements
 ^^^^^^^^^^^^^^^^^^^
@@ -233,6 +261,19 @@ Use following instructions to install Python and system packages:
 
     sudo apt-get install libxml2-dev libxslt1-dev python-dev python-lxml
     pip install -r requirements/requirements_gtk.txt
+
+Run from the Source
+^^^^^^^^^^^^^^^^^^^
+
+To run the program form the source, please ensure following paths are in the `sys.path`.
+This can be done by setting an environment variable `PYTHONPATH` to be like this:
+
+.. code-block:: bash
+
+    export PYTHONPATH=".:./src"
+
+If you use an IDE, the root and the 'src' subfolder of the project should be in the paths
+as mentioned above.
 
 Build the Binaries
 ^^^^^^^^^^^^^^^^^^
