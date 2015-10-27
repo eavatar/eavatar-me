@@ -1,0 +1,10 @@
+{
+  "name": "Avame",
+  "version": "0.1.0",
+  "description": "The Web UI for EAvatar Me",
+  "author": "Your Name <you.name@example.org>",
+  "scripts": {
+    "test": "karma start"
+  },
+  "license": "Apache-2.0"
+}

@@ -29,7 +29,7 @@ describe("Avame Models", function() {
     it("Can be created with default values for its attributes.", function() {
       var script = new ava.models.Script();
       expect(script.get('title')).toBe('');
-      expect(script.get('content')).toBe('');
+      expect(script.get('text')).toBe('');
     });
   });
 
@@ -37,6 +37,21 @@ describe("Avame Models", function() {
     it("Can be created with default values for its attributes.", function() {
       var session = new ava.models.Session();
       expect(session.get('token')).toBeNull();
+    });
+  });
+
+  describe('Tests for ScriptCollection', function() {
+    it('Can add Model instances as objects and arrays.', function() {
+      var scripts = new ava.models.ScriptCollection();
+      expect(scripts.length).toBe(0);
+      scripts.add({ title: 'Clean the kitchen', text: 'script1' });
+      expect(scripts.length).toBe(1);
+      scripts.add([
+        { title: 'Do the laundry', text: 'script2' }, { title: 'Go to the gym', text: 'script3'}
+      ]);
+
+      // how many are there in total now?
+      expect(scripts.length).toBe(3);
     });
   });
 

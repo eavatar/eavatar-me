@@ -92,7 +92,7 @@ ava.models.LogCollection = Backbone.Collection.extend({
 ava.models.Script = Backbone.Model.extend({
     defaults: {
         title: '',
-        content: ''
+        text: ''
     },
 
 });
