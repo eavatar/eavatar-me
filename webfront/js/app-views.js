@@ -40,6 +40,47 @@ ava.views.Message = Backbone.View.extend({
     }
 });
 
+ava.views.Confirm = Backbone.View.extend({
+    render: function () {
+        var template = _.template($("#confirmBox").html());
+        params = {
+            'message': this.message,
+            'title': this.title
+        }
+        $(this.el).html(template(params));
+        // $(this.el).trigger("create");
+        return this;
+    },
+
+    events: {
+            "click #yesBtn": "handleYesBtnClicked",
+            "click #noBtn": "handleNoBtnClicked",
+    },
+
+    handleYesBtnClicked: function(e) {
+        e.preventDefault();
+        console.log("Yes button clicked.")
+        console.log(this.callback)
+        this.callback(true)
+    },
+
+    handleNoBtnClicked: function(e) {
+        e.preventDefault();
+        this.callback(false)
+    },
+
+    initialize: function(message, title, callback) {
+        console.log('Confirm.initialize')
+        this.message = message || ''
+        this.title = title || 'Message'
+        $(this.el).attr('data-dialog', 'true');
+        $(this.el).attr('data-close-btn', 'none');
+        this.confirmed = false
+        this.callback = callback
+        this.render();
+    }
+});
+
 ava.views.Home = Backbone.View.extend({
 
     render: function () {
@@ -108,7 +149,7 @@ ava.views.Home = Backbone.View.extend({
     }
 });
 
-ava.views.Notices = Backbone.View.extend({
+ava.views.NoticeList = Backbone.View.extend({
 
     render: function () {
         var params = {
@@ -154,7 +195,7 @@ ava.views.Notices = Backbone.View.extend({
     }
 });
 
-ava.views.Scripts = Backbone.View.extend({
+ava.views.ScriptList = Backbone.View.extend({
 
     render: function () {
         var params = {
@@ -200,7 +241,7 @@ ava.views.Scripts = Backbone.View.extend({
     }
 });
 
-ava.views.Jobs = Backbone.View.extend({
+ava.views.JobList = Backbone.View.extend({
 
     render: function () {
         data = this.jobs.toJSON()
@@ -238,7 +279,7 @@ ava.views.Jobs = Backbone.View.extend({
 
     initialize: function (options) {
         _.bindAll(this, "render");
-        this.jobs = new ava.models.Jobs()
+        this.jobs = new ava.models.JobCollection()
         this.jobs.fetch()
         this.jobs.on('sync', this.render)
 
@@ -252,7 +293,7 @@ ava.views.Jobs = Backbone.View.extend({
     }
 });
 
-ava.views.Logs = Backbone.View.extend({
+ava.views.LogList = Backbone.View.extend({
 
     render: function () {
         data = this.logs.toJSON()
@@ -299,7 +340,7 @@ ava.views.Logs = Backbone.View.extend({
         footer.render()
         this.footer = footer.$el.html()
 
-        this.logs = new ava.models.Logs()
+        this.logs = new ava.models.LogCollection()
         this.logs.fetch()
         this.logs.on('sync', this.render)
         //this.render();
@@ -354,6 +395,8 @@ ava.views.About = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, "render");
         $(this.el).attr('data-dialog', 'true');
+        $(this.el).attr('data-close-btn', 'none');
+
         this.render();
     }
 });

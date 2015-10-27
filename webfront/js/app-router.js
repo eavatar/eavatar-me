@@ -32,11 +32,16 @@ ava.router = Backbone.Router.extend({
     initialize: function () {
         console.log('router.initialize')
         this.firstPage = true;
+        this.currentPage = 'home'
         ava.session = new ava.models.Session()
     },
 
     message: function(message, title) {
         this.changePage(new ava.views.Message(message, title), 'pop');
+    },
+
+    confirm: function(message, title, callback) {
+        this.changePage(new ava.views.Confirm(message, title, callback), 'pop');
     },
 
     login: function(token) {
@@ -47,8 +52,17 @@ ava.router = Backbone.Router.extend({
     },
 
     logout: function() {
-        ava.session.logout()
-        this.message("You have logged out successfully.")
+        callback = $.proxy(this.logoutConfirm, this)
+        this.confirm("Do you really want to log out?", "Are you sure?", callback)
+    },
+
+    logoutConfirm: function(confirmed) {
+        if(confirmed) {
+            ava.session.logout()
+            this.message("You have logged out successfully.")
+        } else {
+            window.location.hash = this.currentPage
+        }
     },
 
     denied: function() {
@@ -56,26 +70,32 @@ ava.router = Backbone.Router.extend({
     },
 
     home: function () {
+        this.currentPage = 'home'
         this.changePage(new ava.views.Home());
     },
 
     notices: function () {
-        this.changePage(new ava.views.Notices( {} ));
+        this.currentPage = 'notices'
+        this.changePage(new ava.views.NoticeList( {} ));
     },
 
     scripts: function () {
-        this.changePage(new ava.views.Scripts( {} ));
+        this.currentPage = 'scripts'
+        this.changePage(new ava.views.ScriptList( {} ));
     },
 
     jobs: function () {
-        this.changePage(new ava.views.Jobs( {} ));
+        this.currentPage = 'jobs'
+        this.changePage(new ava.views.JobList( {} ));
     },
 
     logs: function () {
-        this.changePage(new ava.views.Logs( {} ));
+        this.currentPage = 'logs'
+        this.changePage(new ava.views.LogList( {} ));
     },
 
     options: function () {
+        this.currentPage = 'options'
         this.changePage(new ava.views.Options({}), 'pop');
     },
 

@@ -10,6 +10,16 @@ ava.models.Notice = Backbone.Model.extend({
     }
 });
 
+ava.models.NoticeCollection = Backbone.Collection.extend({
+    model: ava.models.Notice,
+    url: '/api/notices',
+    parse: function(response){
+        return response.data;
+    }
+
+});
+
+
 
 ava.models.Job = Backbone.Model.extend({
     defaults: {
@@ -18,13 +28,16 @@ ava.models.Job = Backbone.Model.extend({
     },
 
     initialize: function(entry) {
+        if(entry == null) {
+            return
+        }
         this.set('st',  entry.st)
         this.set('name', entry.name)
         this.set('id', entry.id)
     }
 });
 
-ava.models.Jobs = Backbone.Collection.extend({
+ava.models.JobCollection = Backbone.Collection.extend({
     model: ava.models.Job,
     url: '/api/jobs',
     parse: function(response){
@@ -41,10 +54,14 @@ ava.models.Log = Backbone.Model.extend({
         ts: 0,
         lvl: 20,
         lvl_name: 'INFO',
-        msg: 'aa'
+        msg: ''
     },
 
     initialize: function(entry) {
+        if(entry == null) {
+            return
+        }
+
         this.set('ts', entry.ts)
         this.set('lvl', entry.lvl)
         this.set('msg', entry.msg)
@@ -60,7 +77,7 @@ ava.models.Log = Backbone.Model.extend({
     }
 });
 
-ava.models.Logs = Backbone.Collection.extend({
+ava.models.LogCollection = Backbone.Collection.extend({
     model: ava.models.Log,
     url: '/api/logs',
     parse: function(response){
@@ -73,16 +90,18 @@ ava.models.Logs = Backbone.Collection.extend({
 
 
 ava.models.Script = Backbone.Model.extend({
-    initialize: function() {
-        this.title = ''
-        this.content = ''
-    }
+    defaults: {
+        title: '',
+        content: ''
+    },
+
 });
 
-ava.models.Scripts = Backbone.Collection.extend({
+ava.models.ScriptCollection = Backbone.Collection.extend({
     model: ava.models.Script,
-
-    initialize: function() {
+    url: '/api/scripts',
+    parse: function(response){
+        return response.data;
     }
 });
 

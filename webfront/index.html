@@ -13,7 +13,7 @@
         <div data-role="header">
             <h1>{{= title }}</h1>
             <a href="#home" data-icon="home">Home</a>
-            <a href="#logout" data-transition="pop" class="ui-btn ui-btn-icon-notext ui-icon-bullets">Logout</a>
+            <a href="#logout" data-transition="pop" class="ui-btn ui-btn-icon-notext ui-icon-power">Logout</a>
         </div>
     </script>
 
@@ -32,13 +32,29 @@
 
     <script type="text/template" id="messageBox">
         <div id="message">
-          <div data-role="header" data-position="fixed">
+          <div data-role="header">
             <h1>{{= title }}</h1>
           </div>
           <div data-role="main" class="ui-content">
-              <h1>{{= title }}</h1>
+            <h3>{{= message }}</h3>
+            <a href="" data-role="button">OK</a>
+          </div>
+        </div>
+    </script>
+
+    <script type="text/template" id="confirmBox">
+        <div id="confirm" data-dismissible="false">
+          <div data-role="header">
+            <h1>{{= title }}</h1>
+          </div>
+          <div data-role="main" class="ui-content">
             <h3>{{= message }}</h3>
           </div>
+          <div data-role="footer">
+              <a href="" data-role="button" data-icon="back" id="noBtn">No</a>
+	          <a href="" class="ui-btn-right" data-role="button" data-icon="check" id="yesBtn">Yes</a>
+          </div>
+
         </div>
     </script>
 
@@ -143,13 +159,12 @@
 
     <script type="text/template" id="aboutPage">
         <div id="about">
-          <div data-role="header">
+          <div data-role="header" data-close-btn="none">
             <h1>EAvatar Me</h1>
           </div>
           <div data-role="main" class="ui-content">
-            <h3>EAvatar ME version 0.1.0</h3>
-           <p>EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.</p>
-           <h4>You're accessing the web UI without a valid token.</h4>
+            <h3><img src="/img/favicon-96x96.png" align="middle">EAvatar ME version 0.1.0</h3>
+            <p>EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.</p>
           </div>
         </div>
     </script>
