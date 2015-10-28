@@ -262,7 +262,7 @@ class Agent(object):
 
     def _start_app(self):
         try:
-            importlib.import_module("avastartup")
+            importlib.import_module("ava_startup")
         except ImportError:
             logger.error("Failed to import startup module.", exc_info=True)
             raise
@@ -292,7 +292,7 @@ class Agent(object):
         logger.debug("Starting agent...")
         global agent_running, agent_stopped
         self._start_engines()
-
+        self._start_app()
         self.running = True
         agent_running.set()
         logger.debug("Agent started.")
@@ -303,6 +303,9 @@ class Agent(object):
             except KeyboardInterrupt:
                 logger.debug("Interrupted.")
                 break
+
+            if not self._inbox:
+                continue
 
             try:
                 req = self._inbox.get_nowait()

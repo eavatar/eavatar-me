@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 
-# import packages/modules that you want the startup script can access
+# import packages/modules that custom modules can access
 
 import os
 import sys
@@ -15,12 +15,15 @@ import _sqlite3
 from encodings import hex_codec, ascii, utf_8, utf_32
 from click import group, command
 
-# import ws4py
-# from ws4py.server import geventserver
+#import ws4py
+#from ws4py.server import geventserver
 import wsaccel
 
 # gevent
 import gevent
+
+# messagepack
+import msgpack
 
 # lmdb
 import lmdb
