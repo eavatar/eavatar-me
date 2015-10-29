@@ -15,7 +15,7 @@ class PageTest(AgentTest):
         cls.access_token = webfront.access_token
 
     def setUp(self):
-        self.browser = webdriver.PhantomJS()
+        self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(3)
 
     def tearDown(self):

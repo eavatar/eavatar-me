@@ -36,8 +36,7 @@ def prepare_agent_test_env():
     from ava.runtime import environ
     environ.get_environ(reset=True)
 
-
-    base_dir = os.path.dirname(base_path())
+    base_dir = base_path()
 
     src_dir = os.path.join(base_dir, 'pod')
 
