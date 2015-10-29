@@ -93,7 +93,7 @@ coll = COLLECT(exe,
                a.zipfiles,
                Tree(pod_path, 'pod', excludes=['*.pyc', '*.mdb', '*.db']),
                Tree(res_path, 'res', excludes=['*.pyc']),
-               Tree(web_path, 'webfront', excludes=['*_dev.*', 'tests']),
+               Tree(web_path, 'webfront', excludes=['*_dev.*', 'tests', 'node_modules']),
                a.datas,
                shfiles,          # add script files to the collection.
                strip=run_strip,

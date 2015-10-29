@@ -1,6 +1,6 @@
 general:
   artifacts:
-    - "dist/avame"
+    - "dist/dist/avame-0.1.0+${CIRCLE_BUILD_NUM}.tgz"
 
 dependencies:
   override:
@@ -18,4 +18,6 @@ test:
     - PYTHONPATH=".:./src" py.test -vvv tests/unit/
     - PYTHONPATH=".:./src" py.test -vvv tests/functional/test_home_page.py
     - PYTHONPATH=".:./src" pyinstaller pack/avame.spec --clean -y
+  post:
+    - tar zcvf dist/avame-0.1.0+${CIRCLE_BUILD_NUM}.tgz dist/avame/
 
