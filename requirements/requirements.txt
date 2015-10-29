@@ -6,6 +6,7 @@ greenlet==0.4.9
 libnacl==1.4.3
 lmdb==0.87
 lxml==3.4.4
+msgpack-python==0.4.6
 py==1.4.30
 pycrypto==2.6.1
 PyDispatcher==2.0.5
