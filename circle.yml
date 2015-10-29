@@ -1,6 +1,6 @@
 general:
   artifacts:
-    - "dist/dist/avame-0.1.0+${CIRCLE_BUILD_NUM}.tgz"
+    - "dist/avame-0.1.0+${CIRCLE_BUILD_NUM}.tgz"
 
 dependencies:
   override:
