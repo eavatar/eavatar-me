@@ -4,5 +4,5 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 """ User notices
 """
 
-from .models import Notice
-from .signals import USER_NOTIFIED
+from .models import *
+from .signals import *

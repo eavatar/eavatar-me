@@ -17,9 +17,10 @@ from datetime import datetime
 from avame.schedule import Schedule
 from .validator import ScriptValidator
 from ava import launcher
-
+from ava.runtime import environ
 from . import signals
 from .defines import ENGINE_NAME
+from .errors import JobCancelledError
 
 logger = logging.getLogger(__name__)
 
@@ -159,7 +160,7 @@ class JobEngine(object):
         self.contexts = {}
         self.runners = {}
 
-        self.jobs_path = os.path.join(launcher.get_app_dir(), _AVATARS_DIR)
+        self.jobs_path = os.path.join(environ.pod_dir(), _AVATARS_DIR)
         self.jobs_path = os.path.abspath(self.jobs_path)
         self.validator = ScriptValidator()
         self._core_context = None
@@ -247,6 +248,22 @@ class JobEngine(object):
             print("REASON:", reason)
             self._core_context.send(signals.JOB_REJECTED, reason=reason)
 
+    def cancel_job(self, job_id):
+        if job_id not in self.jobs:
+            return
+
+        ctx = self.contexts[job_id]
+        runner = self.runners[job_id]
+
+        try:
+            runner.kill()
+        except:
+            pass
+
+        ctx.exception = JobCancelledError()
+
+        self.job_done(ctx)
+
     def job_done(self, job_context):
         """ Invoked by task runner to notify that a task is finished or failed.
 
@@ -262,6 +279,9 @@ class JobEngine(object):
 
         if job_id in self.runners:
             del self.runners[job_id]
+
+        if job_id in self.contexts:
+            del self.contexts[job_id]
 
         try:
             if job_context.exception is not None:

@@ -5,7 +5,7 @@ import logging
 
 import pkg_resources
 
-from ..runtime import environ, settings
+from ..runtime import environ
 
 
 logger = logging.getLogger(__name__)

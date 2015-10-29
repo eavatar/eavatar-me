@@ -11,12 +11,16 @@ import gevent
 import shutil
 import tempfile
 import pytest
+import logging
 
 from ava.core.defines import AVA_SWARM_SECRET, AVA_AGENT_SECRET
 from ava.util import base_path
+from ava.core import context
 
 from gevent import monkey
 monkey.patch_all(thread=False)
+
+_logger = logging.getLogger(__name__)
 
 
 def prepare_agent_test_env():
@@ -25,7 +29,13 @@ def prepare_agent_test_env():
     :return:
     """
     pod_folder = tempfile.mkdtemp()
+    if 'AVA_POD' in os.environ:
+        del os.environ['AVA_POD']
     os.environ.setdefault('AVA_POD', pod_folder)
+    assert os.path.exists(pod_folder)
+    from ava.runtime import environ
+    environ.get_environ(reset=True)
+
 
     base_dir = os.path.dirname(base_path())
 
@@ -62,11 +72,13 @@ class AgentTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.pod_folder = prepare_agent_test_env()
+        _logger.info("Temp POD folder: %s", cls.pod_folder)
 
-        from ava.runtime import settings
+        from ava.runtime.config import settings
         from ava.core.agent import Agent
 
-        settings['debug'] = True
+        settings['DEBUG'] = True
+        settings['TEST'] = True
         os.environ.setdefault(AVA_SWARM_SECRET, swarm_secret)
         os.environ.setdefault(AVA_AGENT_SECRET, agent_secret)
         AgentTest.agent = Agent(None, None)
@@ -80,11 +92,12 @@ class AgentTest(unittest.TestCase):
         while AgentTest.agent.running:
             gevent.sleep(0.5)
 
+        context._context = None
         shutil.rmtree(cls.pod_folder)
+        _logger.info("Temp POD folder removed: %s", cls.pod_folder)
 
 
-
-@pytest.fixture(scope='module')
+# @pytest.fixture(scope='module')
 def agent(request):
     from ava.runtime import settings
     from ava.core.agent import Agent

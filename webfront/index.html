@@ -63,10 +63,10 @@
         {{= header }}
         <div data-role="main" class="ui-content">
             <ul data-role="listview" data-inset="true">
-                <li><a href="#notices">Notices</a></li>
-                <li><a href="#scripts">Scripts</a></li>
-                <li><a href="#jobs">Jobs</a></li>
-                <li><a href="#logs">Logs</a></li>
+                <li><a href="#notices">User Notices</a></li>
+                <li><a href="#scripts">Job Scripts</a></li>
+                <li><a href="#jobs">Running Jobs</a></li>
+                <li><a href="#logs">Recent Logs</a></li>
             </ul>
 
             <form id="submit_form" method="post">
@@ -85,7 +85,11 @@
         {{= header }}
 
           <div data-role="main" class="ui-content">
-            Notices
+              <ul data-role="listview">
+              {{ notices.forEach(function(notice) { }}
+                <li><h3>{{= notice.title }}</h3>{{= notice.message }}</li>
+              {{ }); }}
+              </ul>
           </div>
 
         {{= footer }}
@@ -96,8 +100,16 @@
         {{= header }}
 
           <div data-role="main" class="ui-content">
-            Scripts
+              <ul data-role="listview">
+              {{ scripts.forEach(function(script) { }}
+                <li><a href="#scriptEdit/{{= script.id }}"><h3>{{= script.title }}</h3>
+                {{ if(script.auto_start) { }}<span class="ui-li-aside">Auto Start</span> {{ }; }}
+                </a></li>
+              {{ }); }}
+              </ul>
           </div>
+
+          <a href="" data-icon="plus" data-role="button">Add</a>
 
         {{= footer }}
         </div>
@@ -134,6 +146,39 @@
         </div>
     </script>
 
+    <script type="text/template" id="scriptEditPage">
+        <div id="scriptEdit" data-dialog="true">
+          <div data-role="header">
+            <h1>Edit Script</h1>
+          </div>
+          <div data-role="main" class="ui-content">
+            <form action="" method="get">
+              <input type="hidden" value="{{=script.id}}" id="script_id"/>
+              <div data-role="fieldcontain">
+	            <label for="name">Title:</label>
+	            <input type="text" name="title" id="title" value="{{= script.title}}"  />
+			  </div>
+
+              <div data-role="fieldcontain">
+	            <label for="auto_start">Auto start:</label>
+                <select id="auto_start" name="auto_start" data-role="slider">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+			  </div>
+
+			  <div data-role="fieldcontain">
+			    <label for="textarea">Text:</label>
+			    <textarea cols="40" rows="8" name="text" id="text">{{= script.text}}</textarea>
+			  </div>
+                <button type="submit" id="okBtn">OK</button>
+                <button type="submit" id="cancelBtn">Cancel</button>
+            </form>
+          </div>
+        </div>
+    </script>
+
+
     <script type="text/template" id="optionsPage">
         <div id="options" data-dialog="true">
           <div data-role="header">
@@ -160,7 +205,7 @@
     <script type="text/template" id="aboutPage">
         <div id="about">
           <div data-role="header" data-close-btn="none">
-            <h1>EAvatar Me</h1>
+            <h1>EAvatar ME</h1>
           </div>
           <div data-role="main" class="ui-content">
             <h3><img src="/img/favicon-96x96.png" align="middle">EAvatar ME version 0.1.0</h3>

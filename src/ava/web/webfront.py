@@ -6,14 +6,12 @@ import logging
 import base58
 import gevent
 from gevent.pywsgi import WSGIServer
-from ava.runtime import settings
+from ava.runtime.config import settings
 from ava.runtime import environ
 
 from . import bottle
 
 from . import dispatcher
-from . import webapi
-from . import resources
 
 
 logger = logging.getLogger(__name__)
@@ -48,7 +46,8 @@ class WebfrontEngine(object):
     def start(self, ctx=None):
         logger.debug("Starting webfront engine...")
 
-        if not settings[_CONF_SECTION]['enabled']:
+        disabled = settings[_CONF_SECTION].get('disabled')
+        if disabled:
             logger.debug("Webfront is not enabled.")
             return
 

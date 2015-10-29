@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
 
-"""
- Say hello to user
-"""
-
-print("Greeting")
+for i in ava.schedule.counts(1).every(3).seconds:
+    ava.do('user.notify', msg="This is a test notice %d" % i, title="Message %d" % i)

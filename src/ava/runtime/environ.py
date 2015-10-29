@@ -105,8 +105,11 @@ class Environment(object):
 _environ = None
 
 
-def get_environ(app_name=APP_NAME):
+def get_environ(app_name=APP_NAME, reset=False):
     global _environ
+
+    if _environ and reset:
+        _environ = None
 
     if _environ is None:
         _environ = Environment(app_name)

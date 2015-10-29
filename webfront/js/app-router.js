@@ -5,6 +5,7 @@ ava.router = Backbone.Router.extend({
         "home": "home",
         "notices": "notices",
         "scripts": "scripts",
+        "scriptEdit/:script_id": "scriptEdit",
         "jobs": "jobs",
         "logs": "logs",
         "options": "options",
@@ -82,6 +83,10 @@ ava.router = Backbone.Router.extend({
     scripts: function () {
         this.currentPage = 'scripts'
         this.changePage(new ava.views.ScriptList( {} ));
+    },
+
+    scriptEdit: function(script_id) {
+        this.changePage(new ava.views.ScriptEdit(script_id));
     },
 
     jobs: function () {

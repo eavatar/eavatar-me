@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from .defines import *
-from .signals import *
-from .models import *
-from .service import *
+from ava.core import AvaError
+
+
+class JobCancelledError(AvaError):
+    pass
+

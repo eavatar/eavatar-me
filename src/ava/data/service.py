@@ -7,7 +7,7 @@ from ..core import get_core_context
 _dataengine = None
 
 
-def _get_data_engine():
+def get_data_engine():
     global _dataengine
     if _dataengine is None:
         _dataengine = get_core_context().lookup('dataengine')
@@ -164,7 +164,7 @@ def store_names():
 
     :return: the store names.
     """
-    return _get_data_engine().store_names()
+    return get_data_engine().store_names()
 
 
 def create_store(store_name):
@@ -173,7 +173,7 @@ def create_store(store_name):
     :param store_name:
     :return:
     """
-    return _get_data_engine().create_store(store_name)
+    return get_data_engine().create_store(store_name)
 
 
 def remove_store(store_name):
@@ -182,7 +182,7 @@ def remove_store(store_name):
     :param store_name:
     :return:
     """
-    return _get_data_engine().remove_store(store_name)
+    return get_data_engine().remove_store(store_name)
 
 
 def get_store(store_name):
@@ -191,7 +191,7 @@ def get_store(store_name):
     :param store_name:
     :return:
     """
-    return _get_data_engine().get_store(store_name)
+    return get_data_engine().get_store(store_name)
 
 __all__ = ['ICursor', 'IStore', 'create_store', 'remove_store', 'get_store',
-           'store_names',]
+           'store_names', ]

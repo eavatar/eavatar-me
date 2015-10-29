@@ -9,7 +9,7 @@ EXE_NAME = 'ava'
 DEBUG = True
 
 WEBFRONT = {
-    "enabled": True,
+    "disabled": False,
     "listen_port": 5080,
     "listen_addr": "0.0.0.0",
     "secure_listen_addr": "0.0.0.0",

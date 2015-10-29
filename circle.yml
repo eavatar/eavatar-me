@@ -1,0 +1,20 @@
+general:
+  artifacts:
+    - "dist/avame"
+
+dependencies:
+  override:
+    - sudo mkdir -p /usr/local/lib
+    - sudo pip install -U pip
+    - sudo easy_install -U setuptools
+    - pip install -r requirements.txt
+
+test:
+  override:
+    - sudo cp plat.libs/libsodium.so.13.1.0 /usr/local/lib/
+    - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so.13
+    - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so
+    - bin/py.test -vvv tests/unit/
+    - bin/py.test -vvv tests/functional/test_webapi.py
+    - pyinstaller pack/avame.spec --clean -y
+

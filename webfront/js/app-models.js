@@ -6,7 +6,17 @@ ava.models.Notice = Backbone.Model.extend({
         title: 'Ava Message'
     },
 
-    initialize: function(){
+    parse: function(response){
+        return response.data;
+    },
+
+    initialize: function(entry){
+        if(entry == null) {
+            return
+        }
+        this.set('id', entry.id)
+        this.set('title',  entry.title)
+        this.set('message', entry.message)
     }
 });
 
@@ -27,6 +37,10 @@ ava.models.Job = Backbone.Model.extend({
         name: '',
     },
 
+    parse: function(response){
+        return response.data;
+    },
+
     initialize: function(entry) {
         if(entry == null) {
             return
@@ -41,7 +55,6 @@ ava.models.JobCollection = Backbone.Collection.extend({
     model: ava.models.Job,
     url: '/api/jobs',
     parse: function(response){
-        console.log("parse jobs response")
         return response.data;
     }
 
@@ -94,7 +107,22 @@ ava.models.Script = Backbone.Model.extend({
         title: '',
         text: ''
     },
+    urlRoot: '/api/scripts',
 
+    parse: function(response){
+        return response.data;
+    },
+
+    initialize: function(entry) {
+        if(entry == null) {
+            return
+        }
+
+        this.set('id', entry.id)
+        this.set('title', entry.title)
+        this.set('text', entry.text)
+
+    }
 });
 
 ava.models.ScriptCollection = Backbone.Collection.extend({

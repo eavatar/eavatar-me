@@ -27,13 +27,15 @@ AGENT_CONF = os.path.join(environ.conf_dir(), u'ava.json')
 
 # The default configuration file is located at the base directory.
 
-settings = dict(base_dir=environ.base_dir().replace("\\", "/"),
-                conf_dir=environ.conf_dir().replace("\\", "/"),
-                data_dir=environ.data_dir().replace("\\", "/"),
-                pkgs_dir=environ.pkgs_dir().replace("\\", "/"),
-                logs_dir=environ.logs_dir().replace("\\", "/"),
-                mods_dir=environ.mods_dir().replace("\\", "/"),
-                )
+locations = dict(base_dir=environ.base_dir().replace("\\", "/"),
+                 conf_dir=environ.conf_dir().replace("\\", "/"),
+                 data_dir=environ.data_dir().replace("\\", "/"),
+                 pkgs_dir=environ.pkgs_dir().replace("\\", "/"),
+                 logs_dir=environ.logs_dir().replace("\\", "/"),
+                 mods_dir=environ.mods_dir().replace("\\", "/"),
+                 )
+
+settings = dict(locations)
 
 if ava_settings is not None:
     for attr_name in dir(ava_settings):
@@ -51,7 +53,7 @@ def load_conf(conf_file):
         return {}
 
     template = Template(data)
-    data = template.substitute(**settings)
+    data = template.substitute(**locations)
     return json.loads(data)
 
 

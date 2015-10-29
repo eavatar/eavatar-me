@@ -96,7 +96,6 @@ ava.views.Home = Backbone.View.extend({
     },
 
     events: {
-        "change #drpOne": "handleChange",
         "submit #submit_form": "handleClick"
     },
 
@@ -126,14 +125,6 @@ ava.views.Home = Backbone.View.extend({
         });
     },
 
-    handleChange: function (e) {
-        e.preventDefault();
-
-        var $this = $(e.target);
-
-        alert($this.val());
-    },
-
     initialize: function (options) {
         console.log('Home.initialize')
 
@@ -152,38 +143,26 @@ ava.views.Home = Backbone.View.extend({
 ava.views.NoticeList = Backbone.View.extend({
 
     render: function () {
+        data = this.notices.toJSON()
         var params = {
             header: this.header,
-            footer: this.footer
+            footer: this.footer,
+            notices: data
          };
 
         var template = _.template($("#noticesPage").html());
 
         $(this.el).html(template(params));
+        $(this.el).trigger("create");
         return this;
-    },
-
-    events: {
-        "change #drpTwo": "handleChange",
-        "click #button2": "handleClick"
-    },
-
-    handleClick: function (e) {
-        e.preventDefault();
-
-        alert("clicked");
-    },
-
-    handleChange: function (e) {
-        e.preventDefault();
-
-        var $this = $(e.target);
-
-        alert($this.val());
     },
 
     initialize: function (options) {
         _.bindAll(this, "render");
+        this.notices = new ava.models.NoticeCollection()
+        this.notices.fetch()
+        this.notices.on('sync', this.render)
+
         header = new ava.views.Header()
         header.render({title: "User Notices"})
         this.header = header.$el.html()
@@ -198,38 +177,26 @@ ava.views.NoticeList = Backbone.View.extend({
 ava.views.ScriptList = Backbone.View.extend({
 
     render: function () {
+        data = this.scripts.toJSON();
         var params = {
             header: this.header,
-            footer: this.footer
+            footer: this.footer,
+            scripts: data
          };
 
         var template = _.template($("#scriptsPage").html());
+        $(this.el).html(template(params));
 
         $(this.el).html(template(params));
+        $(this.el).trigger("create");
         return this;
-    },
-
-    events: {
-        "change #drpTwo": "handleChange",
-        "click #button2": "handleClick"
-    },
-
-    handleClick: function (e) {
-        e.preventDefault();
-
-        alert("clicked");
-    },
-
-    handleChange: function (e) {
-        e.preventDefault();
-
-        var $this = $(e.target);
-
-        alert($this.val());
     },
 
     initialize: function (options) {
         _.bindAll(this, "render");
+        this.scripts = new ava.models.ScriptCollection()
+        this.scripts.fetch()
+        this.scripts.on('sync', this.render)
 
         header = new ava.views.Header()
         header.render({title: "Job Scripts"})
@@ -237,7 +204,48 @@ ava.views.ScriptList = Backbone.View.extend({
         footer = new ava.views.Footer()
         footer.render()
         this.footer = footer.$el.html()
+
         this.render();
+    }
+});
+
+ava.views.ScriptEdit = Backbone.View.extend({
+
+    render: function () {
+        var template = _.template($("#scriptEditPage").html());
+        params = {model: this.model}
+        $(this.el).html(template(params));
+        $(this.el).trigger("create");
+
+        return this;
+    },
+
+    events: {
+        "click #okBtn": "handleOK",
+        "click #cancelBtn": "handleCancel"
+    },
+
+
+    handleOK: function (e) {
+        e.preventDefault();
+
+    },
+
+    handleCancel: function (e) {
+        e.preventDefault();
+
+    },
+
+    initialize: function (script_id) {
+        _.bindAll(this, "render");
+        $(this.el).attr('data-dialog', 'true');
+
+        console.log("Edit script:", script_id)
+        this.script_id = script_id
+        this.model = new ava.models.Script({id: script_id})
+        this.model.on('sync', this.render, this)
+        this.model.fetch()
+        //this.render();
     }
 });
 
@@ -256,25 +264,6 @@ ava.views.JobList = Backbone.View.extend({
         this.$el.html(template(params));
         $(this.el).trigger("create");  // trigger JQM to re-style the page
         return this;
-    },
-
-    events: {
-        "change #drpTwo": "handleChange",
-        "click #button2": "handleClick"
-    },
-
-    handleClick: function (e) {
-        e.preventDefault();
-
-        alert("clicked");
-    },
-
-    handleChange: function (e) {
-        e.preventDefault();
-
-        var $this = $(e.target);
-
-        alert($this.val());
     },
 
     initialize: function (options) {
@@ -312,25 +301,6 @@ ava.views.LogList = Backbone.View.extend({
         return this;
     },
 
-    events: {
-        "change #drpTwo": "handleChange",
-        "click #button2": "handleClick"
-    },
-
-    handleClick: function (e) {
-        e.preventDefault();
-
-        alert("clicked");
-    },
-
-    handleChange: function (e) {
-        e.preventDefault();
-
-        var $this = $(e.target);
-
-        alert($this.val());
-    },
-
     initialize: function (options) {
         _.bindAll(this, "render");
         header = new ava.views.Header()
@@ -354,17 +324,6 @@ ava.views.Options = Backbone.View.extend({
 
         $(this.el).html(template);
         return this;
-    },
-
-    events: {
-        "change #drpTwo": "handleChange",
-        "click #button2": "handleClick"
-    },
-
-    handleClick: function (e) {
-        e.preventDefault();
-
-        alert("clicked");
     },
 
     handleChange: function (e) {

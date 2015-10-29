@@ -8,7 +8,9 @@ from ..core import get_core_context
 from ava.runtime import environ
 
 from .bottle import request, response, HTTPError, static_file as _static_file
-from .defines import WEBFRONT_CONTEXT_NAME
+from . import defines as D
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -17,11 +19,11 @@ static_folder = os.path.join(environ.pod_dir(), 'webroot')
 
 
 def get_webfront_engine():
-    return get_core_context().lookup(WEBFRONT_CONTEXT_NAME)
+    return get_core_context().lookup(D.WEBFRONT_CONTEXT_NAME)
 
 
 def raise_unauthorized(desc=b'Authentication required.'):
-    raise HTTPError(401, desc)
+    raise HTTPError(D.HTTP_STATUS_AUTH_REQUIRED, desc)
 
 
 def get_access_token():
@@ -32,11 +34,34 @@ def require_auth(callback):
 
     def wrapper(*args, **kwargs):
         auth = request.get_header('Authorization')
-        logger.debug("Authorization: %s", auth)
 
         if get_webfront_engine().access_token != auth:
             logger.warning("Access token mismatched.")
-            raise_unauthorized()
+            response.status = D.HTTP_STATUS_AUTH_REQUIRED
+            response.content_type = D.JSON_CONTENT_TYPE
+            return dict(status='error', reason='Authentication required.')
+
+        body = callback(*args, **kwargs)
+        return body
+
+    return wrapper
+
+
+def require_json(callback):
+
+    def wrapper(*args, **kwargs):
+        ct = request.content_type
+        logger.debug("Content-type: %s", ct)
+
+        if ct is None:
+            ct = ''
+        ct.strip().lower()
+
+        if not ct.startswith('application/json'):
+            logger.warning("JSON type expected, instead received: %s", ct)
+            response.status = D.HTTP_STATUS_UNSUPPORTED_TYPE
+            response.content_type = D.JSON_CONTENT_TYPE
+            return dict(status='error', reason='Request data type is not supported.')
 
         body = callback(*args, **kwargs)
         return body

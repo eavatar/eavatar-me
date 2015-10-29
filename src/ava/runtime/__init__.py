@@ -10,4 +10,3 @@ from .environ import (
     base_dir, pod_dir, pkgs_dir, logs_dir, conf_dir, data_dir, mods_dir,
 )
 
-from .config import settings
