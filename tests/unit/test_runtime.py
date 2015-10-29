@@ -3,7 +3,7 @@
 import os
 import unittest
 
-from ava.runtime import settings
+from ava.runtime.config import settings
 from ava.runtime import environ
 
 
