@@ -37,11 +37,15 @@ class WebfrontEngine(object):
         self.secure_listen_port = 0  # 0 means not binding
         self.local_base_url = "http://127.0.0.1:%d/" % (self.listen_port,)
         self.secure_base_url = "https://127.0.0.1:%d/" % (self.secure_listen_port,)
-        self._token = base58.b58encode(os.urandom(16))
+        self._token = None
 
     @property
     def access_token(self):
         return self._token
+
+    def _acquire_access_token(self):
+
+        self._token = os.environ.get('AVA_ACCESS_TOKEN', base58.b58encode(os.urandom(16)))
 
     def start(self, ctx=None):
         logger.debug("Starting webfront engine...")
@@ -50,6 +54,9 @@ class WebfrontEngine(object):
         if disabled:
             logger.debug("Webfront is not enabled.")
             return
+
+        self._acquire_access_token()
+        logger.info("Access Token: %s", self._token)
 
         self.listen_port = settings[_CONF_SECTION]['listen_port']
         self.listen_addr = settings[_CONF_SECTION]['listen_addr']

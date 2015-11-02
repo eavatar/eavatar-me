@@ -11,8 +11,8 @@ DEBUG = True
 WEBFRONT = {
     "disabled": False,
     "listen_port": 5080,
-    "listen_addr": "0.0.0.0",
-    "secure_listen_addr": "0.0.0.0",
+    "listen_addr": "127.0.0.1",
+    "secure_listen_addr": "",
     "secure_listen_port": 5443,
 }
 

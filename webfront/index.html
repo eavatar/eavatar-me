@@ -258,8 +258,21 @@
           </div>
           <div data-role="main" class="ui-content">
             <h3><img src="/img/favicon-96x96.png" align="middle">EAvatar ME version 0.1.0</h3>
-            <p>EAvatar ME, a.k.a. Avame, is a versatile agent for task automation.</p>
+            <p>EAvatar ME, also known as Avame, is a versatile agent for task automation. To access the UI, please log in.</p>
+            <form action="" method="get">
+              <div id="flash_message">{{= flash_message }}</div>
+              <div class="ui-field-contain">
+	            <label class="ui-field-contain" for="token">Token:</label>
+	            <input type="password" required maxlength="32" name="token" id="token" value=""  />
+			  </div>
+
+              <div clas="ui-field-contain">
+                  <input id="loginBtn" type="submit" value="Log In" />
+              </div>
+
+            </form>
           </div>
+
         </div>
     </script>
 

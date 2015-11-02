@@ -11,7 +11,8 @@ ava.models = {};
 ava.session = {};
 ava.config = {
     version: '0.1.0',
-    api_base_url: '/api'
+    base_url: '',
+    flash_message: ''
 };
 
 ava.eventBus = _.extend({}, Backbone.Events);

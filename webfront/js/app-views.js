@@ -445,11 +445,31 @@ ava.views.Options = Backbone.View.extend({
 ava.views.About = Backbone.View.extend({
 
     render: function () {
+        msg = ava.config.flash_message;
+        var params = {
+            'flash_message': msg
+         };
+
+        ava.config.flash_message = '';
         var template = _.template($("#aboutPage").html());
 
-        $(this.el).html(template);
+        $(this.el).html(template(params));
         return this;
     },
+
+    events: {
+        "submit": "handleSubmit"
+    },
+
+    handleSubmit: function(e) {
+        console.log("Login submit")
+        e.preventDefault();
+        token = $('#token').val()
+        ava.session.set('token', token)
+        ava.session.fetch()
+        window.location.hash = 'home'
+    },
+
 
     initialize: function (options) {
         _.bindAll(this, "render");

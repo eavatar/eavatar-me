@@ -7,7 +7,9 @@ ava.models.Notice = Backbone.Model.extend({
         title: 'Ava Message'
     },
 
-    urlRoot: '/api/notices',
+    urlRoot: function() {
+        return ava.config.base_url + '/api/notices'
+    },
 
     parse: function(response){
         return response.data;
@@ -36,7 +38,9 @@ ava.models.Notice = Backbone.Model.extend({
 
 ava.models.NoticeCollection = Backbone.Collection.extend({
     model: ava.models.Notice,
-    url: '/api/notices',
+    url: function() {
+        return ava.config.base_url + '/api/notices'
+    },
     parse: function(response){
         return response.data;
     }
@@ -51,7 +55,9 @@ ava.models.Job = Backbone.Model.extend({
         name: '',
     },
 
-    urlRoot: '/api/jobs',
+    urlRoot: function() {
+        return ava.config.base_url + '/api/jobs'
+    },
 
     parse: function(response){
         return response.data;
@@ -69,7 +75,10 @@ ava.models.Job = Backbone.Model.extend({
 
 ava.models.JobCollection = Backbone.Collection.extend({
     model: ava.models.Job,
-    url: '/api/jobs',
+    url: function() {
+        return ava.config.base_url + '/api/jobs'
+    },
+
     parse: function(response){
         return response.data;
     }
@@ -86,7 +95,10 @@ ava.models.Log = Backbone.Model.extend({
         msg: ''
     },
 
-    urlRoot: '/api/logs',
+    urlRoot: function() {
+        return ava.config.base_url + '/api/logs'
+    },
+
     parse: function(response){
         return response.data;
     },
@@ -114,7 +126,9 @@ ava.models.Log = Backbone.Model.extend({
 
 ava.models.LogCollection = Backbone.Collection.extend({
     model: ava.models.Log,
-    url: '/api/logs',
+    url: function() {
+        return ava.config.base_url + '/api/logs';
+    },
     parse: function(response){
         console.log("parse logs response");
         return response.data;
@@ -129,7 +143,9 @@ ava.models.Script = Backbone.Model.extend({
         title: '',
         text: ''
     },
-    urlRoot: '/api/scripts',
+    urlRoot: function() {
+        return ava.config.base_url + '/api/scripts'
+    },
 
     parse: function(response){
         return response.data;
@@ -149,7 +165,9 @@ ava.models.Script = Backbone.Model.extend({
 
 ava.models.ScriptCollection = Backbone.Collection.extend({
     model: ava.models.Script,
-    url: '/api/scripts',
+    url: function() {
+        return ava.config.base_url + '/api/scripts'
+    },
     parse: function(response){
         return response.data;
     }
@@ -162,7 +180,9 @@ ava.models.Session = Backbone.Model.extend( {
         token: null
     },
 
-    url: '/api/auth',
+    url: function() {
+        return ava.config.base_url + '/api/auth'
+    },
 
     authenticated: function() {
         return this.get('token') != null

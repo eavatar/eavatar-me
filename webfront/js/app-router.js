@@ -23,7 +23,7 @@ ava.router = Backbone.Router.extend({
         var f = function() {
             // check token existence for all except 'login' page.
             if(name != 'login' && ava.session.get('token') == null) {
-                this.changePage(new ava.views.About());
+                this.changePage(this.aboutPage);
                 return
             }
             callback.apply(router, arguments);
@@ -42,6 +42,7 @@ ava.router = Backbone.Router.extend({
         this.jobList = new ava.views.JobList()
         this.logList = new ava.views.LogList()
         this.scriptList = new ava.views.ScriptList()
+        this.aboutPage = new ava.views.About()
     },
 
     message: function(message, title) {
