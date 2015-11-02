@@ -218,7 +218,6 @@ ava.views.NoticeList = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, "render");
         this.notices = new ava.models.NoticeCollection()
-        this.notices.fetch()
         this.notices.on('sync', this.render)
 
         header = new ava.views.Header()
@@ -253,7 +252,6 @@ ava.views.ScriptList = Backbone.View.extend({
     initialize: function (options) {
         _.bindAll(this, "render");
         this.scripts = new ava.models.ScriptCollection()
-        this.scripts.fetch()
         this.scripts.on('sync', this.render)
 
         header = new ava.views.Header()
@@ -302,7 +300,6 @@ ava.views.ScriptEdit = Backbone.View.extend({
         this.script_id = script_id
         this.model = new ava.models.Script({id: script_id})
         this.model.on('sync', this.render, this)
-        this.model.fetch()
         //this.render();
     }
 });
@@ -327,7 +324,6 @@ ava.views.JobList = Backbone.View.extend({
     initialize: function () {
         _.bindAll(this, "render");
         this.jobs = new ava.models.JobCollection()
-        this.jobs.fetch()
         this.jobs.on('sync', this.render)
 
         header = new ava.views.Header()
@@ -369,7 +365,6 @@ ava.views.JobView = Backbone.View.extend({
 
         _.bindAll(this, "render");
         this.job = new ava.models.Job({id: job_id})
-        this.job.fetch()
         this.job.on('sync', this.render)
 
         header = new ava.views.Header()
@@ -411,7 +406,6 @@ ava.views.LogList = Backbone.View.extend({
         this.footer = footer.$el.html()
 
         this.logs = new ava.models.LogCollection()
-        this.logs.fetch()
         this.logs.on('sync', this.render)
         //this.render();
     }

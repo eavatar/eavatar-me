@@ -15,7 +15,7 @@ import logging
 
 from ava.core.defines import AVA_SWARM_SECRET, AVA_AGENT_SECRET
 from ava.util import base_path
-from ava.core import context
+from ava.core import context, agent_running, agent_stopped
 
 from gevent import monkey
 monkey.patch_all(thread=False)
@@ -82,39 +82,16 @@ class AgentTest(unittest.TestCase):
         os.environ.setdefault(AVA_AGENT_SECRET, agent_secret)
         AgentTest.agent = Agent(None, None)
         agent_greenlet = gevent.spawn(AgentTest.agent.run)
-        while not AgentTest.agent.running:
-            gevent.sleep(0.5)
+        # while not AgentTest.agent.running:
+        #    gevent.sleep(0.5)
+        agent_running.wait(10)
 
     @classmethod
     def tearDownClass(cls):
         AgentTest.agent.interrupted = True
-        while AgentTest.agent.running:
-            gevent.sleep(0.5)
-
+        # while AgentTest.agent.running:
+        #    gevent.sleep(0.5)
+        agent_stopped.wait(10)
         context._context = None
         shutil.rmtree(cls.pod_folder)
         _logger.info("Temp POD folder removed: %s", cls.pod_folder)
-
-
-# @pytest.fixture(scope='module')
-def agent(request):
-    from ava.runtime import settings
-    from ava.core.agent import Agent
-
-    settings['debug'] = True
-    os.environ.setdefault(AVA_SWARM_SECRET, swarm_secret)
-    os.environ.setdefault(AVA_AGENT_SECRET, agent_secret)
-    agent = Agent(None, None)
-    agent_greenlet = gevent.spawn(agent.run)
-    while not agent.running:
-        gevent.sleep(0.5)
-
-    def teardown_agent():
-        if not agent:
-            return
-        agent.interrupted = True
-        while agent.running:
-            gevent.sleep(0.5)
-
-    request.addfinalizer(teardown_agent)
-    return agent

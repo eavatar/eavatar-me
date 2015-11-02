@@ -6,7 +6,7 @@ Default settings which can be overridden by configuration files.
 
 EXE_NAME = 'ava'
 
-DEBUG = True
+DEBUG = False
 
 WEBFRONT = {
     "disabled": False,

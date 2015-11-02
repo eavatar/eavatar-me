@@ -22,7 +22,8 @@ ava.router = Backbone.Router.extend({
 
         var f = function() {
             // check token existence for all except 'login' page.
-            if(name != 'login' && ava.session.get('token') == null) {
+            if(name != 'login' && name !='' && ava.session.get('token') == null) {
+                console.log("Routing to page:", name)
                 this.changePage(this.aboutPage);
                 return
             }

@@ -4,14 +4,9 @@ from __future__ import absolute_import, print_function, unicode_literals
 from abc import abstractmethod
 from ..core import get_core_context
 
-_dataengine = None
-
 
 def get_data_engine():
-    global _dataengine
-    if _dataengine is None:
-        _dataengine = get_core_context().lookup('dataengine')
-    return _dataengine
+    return get_core_context().lookup('dataengine')
 
 
 class IStore(object):

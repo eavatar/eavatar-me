@@ -27,8 +27,6 @@ api = Bottle()
 dispatcher.mount('/api', api)
 
 job_engine = get_job_engine()
-notice_store = stores.get_store('notices')
-script_store = stores.get_store('scripts')
 
 
 def _not_found_error(reason='Resource not found.'):
@@ -146,7 +144,7 @@ def script_list():
 @require_json
 @require_auth
 def script_create():
-
+    script_store = stores.get_store('scripts')
     d = request.json
 
     if d.get('id') is not None:
@@ -155,8 +153,8 @@ def script_create():
 
     script = Script(**d)
     assert script.id is not None
-
-    script_store[script.id] = [script.to_dict(), clock.tick()]
+    with script_store.cursor(readonly=False) as cur:
+        cur.put(script.id, [script.to_dict(), clock.tick()])
 
     return dict(status=D.SUCCESS, data=script.id)
 
@@ -165,6 +163,7 @@ def script_create():
 @require_json
 @require_auth
 def script_update(script_id):
+    script_store = stores.get_store('scripts')
     rec = script_store.get(script_id)
     if rec is None:
         return _not_found_error("Script not found")
@@ -181,6 +180,7 @@ def script_update(script_id):
 def script_get(script_id):
     _logger.debug("Fetching script: %s", script_id)
 
+    script_store = stores.get_store('scripts')
     rec = script_store.get(script_id)
     if rec is None:
         return _not_found_error("Script not found")
@@ -191,11 +191,12 @@ def script_get(script_id):
 @api.route("/scripts/<script_id>", method=['DELETE'])
 @require_auth
 def script_remove(script_id):
-    rec = script_store.get(script_id)
+    store = stores.get_store('scripts')
+    rec = store.get(script_id)
     if rec is None:
         return _not_found_error("Script not found")
 
-    script_store.remove(script_id)
+    store.remove(script_id)
     return dict(status=D.SUCCESS, data=script_id)
 
 
@@ -216,10 +217,11 @@ def script_check():
 @api.route("/notices", method=['GET'])
 @require_auth
 def notice_list():
+    store = stores.get_store('notices')
     result = []
 
     count = 100
-    with notice_store.cursor() as cur:
+    with store.cursor() as cur:
         for k in cur.iterprev(keys=True, values=True):
             rec = cur.value()
             result.append(rec[0])
@@ -234,12 +236,13 @@ def notice_list():
 @require_auth
 def notice_delete(notice_id):
     _logger.debug("Delete notice with ID: %s", notice_id)
+    store = stores.get_store('notices')
 
-    rec = notice_store.get(notice_id)
+    rec = store.get(notice_id)
     if rec is None:
         response.status_code = 404
         return dict(status=D.ERROR, reason="Notice not found")
 
-    notice_store.remove(notice_id)
+    store.remove(notice_id)
 
     return dict(status=D.SUCCESS, data=notice_id)

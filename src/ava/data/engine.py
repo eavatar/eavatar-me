@@ -62,6 +62,8 @@ class Store(IStore):
     def cursor(self, readonly=True):
         _write = not readonly
 
+        assert self._db is not None
+
         _txn = self._engine.database.begin(db=self._db, write=_write, buffers=False)
         return Cursor(_txn, self._db, _readonly=readonly)
 
@@ -253,6 +255,7 @@ class DataEngine(object):
         if self.database:
             self.database.close()
 
+        self.database = None
         logger.debug("Data engine stopped.")
 
     def store_names(self):
