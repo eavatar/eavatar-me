@@ -58,8 +58,8 @@ def init_app_dir(folder=None):
 
     _logger.debug("Initializing app folder...")
     if os.path.exists(folder):
-        _logger.error("App folder '%s' exists, abort initialization." %
-                      folder)
+        _logger.info("App folder '%s' exists, abort initialization." %
+                     folder)
         return
 
     os.makedirs(folder)

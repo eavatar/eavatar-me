@@ -7,6 +7,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import os
+import glob
 import codecs
 import logging
 import logging.config
@@ -62,10 +63,22 @@ def save_conf(conf_file, content):
         os.chmod(conf_file, 0600)
         out.write(json.dumps(content, skipkeys=True, indent=2))
 
-if settings['DEBUG']:
-    print("Configuration file:", AGENT_CONF)
 
-settings.update(load_conf(AGENT_CONF))
+def load_conf_files():
+    """
+    Loads all files with extension '.conf' in the configuration folder.
+    """
+    conf_loc = locations['conf_dir']
+    for f in glob.glob(os.path.join(conf_loc, '*.conf')):
+        conf = load_conf(f)
+        basename = os.path.basename(f)
+        basename = os.path.splitext(basename)[0]
+
+        # section names should be in upper case.
+        settings[basename.upper()] = conf
+
+# load configuration files.
+load_conf_files()
 
 # configure logging
 logging.config.dictConfig(settings['LOGGING'])
