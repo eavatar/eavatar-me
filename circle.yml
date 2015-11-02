@@ -32,7 +32,7 @@ deployment:
   hub:
     branch: master
     commands:
-      - docker build -t eavatar/ava:$CIRCLE_BUILD_NUM-$CIRCLE_SHA1 .
+      - docker build -t eavatar/avame:$CIRCLE_BUILD_NUM-$CIRCLE_SHA1 .
       - docker tag eavatar/avame:$CIRCLE_BUILD_NUM-$CIRCLE_SHA1 eavatar/avame:latest
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push eavatar/avame
