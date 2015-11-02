@@ -19,16 +19,13 @@ class Notice(object):
     ASK_TEXT = 3    # ask for a text input from the user.
     ASK_SECRET = 4  # ask for a secret, like password, from the user
 
-    def __init__(self, title='', message='', kind=NOTIFY, id=None, priority=INFO):
-        self._title = title
-        self._message = message
-        self._kind = kind
-        if id is None:
-            self._id = time_uuid.oid()
-        else:
-            self._id = id
-        self._timestamp = datetime.now().isoformat()
-        self._priority = priority
+    def __init__(self, **kwargs):
+        self._id = kwargs.get('id', time_uuid.oid())
+        self._title = kwargs.get('title', '')
+        self._message = kwargs.get('message', '')
+        self._kind = kwargs.get('kind', self.NOTIFY)
+        self._timestamp = kwargs.get('timestamp', datetime.now().isoformat())
+        self._priority = kwargs.get('priority', self.INFO)
         self._app_icon = None
         self._app_name = APP_NAME
         self._reply_to = None
