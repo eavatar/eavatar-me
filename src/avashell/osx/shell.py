@@ -246,16 +246,15 @@ class Shell(ShellBase):
     def doIdle_(self, timer):
         self.process_idle_tasks()
 
-    def notify_user(self, msg, title):
+    def on_user_notified(self, notice):
         try:
-            notice = Notice(title=title, message=msg)
             pop_last = len(self.notices) >= NUM_OF_NOTICES
             print(len(self.notices))
             self.notices.append(notice)
             self.delegate.addNewNotice(notice, pop_last)
 
             if self.should_notify(notice):
-                notification(title=title, subtitle="", message=msg)
+                notification(title=notice.title, subtitle="", message=notice.message)
         except:
             logger.error("Failed to send notice", exc_info=True)
 

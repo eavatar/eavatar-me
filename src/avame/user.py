@@ -4,17 +4,19 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from ava.core import get_core_context
 from ava.task import action
 from ava.user.signals import USER_NOTIFIED
+from ava.user.models import Notice
 
 
 @action
-def notify(msg, title):
+def notify(**kwargs):
     """
     Send a user notification.
 
     :param message: the message
     :param title: the title
     """
-    get_core_context().send(signal=USER_NOTIFIED, msg=msg, title=title)
+    notice = Notice(**kwargs)
+    get_core_context().send(signal=USER_NOTIFIED, notice=notice)
 
 
 __all__ = ['notify']

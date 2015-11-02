@@ -58,14 +58,14 @@ class ShellBase(object):
 
         self._run()
 
-    def on_user_notified(self, msg, title):
+    def on_user_notified(self, notice):
         """
         :param msg: Message
         :param title: Title
         """
-        print(title)
-        print('-' * len(title))
-        print(msg)
+        print(notice.title)
+        print('-' * len(notice.title))
+        print(notice.message)
 
     def on_job_accepted(self, job_name):
         _logger.info("Job accepted: %s", job_name)

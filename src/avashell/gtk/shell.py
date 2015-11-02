@@ -132,17 +132,16 @@ class Shell(ShellBase):
         super(Shell, self).__init__()
         self.statusIcon = StatusIcon(self)
 
-    def notify_user(self, msg, title):
-        _logger.debug("User notice received: %s", title)
+    def on_user_notified(self, notice):
+        _logger.debug("User notice received: %s", notice.title)
 
-        notice = Notice(title=title, message=msg)
         pop_last = len(self.notices) >= NUM_OF_NOTICES
         print(len(self.notices))
         self.notices.append(notice)
         self.statusIcon.add_new_notice(notice, pop_last)
 
         if self.should_notify(notice):
-            self.statusIcon.notify(msg=msg, title=title)
+            self.statusIcon.notify(msg=notice.message, title=notice.title)
 
     def on_timeout(self):
         self.process_idle_tasks()

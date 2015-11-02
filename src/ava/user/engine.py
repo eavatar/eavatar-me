@@ -26,9 +26,8 @@ class UserEngine(object):
     def stop(self, context):
         _logger.debug("User engine stopped.")
 
-    def on_user_notified(self, msg, title):
+    def on_user_notified(self, notice):
         try:
-            notice = Notice(message=msg, title=title)
             self._notice_store[notice.id] = [notice.to_dict(), clock.tick()]
             _logger.debug("User notice saved: %s", notice.id)
         except Exception:

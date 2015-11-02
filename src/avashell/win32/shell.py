@@ -290,8 +290,7 @@ class Shell(ShellBase):
         self.console = None
         self.destroyed = False
 
-    def notify_user(self, msg, title="Ava Message"):
-        notice = Notice(title=title, message=msg)
+    def on_user_notified(self, notice):
         pop_last = len(self.notices) >= NUM_OF_NOTICES
         self.notice_index = (self.notice_index + 1) % NUM_OF_NOTICES
         self.notices.append(notice)

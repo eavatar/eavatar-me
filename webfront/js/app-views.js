@@ -365,6 +365,7 @@ ava.views.JobView = Backbone.View.extend({
 
         _.bindAll(this, "render");
         this.job = new ava.models.Job({id: job_id})
+        this.job.fetch()
         this.job.on('sync', this.render)
 
         header = new ava.views.Header()
