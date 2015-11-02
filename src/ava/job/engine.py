@@ -10,13 +10,13 @@ import ast
 import glob
 import logging
 import gevent
-import uuid
+
 from gevent import Greenlet
 from datetime import datetime
 
 from avame.schedule import Schedule
 from .validator import ScriptValidator
-from ava import launcher
+from ava.util import time_uuid
 from ava.runtime import environ
 from . import signals
 from .defines import ENGINE_NAME
@@ -216,20 +216,23 @@ class JobEngine(object):
         logger.info("All jobs stopped.")
 
     def _gen_job_id(self):
-        while True:
-            name = 'J' + uuid.uuid1().hex[:8]
-            if name not in self.jobs:
-                return name
+        return time_uuid.oid()
+
+    def validate_script(self, script):
+        self.validator.validate(script)
 
     def submit_job(self, job):
         job_id = self._gen_job_id()
 
         try:
             script = job['script']
-            node = ast.parse(script, filename=job_id, mode='exec')
+            job_name = job.get('name')
+            if job_name is None:
+                job_name = job_id
+            node = ast.parse(script, filename=job_name, mode='exec')
             self.validator.visit(node)
-            acode = compile(node, filename=job_id, mode='exec')
-            job_info = JobInfo(job_id, job_id, script, acode)
+            acode = compile(node, filename=job_name, mode='exec')
+            job_info = JobInfo(job_id, job_name, script, acode)
             self.jobs[job_id] = job_info
             ctx = JobContext(job_info, self._core_context)
             self.contexts[job_id] = ctx

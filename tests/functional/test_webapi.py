@@ -65,15 +65,31 @@ class TestWebAPI(AgentTest):
         myheaders = dict(self.headers)
         myheaders['Content-type'] = 'text/html'
 
-        data = dict(script_text='ava.sleep(0.1)')
+        data = dict(script='ava.sleep(0.1)')
         r2 = requests.post(url, headers=myheaders, data=data)
         assert r2.status_code == 415
 
     def test_job_operations(self):
         url = self.api_url + '/jobs'
-        data = dict(script_text='ava.sleep(0.1)')
-        r2 = requests.post(url, headers=self.headers, data=json.dumps(data))
+        data = dict(script='ava.sleep(10)')
+        r1 = requests.post(url, headers=self.headers, data=json.dumps(data))
+        assert r1.status_code == 200
+        job_id = r1.json().get('data')
+        assert job_id is not None
+
+        r2 = requests.get(url + '/' + job_id, headers=self.headers)
         assert r2.status_code == 200
+        r2_data = r2.json().get('data')
+        assert job_id == r2_data.get('id')
+
+        # remove
+        r3 = requests.delete(url + '/' + job_id, headers=self.headers)
+        assert r3.status_code == 200
+
+        # should be removed.
+        r3_res = requests.get(url + '/' + job_id, headers=self.headers)
+        assert r3_res.status_code == 404
+
 
     def test_logs_endpoint(self):
         url = self.api_url + '/logs'

@@ -9,6 +9,16 @@
     <link rel="stylesheet" href="/css/jquery.mobile.min.css">
     <link  rel="stylesheet" href="/css/jquery.notify.css">
 
+    <style>
+    th {
+        border-bottom: 1px solid #d6d6d6;
+    }
+
+    tr:nth-child(even) {
+        background: #e9e9e9;
+    }
+    </style>
+
     <script id="header-template" type="text/template">
         <div data-role="header">
             <h1>{{= title }}</h1>
@@ -22,7 +32,6 @@
           <div data-role="navbar">
           <ul>
             <li><a href="#notices" class="ui-btn">Notices</a></li>
-            <li><a href="#scripts" class="ui-btn">Scripts</a></li>
             <li><a href="#jobs" class="ui-btn">Jobs</a></li>
             <li><a href="#logs" class="ui-btn">Logs</a></li>
           </ul>
@@ -62,18 +71,16 @@
         <div id="home">
         {{= header }}
         <div data-role="main" class="ui-content">
-            <ul data-role="listview" data-inset="true">
-                <li><a href="#notices">User Notices</a></li>
-                <li><a href="#scripts">Job Scripts</a></li>
-                <li><a href="#jobs">Running Jobs</a></li>
-                <li><a href="#logs">Recent Logs</a></li>
-            </ul>
-
+            <div><h3 id="submit_message">Ava: What can I do for you?</h3></div>
             <form id="submit_form" method="post">
-                <label for="script">Instructions:</label>
-                <textarea  name="script" id="script" ></textarea>
-                <input type="submit" value="Submit">
+                <label class="ui-field-contain" for="script">Instructions:</label>
+                <textarea name="script" id="script"></textarea>
             </form>
+                <div data-role="controlgroup" data-type="horizontal">
+                  <a href="" id="clearBtn" class="ui-btn ui-corner-all">Clear</a>
+                  <a href="" id="checkBtn" class="ui-btn ui-corner-all">Check</a>
+                  <a href="" id="submitBtn" class="ui-btn ui-corner-all">Submit & Run</a>
+                </div>
         </div>
 
         {{= footer }}
@@ -85,11 +92,24 @@
         {{= header }}
 
           <div data-role="main" class="ui-content">
-              <ul data-role="listview">
+            <table id="noticeTable" data-role="table" class="ui-responsive">
+              <thead>
+              <th></th>
+              <th>Title</th>
+              <th>Message</th>
+              <th data-priority="3">Timestamp</th>
+              </thead>
+              <tbody>
               {{ notices.forEach(function(notice) { }}
-                <li><h3>{{= notice.title }}</h3>{{= notice.message }}</li>
+              <tr>
+                <td><img src="/img/dialog-{{= notice.priority }}.png"/></td>
+                <td>{{= notice.title }}</td>
+                <td>{{= notice.message }}</td>
+                <td>{{= notice.timestamp }}</td>
+              </tr>
               {{ }); }}
-              </ul>
+              </tbody>
+            </table>
           </div>
 
         {{= footer }}
@@ -121,10 +141,29 @@
 
           <div data-role="main" class="ui-content">
               <ul data-role="listview">
+              {{ if(jobs.length==0) { }}<li><h3>No running jobs.</h3></li> {{ };}}
               {{ jobs.forEach(function(job) { }}
-                <li>{{= job.id }}:  {{= job.name }} : {{= job.st }}</li>
+                <li><a href="#jobs/{{= job.id }}/view"><img src="/img/job.png"/><h3>{{= job.name }}</h3>id: {{= job.id }} <span class="ui-li-aside">Started at: {{= job.st }}</span></a><a data-icon="delete" href="#jobs/{{= job.id }}/cancel">Cancel</a></li>
               {{ }); }}
               </ul>
+          </div>
+
+        {{= footer }}
+        </div>
+    </script>
+
+    <script type="text/template" id="jobDetailsPage">
+        <div id="jobDetails">
+        {{= header }}
+
+          <div data-role="main" class="ui-content">
+              <ul data-role="listview">
+                  <li><h3>Job ID:</h3>{{= job.id }}</li>
+                  <li><h3>Job Name:</h3>{{= job.name}}</li>
+                  <li><h3>Start Time:</h3>{{= job.st}}</li>
+                  <li><div data-role="controlgroup" data-type="horizontal"><a href="#jobs" data-icon="back"data-role="button">Back</a><a data-role="button" data-icon="delete" href="#jobs/{{=job.id}}/cancel">Cancel</a></div></li>
+              </ul>
+
           </div>
 
         {{= footer }}
@@ -134,13 +173,23 @@
     <script type="text/template" id="logsPage">
         <div id="logs">
         {{= header }}
-
           <div data-role="main" class="ui-content">
-              <ul data-role="listview">
+            <table data-role="table" class="ui-responsive">
+              <thead>
+              <th data-priority="3">Timestamp</th>
+              <th data-priority="1">Level</th>
+              <th>Message</th>
+              </thead>
+              <tbody>
               {{ logs.forEach(function(log) { }}
-                <li>{{= log.ts }} - {{= log.lvl_name }} - {{= log.msg }}</li>
+              <tr>
+                <td>{{= log.ts }}</td>
+                <td><img src="/img/dialog-{{= log.lvl_name }}.png" alt="{{= log.lvl_name }}"/></td>
+                <td>{{= log.msg }}</td>
+              </tr>
               {{ }); }}
-              </ul>
+              </tbody>
+            </table>
           </div>
         {{= footer }}
         </div>
@@ -217,7 +266,6 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/jqm-config.js"></script>
     <script src="/js/jquery.mobile.min.js"></script>
-    <script src="/js/jquery.notify.min.js"></script>
     <script src="/js/lodash.min.js"></script>
     <script src="/js/backbone.min.js"></script>
     <script src="/js/app-config.js"></script>

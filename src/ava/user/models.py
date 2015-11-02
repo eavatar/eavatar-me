@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+from datetime import datetime
 from ava.util import time_uuid
 from ava import APP_NAME
 
@@ -23,9 +24,10 @@ class Notice(object):
         self._message = message
         self._kind = kind
         if id is None:
-            self._id = time_uuid.utcnow().hex
+            self._id = time_uuid.oid()
         else:
             self._id = id
+        self._timestamp = datetime.now().isoformat()
         self._priority = priority
         self._app_icon = None
         self._app_name = APP_NAME
@@ -57,6 +59,7 @@ class Notice(object):
             message=self._message,
             title=self._title,
             priority=self._priority,
+            timestamp=self._timestamp,
             kind=self._kind
         )
 
@@ -66,5 +69,6 @@ class Notice(object):
         self._title = d.get('title')
         self._priority = d.get('priority')
         self._kind = d.get('kind')
+        self._timestamp = d.get('timestamp')
 
 

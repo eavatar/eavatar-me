@@ -4,6 +4,43 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 from ava.util import time_uuid
 
 
+class Job(object):
+    """
+    Represent running jobs.
+    """
+    def __init__(self, id=None, name=None, started_time=None):
+        if id is None:
+            self._id = time_uuid.utcnow().hex
+        else:
+            self._id = id
+
+        self._name = name
+        self._started_time = started_time
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def started_time(self):
+        return self._started_time
+
+    @property
+    def started_time_iso(self):
+        return self._started_time.isoformat()
+
+    def to_dict(self):
+        return dict(
+            id=self._id,
+            name=self._name,
+            st=self._started_time
+        )
+
+
 class Script(object):
     """
     Job scripts

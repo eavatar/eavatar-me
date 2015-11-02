@@ -7,6 +7,7 @@ ava.router = Backbone.Router.extend({
         "scripts": "scripts",
         "scriptEdit/:script_id": "scriptEdit",
         "jobs": "jobs",
+        "jobs/:job_id/:action": "jobs",
         "logs": "logs",
         "options": "options",
         "login/:token": "login",
@@ -35,6 +36,12 @@ ava.router = Backbone.Router.extend({
         this.firstPage = true;
         this.currentPage = 'home'
         ava.session = new ava.models.Session()
+
+        this.homePage = new ava.views.Home()
+        this.noticeList = new ava.views.NoticeList()
+        this.jobList = new ava.views.JobList()
+        this.logList = new ava.views.LogList()
+        this.scriptList = new ava.views.ScriptList()
     },
 
     message: function(message, title) {
@@ -72,31 +79,50 @@ ava.router = Backbone.Router.extend({
 
     home: function () {
         this.currentPage = 'home'
-        this.changePage(new ava.views.Home());
+        this.changePage(this.homePage);
     },
 
     notices: function () {
         this.currentPage = 'notices'
-        this.changePage(new ava.views.NoticeList( {} ));
+        // this.changePage(new ava.views.NoticeList({notices: this.notices}));
+        this.noticeList.notices.fetch()
+        this.changePage(this.noticeList)
     },
 
     scripts: function () {
         this.currentPage = 'scripts'
-        this.changePage(new ava.views.ScriptList( {} ));
+        this.scriptList.scripts.fetch()
+        this.changePage(this.scriptList);
     },
 
     scriptEdit: function(script_id) {
         this.changePage(new ava.views.ScriptEdit(script_id));
     },
 
-    jobs: function () {
-        this.currentPage = 'jobs'
-        this.changePage(new ava.views.JobList( {} ));
+    jobs: function(job_id, action) {
+        if(job_id === undefined || job_id === null) {
+            this.currentPage = 'jobs'
+            this.jobList.jobs.fetch()
+            this.changePage(this.jobList);
+            return
+        }
+
+        if(action === null) {
+            action = 'view'
+        }
+
+        if(action == 'view') {
+            this.currentPage = 'jobs/' + job_id + '/view'
+            this.changePage(new ava.views.JobView(job_id, action))
+        } else if(action == 'cancel') {
+            this.changePage(new ava.views.JobView(job_id, action))
+        }
     },
 
     logs: function () {
         this.currentPage = 'logs'
-        this.changePage(new ava.views.LogList( {} ));
+        this.logList.logs.fetch()
+        this.changePage(this.logList);
     },
 
     options: function () {

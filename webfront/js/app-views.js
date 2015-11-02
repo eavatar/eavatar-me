@@ -82,7 +82,6 @@ ava.views.Confirm = Backbone.View.extend({
 });
 
 ava.views.Home = Backbone.View.extend({
-
     render: function () {
         var params = { title: "EAvatar " + Math.random(),
             header: this.header,
@@ -91,38 +90,96 @@ ava.views.Home = Backbone.View.extend({
 
         var template = _.template($("#homePage").html());
         $(this.el).html(template(params));
-
+        $(this.el).trigger("create");
         return this;
     },
 
-    events: {
-        "submit #submit_form": "handleClick"
+    _show_message: function (msg) {
+        $('#submit_message').text(msg)
     },
 
-    handleClick: function (e) {
+    events: {
+        "click #clearBtn": "handleClear",
+        "click #checkBtn": "handleCheck",
+        "click #submitBtn": "handleSubmit"
+    },
+
+    handleClear: function (e) {
+        console.log("Clear button clicked.")
         e.preventDefault();
+        $('#script').val('')
+    },
 
-        notify({
-            type: "info",
-            title: "Ava Message",
-            message: "Super simple Notify plugin.",
+    handleCheck: function(e) {
+        console.log("Check button clicked.")
+        e.preventDefault();
+        url = '/api/scripts/check'
+        script = $('#script').val()
+        if(_.isEmpty(script)) {
+            this._show_message("Script is empty.")
+            return
+        }
 
-            position: { x: "right", y: "top" },
-            icon: '<img src="/img/paper_plane.png" />',
-            size: "normal",
-            overlay: false,
-            closeBtn: true,
-            overflowHide: false,
-            spacing: 20,
-            theme: "dark-theme",
-            autoHide: true,
-            delay: 2500,
-            onShow: null,
-            onClick: null,
-            onHide: null,
-            template: '<div class="notify"><div class="notify-text"></div></div>'
+        data = {
+        }
 
-        });
+        data['script'] = script
+        console.log('script:', script)
+
+        options = {
+            contentType: 'application/json',
+            success: _.bind(this._handle_check_success, this),
+            error: _.bind(this._handle_check_error, this),
+            type: 'POST',
+            data: JSON.stringify(data)
+        }
+
+        $.ajax(url, options)
+    },
+    _handle_check_success: function(data,textStatus) {
+        this._show_message("Check OK")
+    },
+
+    _handle_check_error: function(xhr,status,error) {
+        this._show_message("Error: " + error);
+    },
+
+    handleSubmit: function (e) {
+        console.log("Submit button clicked.")
+        e.preventDefault();
+        url = '/api/jobs';
+
+        script = $('#script').val()
+        if(_.isEmpty(script)) {
+            console.log("No script content")
+            return
+        }
+
+        data = {
+        }
+
+        data['script'] = script
+        console.log('script:', script)
+
+        options = {
+            contentType: 'application/json',
+            success: this.submission_succeeded,
+            error: this.submission_failed,
+            type: 'POST',
+            data: JSON.stringify(data)
+        }
+
+        $.ajax(url, options)
+    },
+
+    submission_succeeded: function(data,textStatus) {
+        console.log("Job submission succeeded.")
+        $('#submit_message').html('Job submitted successfully. Job ID = ' + data['data'])
+        $('#script').val('')
+    },
+
+    submission_failed: function(xhr,status,error) {
+        console.log("Job submission failed:", error)
     },
 
     initialize: function (options) {
@@ -136,6 +193,7 @@ ava.views.Home = Backbone.View.extend({
         footer = new ava.views.Footer()
         footer.render()
         this.footer = footer.$el.html()
+
         this.render();
     }
 });
@@ -266,7 +324,7 @@ ava.views.JobList = Backbone.View.extend({
         return this;
     },
 
-    initialize: function (options) {
+    initialize: function () {
         _.bindAll(this, "render");
         this.jobs = new ava.models.JobCollection()
         this.jobs.fetch()
@@ -274,6 +332,48 @@ ava.views.JobList = Backbone.View.extend({
 
         header = new ava.views.Header()
         header.render({title: "Running Jobs"})
+        this.header = header.$el.html()
+        footer = new ava.views.Footer()
+        footer.render()
+        this.footer = footer.$el.html()
+        // this.render();
+    }
+});
+
+ava.views.JobView = Backbone.View.extend({
+
+
+    render: function () {
+        data = this.job.toJSON()
+
+        var params = {
+            header: this.header,
+            footer: this.footer,
+            'job': data
+         };
+
+        var template = _.template($("#jobDetailsPage").html());
+        this.$el.html(template(params));
+        $(this.el).trigger("create");  // trigger JQM to re-style the page
+        return this;
+    },
+
+    initialize: function (job_id, action) {
+
+        if(action == 'cancel') {
+            job = new ava.models.Job({id: job_id})
+            job.destroy()
+            window.location.hash = '#jobs'
+            return
+        }
+
+        _.bindAll(this, "render");
+        this.job = new ava.models.Job({id: job_id})
+        this.job.fetch()
+        this.job.on('sync', this.render)
+
+        header = new ava.views.Header()
+        header.render({title: "Job Info"})
         this.header = header.$el.html()
         footer = new ava.views.Footer()
         footer.render()

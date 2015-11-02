@@ -8,9 +8,10 @@ from ava.util.clock import clock
 
 from ava import log
 from ava.job import get_job_engine
-from ava import data
+from ava import data as stores
 from ava.user import Notice
 from ava.job import Script
+from ava.job.errors import ScriptSyntaxError
 from ava.web.bottle import response, request, HTTPError
 
 from .dispatcher import dispatcher
@@ -26,8 +27,8 @@ api = Bottle()
 dispatcher.mount('/api', api)
 
 job_engine = get_job_engine()
-notice_store = data.get_store('notices')
-script_store = data.get_store('scripts')
+notice_store = stores.get_store('notices')
+script_store = stores.get_store('scripts')
 
 
 def _not_found_error(reason='Resource not found.'):
@@ -84,16 +85,47 @@ def job_list():
 @require_auth
 def job_create():
     _logger.debug("job_create")
-    data = request.json
-    print("job_create: DATA: ", data)
-    return dict(status=D.SUCCESS)
+    try:
+        job_data = request.json
+    except ValueError:
+        response.status = D.HTTP_STATUS_BAD_REQUEST
+        return dict(status=D.ERROR, reason='No valid JSON object.')
+
+    print("job_create: DATA: ", job_data)
+
+    if job_data is None:
+        response.status = D.HTTP_STATUS_BAD_REQUEST
+        return dict(status=D.ERROR, reason='No script provided.')
+
+    try:
+        job_id = get_job_engine().submit_job(job_data)
+        return dict(status=D.SUCCESS, data=job_id)
+    except ScriptSyntaxError as ex:
+        response.status = D.HTTP_STATUS_BAD_REQUEST
+        return dict(status=D.ERROR, reason=ex.message)
 
 
-@api.route("/jobs/<job_id>")
+@api.route("/jobs/<job_id>", method="get")
+@require_auth
+def job_retrieve(job_id):
+    job_info = get_job_engine().jobs.get(job_id)
+    if job_info is None:
+        return _not_found_error("Job not found")
+
+    data = dict(id=job_info.id, name=job_info.name, st=job_info.started_time_iso)
+    return dict(status=D.SUCCESS, data=data)
+
+
+@api.route("/jobs/<job_id>", method="delete")
 @require_auth
 def job_delete(job_id):
-    job_engine.cancel_job(job_id)
-    return dict(status=D.SUCCESS)
+    job_info = get_job_engine().jobs.get(job_id)
+    if job_info is None:
+        return _not_found_error("Job not found")
+    try:
+        job_engine.cancel_job(job_id)
+    finally:
+        return dict(status=D.SUCCESS, data=job_id)
 
 
 # Scripts
@@ -166,6 +198,19 @@ def script_remove(script_id):
     script_store.remove(script_id)
     return dict(status=D.SUCCESS, data=script_id)
 
+
+@api.route("/scripts/check", method=['POST'])
+@require_json
+@require_auth
+def script_check():
+
+    d = request.json
+    try:
+        get_job_engine().validate_script(d.get('script'))
+        return dict(status=D.SUCCESS)
+    except Exception as ex:
+        response.status = D.HTTP_STATUS_BAD_REQUEST
+        return dict(status=D.ERROR, reason=ex.message)
 
 # Notices
 @api.route("/notices", method=['GET'])

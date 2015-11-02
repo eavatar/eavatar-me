@@ -6,6 +6,7 @@ import os
 import logging
 from ..core import get_core_context
 from ava.runtime import environ
+from ava.runtime.config import settings
 
 from .bottle import request, response, HTTPError, static_file as _static_file
 from . import defines as D
@@ -36,10 +37,12 @@ def require_auth(callback):
         auth = request.get_header('Authorization')
 
         if get_webfront_engine().access_token != auth:
-            logger.warning("Access token mismatched.")
-            response.status = D.HTTP_STATUS_AUTH_REQUIRED
-            response.content_type = D.JSON_CONTENT_TYPE
-            return dict(status='error', reason='Authentication required.')
+            if not settings['DEBUG']:
+                response.status = D.HTTP_STATUS_AUTH_REQUIRED
+                response.content_type = D.JSON_CONTENT_TYPE
+                return dict(status='error', reason='Authentication required.')
+            else:
+                logger.warning("In DEBUG mode, access token is ignored.")
 
         body = callback(*args, **kwargs)
         return body

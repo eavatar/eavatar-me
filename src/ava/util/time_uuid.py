@@ -9,6 +9,7 @@ import datetime
 import calendar
 import threading
 import random
+import base58
 
 
 def utcnow():
@@ -212,3 +213,47 @@ class TimeUUID(uuid.UUID):
                     clock_seq_hi_variant, clock_seq_low, node),
             version=1
         )
+
+
+alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+base_count = len(alphabet)
+
+
+def _base58_encode(num):
+    encode = b''
+
+    if num < 0:
+        return b''
+
+    while (num >= base_count):
+        mod = num % base_count
+        encode = alphabet[mod] + encode
+        num = num // base_count
+
+    if(num):
+        encode = alphabet[num] + encode
+
+    return encode
+
+
+def oid(timestamp_factory=IncreasingMicrosecondClock()):
+    """
+    Generate unique identifiers for objects in string format.
+    The lexicographical order of these strings are roughly same as their generation times.
+
+    Internally, an object ID is composed of a timestamp and the node ID so that
+    IDs generated from different nodes can also be compared and be ensured to be unique.
+
+    :param timestamp_factory: the timestamp generator
+    :return:
+    """
+    timestamp = timestamp_factory()
+    ns = timestamp * 1e9
+    ts = int(ns // 100) + 0x01b21dd213814000L
+
+    node = uuid.getnode()
+    num = (ts << 48L) | node
+    return _base58_encode(num)
+
+
+

@@ -5,6 +5,9 @@ import ast
 import logging
 from sys import version_info
 
+from .errors import ScriptSyntaxError
+
+
 supported_nodes = ('arg', 'assert', 'assign', 'attribute', 'augassign',
                    'binop', 'boolop', 'break', 'call', 'compare',
                    'continue', 'delete', 'dict', 'ellipsis',
@@ -38,13 +41,15 @@ class ScriptValidator(ast.NodeVisitor):
         name = node.__class__.__name__.lower()
         # print("Node: %s" % name)
         if name not in supported_nodes:
-            raise Exception("Not supported node: %r" % name)
+            raise ScriptSyntaxError("Not supported node: %r" % name)
 
         try:
             handler = self.node_handlers[name]
             handler(node)
         except KeyError:
-            raise Exception("Not supported node: %r" % name)
+            raise ScriptSyntaxError("Not supported node: %r" % name)
+        except SyntaxError as ex:
+            raise ScriptSyntaxError(ex.message)
 
     def on_module(self, node):
         for tnode in node.body:

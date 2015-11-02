@@ -14,6 +14,8 @@ ava.config = {
     api_base_url: '/api'
 };
 
+ava.eventBus = _.extend({}, Backbone.Events);
+
 
 $.ajaxSetup({
     statusCode: {

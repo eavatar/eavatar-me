@@ -1,10 +1,13 @@
 
 ava.models.Notice = Backbone.Model.extend({
     defaults: {
-        kind: 'info',
+        kind: 1,
+        priority: 'info',
         message: '',
         title: 'Ava Message'
     },
+
+    urlRoot: '/api/notices',
 
     parse: function(response){
         return response.data;
@@ -14,9 +17,20 @@ ava.models.Notice = Backbone.Model.extend({
         if(entry == null) {
             return
         }
+
+        if(entry.priority < 30) {
+            this.set('priority', 'info')
+        } else if(entry.lvl < 40) {
+            this.set('priority', 'alert')
+        } else {
+            this.set('priority', 'error')
+        }
+
         this.set('id', entry.id)
+        this.set('kind', entry.kind)
         this.set('title',  entry.title)
         this.set('message', entry.message)
+        this.set('timestamp', entry.timestamp)
     }
 });
 
@@ -36,6 +50,8 @@ ava.models.Job = Backbone.Model.extend({
         st: '',
         name: '',
     },
+
+    urlRoot: '/api/jobs',
 
     parse: function(response){
         return response.data;
@@ -66,9 +82,15 @@ ava.models.Log = Backbone.Model.extend({
     defaults: {
         ts: 0,
         lvl: 20,
-        lvl_name: 'INFO',
+        lvl_name: 'info',
         msg: ''
     },
+
+    urlRoot: '/api/logs',
+    parse: function(response){
+        return response.data;
+    },
+
 
     initialize: function(entry) {
         if(entry == null) {
@@ -80,11 +102,11 @@ ava.models.Log = Backbone.Model.extend({
         this.set('msg', entry.msg)
 
         if(entry.lvl < 30) {
-            this.set('lvl_name', 'INFO')
+            this.set('lvl_name', 'info')
         } else if(entry.lvl < 40) {
-            this.set('lvl_name', 'ALERT')
+            this.set('lvl_name', 'alert')
         } else {
-            this.set('lvl_name', 'ERROR')
+            this.set('lvl_name', 'error')
         }
 
     }
@@ -94,7 +116,7 @@ ava.models.LogCollection = Backbone.Collection.extend({
     model: ava.models.Log,
     url: '/api/logs',
     parse: function(response){
-        console.log("parse logs response")
+        console.log("parse logs response");
         return response.data;
     }
 });
