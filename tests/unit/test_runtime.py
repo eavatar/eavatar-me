@@ -9,8 +9,8 @@ from ava.runtime import environ
 class TestRuntimeConfig(unittest.TestCase):
 
     def setUp(self):
-        from ava import launcher
-        launcher.init_app_dir()
+        from ava import wrapper
+        wrapper.init_app_dir()
 
     def test_should_have_dir_settings(self):
         from ava.runtime.config import settings
@@ -30,8 +30,8 @@ class TestRuntimeConfig(unittest.TestCase):
 class TestRuntimeEnviron(unittest.TestCase):
 
     def setUp(self):
-        from ava import launcher
-        launcher.init_app_dir()
+        from ava import wrapper
+        wrapper.init_app_dir()
 
     def test_work_home(self):
         env = environ.Environment()
