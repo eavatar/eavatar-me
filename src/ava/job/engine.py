@@ -26,6 +26,10 @@ import random
 
 import json
 import lxml
+import base64
+import binascii
+import hashlib
+import hmac
 
 from gevent import Greenlet
 
@@ -36,7 +40,7 @@ from ava.runtime import environ
 from ava.task.service import get_task_engine
 from . import signals
 from .defines import ENGINE_NAME
-from .errors import JobCancelledError
+from .errors import JobCancelledError, ScriptSyntaxError
 
 logger = logging.getLogger(__name__)
 
@@ -128,6 +132,10 @@ class JobContext(object):
         self._scope['random'] = random
         self._scope['json'] = json
         self._scope['lxml'] = lxml
+        self._scope['base64'] = base64
+        self._scope['binascii'] = binascii
+        self._scope['hashlib'] = hashlib
+        self._scope['hmac'] = hmac
 
     def sleep(self, secs):
         time.sleep(secs)
@@ -283,6 +291,7 @@ class JobEngine(object):
 
             print("REASON:", reason)
             self._core_context.send(signals.JOB_REJECTED, reason=reason)
+            raise ScriptSyntaxError(reason)
 
     def cancel_job(self, job_id):
         if job_id not in self.jobs:

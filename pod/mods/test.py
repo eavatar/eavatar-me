@@ -10,6 +10,6 @@ def hello(name=None):
     if name is None:
         print("Hello, there.")
     else:
-        print("Hello, name!")
+        print("Hello, %s!" % name)
 
-print("Hello from hello module")
+    return name

@@ -56,7 +56,11 @@ def log_list():
     i = 1
     for it in log.recent_log_entries():
         isotime = datetime.isoformat(it.time)
-        rec = dict(id=i, msg=it.message, lvl=it.levelno, ts=isotime)
+        if hasattr(it, 'message'):
+            msg = it.message
+        else:
+            msg = ''
+        rec = dict(id=i, msg=msg, lvl=it.levelno, ts=isotime)
         entries.append(rec)
         i += 1
     #response.content_type = b'application/json'
@@ -89,8 +93,6 @@ def job_create():
         response.status = D.HTTP_STATUS_BAD_REQUEST
         return dict(status=D.ERROR, reason='No valid JSON object.')
 
-    print("job_create: DATA: ", job_data)
-
     if job_data is None:
         response.status = D.HTTP_STATUS_BAD_REQUEST
         return dict(status=D.ERROR, reason='No script provided.')
@@ -98,9 +100,9 @@ def job_create():
     try:
         job_id = get_job_engine().submit_job(job_data)
         return dict(status=D.SUCCESS, data=job_id)
-    except ScriptSyntaxError as ex:
+    except (ScriptSyntaxError, SyntaxError) as ex:
         response.status = D.HTTP_STATUS_BAD_REQUEST
-        return dict(status=D.ERROR, reason=ex.message)
+        return dict(status=D.ERROR, reason=str(ex))
 
 
 @api.route("/jobs/<job_id>", method="get")
@@ -211,7 +213,7 @@ def script_check():
         return dict(status=D.SUCCESS)
     except Exception as ex:
         response.status = D.HTTP_STATUS_BAD_REQUEST
-        return dict(status=D.ERROR, reason=ex.message)
+        return dict(status=D.ERROR, reason=str(ex))
 
 # Notices
 @api.route("/notices", method=['GET'])

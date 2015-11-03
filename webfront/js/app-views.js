@@ -141,7 +141,8 @@ ava.views.Home = Backbone.View.extend({
     },
 
     _handle_check_error: function(xhr,status,error) {
-        this._show_message("Error: " + error);
+        res = JSON.parse(xhr.responseText)
+        this._show_message("Error: " + res['reason']);
     },
 
     handleSubmit: function (e) {
@@ -163,10 +164,11 @@ ava.views.Home = Backbone.View.extend({
 
         options = {
             contentType: 'application/json',
-            success: this.submission_succeeded,
-            error: this.submission_failed,
+            success: _.bind(this.submission_succeeded,this),
+            error: _.bind(this.submission_failed, this),
             type: 'POST',
-            data: JSON.stringify(data)
+            data: JSON.stringify(data),
+            dataType: 'json'
         }
 
         $.ajax(url, options)
@@ -179,7 +181,9 @@ ava.views.Home = Backbone.View.extend({
     },
 
     submission_failed: function(xhr,status,error) {
+        res = JSON.parse(xhr.responseText)
         console.log("Job submission failed:", error)
+        this._show_message("Submission failed: " + res['reason']);
     },
 
     initialize: function (options) {

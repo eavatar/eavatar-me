@@ -6,10 +6,20 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 import sys
+import re
+import ftplib
+import poplib
+import imaplib
+import nntplib
+import smtplib
+import telnetlib
 import logging
 import logging.config
 import sqlite3
 import _sqlite3
+import uuid
+import urlparse
+import webbrowser
 
 # workaround for missing codec in Tiny core linux
 from encodings import hex_codec, ascii, utf_8, utf_32
