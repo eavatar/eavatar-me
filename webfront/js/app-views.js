@@ -141,6 +141,8 @@ ava.views.Home = Backbone.View.extend({
     },
 
     _handle_check_error: function(xhr,status,error) {
+        console.log(status)
+        console.log(error)
         res = JSON.parse(xhr.responseText)
         this._show_message("Error: " + res['reason']);
     },
