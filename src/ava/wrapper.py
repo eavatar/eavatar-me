@@ -78,7 +78,7 @@ def init_app_dir(folder=None):
     for d in subdirs:
         src_path = os.path.join(src_dir, d)
         dst_path = os.path.join(folder, d)
-        if os.path.isdir(src_path):
+        if os.path.isdir(src_path) and not os.path.exists(dst_path):
             shutil.copytree(src_path, dst_path)
         else:
             shutil.copy2(src_path, dst_path)
