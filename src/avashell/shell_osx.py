@@ -2,10 +2,10 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
-from ava import launcher
+from ava import wrapper
 from ctypes import cdll
 
-launcher.init_app_dir()
+wrapper.init_app_dir()
 from ava.runtime import environ
 
 from ava import exports

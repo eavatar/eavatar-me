@@ -14,7 +14,7 @@ from AppKit import *
 
 from avashell.utils import resource_path
 from avashell.osx.window import Window
-from ava import launcher
+from ava import wrapper
 from ava.user import status
 from ..base import *
 from . import msgbox
