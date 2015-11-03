@@ -96,6 +96,32 @@ There is an additional argument `count` which specify how many tasks to wait for
 returning.
 
 
+Built-in Actions
+----------------
+
+User Module
+^^^^^^^^^^^
+
+* user.notify
+    Notify owner with a message and title.
+
+Request Module
+^^^^^^^^^^^^^^
+
+Make methods from `requests` library available as actions.
+
+* requests.head
+
+* requests.get
+
+* requests.put
+
+* requests.patch
+
+* requests.delete
+
+* requests.post
+
 Loop Control
 ------------
 
