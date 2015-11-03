@@ -13,6 +13,7 @@ Contents:
 
    intro
    userguide
+   writing-scripts
    development
    faq
    internals
