@@ -14,4 +14,4 @@ def version():
 
     :return:
     """
-    click.echo("Ava Ver. %s" % VERSION_STRING)
+    click.echo("EAvatar ME V. %s" % VERSION_STRING)
