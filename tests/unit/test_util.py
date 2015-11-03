@@ -9,8 +9,7 @@ class TestTimeUUID(object):
 
     def test_time_uuid_order(self):
         old = time_uuid.oid()
-        for i in range(1000):
-            time.sleep(0.01)
+        for i in range(100):
             t = time_uuid.oid()
             print(t)
             assert t > old
