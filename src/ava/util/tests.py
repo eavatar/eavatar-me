@@ -95,3 +95,27 @@ class AgentTest(unittest.TestCase):
         context._context = None
         shutil.rmtree(cls.pod_folder)
         _logger.info("Temp POD folder removed: %s", cls.pod_folder)
+
+
+@pytest.fixture(scope='session')
+def agent(request):
+    from ava.runtime.config import settings
+    from ava.core.agent import Agent
+
+    pod_folder = prepare_agent_test_env()
+    settings['GENERAL']['TEST'] = True
+    os.environ.setdefault(AVA_SWARM_SECRET, swarm_secret)
+    os.environ.setdefault(AVA_AGENT_SECRET, agent_secret)
+    _agent = Agent(None, None)
+    agent_greenlet = gevent.spawn(_agent.run)
+    agent_running.wait(10)
+
+    def teardown_agent():
+        if not agent:
+            return
+        _agent.interrupted = True
+        agent_stopped.wait(10)
+        shutil.rmtree(pod_folder)
+
+    request.addfinalizer(teardown_agent)
+    return _agent

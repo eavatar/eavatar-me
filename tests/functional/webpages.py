@@ -1,25 +1,32 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import pytest
 from selenium import webdriver
-from ava.util.tests import AgentTest
+
+@pytest.fixture(scope='module')
+def webfront(agent):
+    return agent.context().lookup('webfront')
 
 
-class PageTest(AgentTest):
+@pytest.fixture(scope='module')
+def server_url(webfront):
+    return webfront.local_base_url
 
-    @classmethod
-    def setUpClass(cls):
-        AgentTest.setUpClass()
-        webfront = cls.agent.context().lookup('webfront')
-        cls.live_server_url = webfront.local_base_url
-        cls.access_token = webfront.access_token
+@pytest.fixture(scope='module')
+def access_token(webfront):
+    return webfront.access_token
 
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
+@pytest.fixture
+def browser(request):
+    b = webdriver.Firefox()
+    b.implicitly_wait(3)
 
-    def tearDown(self):
-        self.browser.quit()
+    def teardown_browser():
+        b.quit()
+    request.addfinalizer(teardown_browser)
+
+    return b
 
 
 class WebPage(object):
@@ -36,6 +43,24 @@ class WebPage(object):
         self.browser.get(self.base_url + '#login/' + self.access_token)
         header = self.browser.find_element_by_tag_name('h1')
         assert 'EAvatar ME' in header.text
+
+    def find_element_by_id(self, elmt_id):
+        return self.browser.find_element_by_id(elmt_id)
+
+    def find_elements_by_id(self, elmt_id):
+        return self.browser.find_elements_by_id(elmt_id)
+
+    def find_element_by_tag_name(self, tag_name):
+        return self.browser.find_element_by_tag_name(tag_name)
+
+    def find_elements_by_tag_name(self, tag_name):
+        return self.browser.find_elements_by_tag_name(tag_name)
+
+    def find_element_by_xpath(self, xpath):
+        return self.browser.find_element_by_xpath(xpath)
+
+    def find_elements_by_xpath(self, xpath):
+        return self.find_elements_by_xpath(xpath)
 
 
 class RootPage(WebPage):
