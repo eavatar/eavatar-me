@@ -31,9 +31,9 @@
         <div data-role="footer" data-position="fixed">
           <div data-role="navbar">
           <ul>
-            <li><a href="#notices" class="ui-btn">Notices</a></li>
-            <li><a href="#jobs" class="ui-btn">Jobs</a></li>
-            <li><a href="#logs" class="ui-btn">Logs</a></li>
+            <li><a href="#notices" class="ui-btn ui-icon-comment ui-btn-icon-left">Notices</a></li>
+            <li><a href="#jobs" class="ui-btn ui-icon-clock ui-btn-icon-left">Jobs</a></li>
+            <li><a href="#logs" class="ui-btn ui-icon-bullets ui-btn-icon-left">Logs</a></li>
           </ul>
           </div>
         </div>
@@ -104,7 +104,7 @@
               <tr>
                 <td><img src="/img/dialog-{{= notice.priority }}.png"/></td>
                 <td>{{= notice.title }}</td>
-                <td>{{= notice.message }}</td>
+                <td>{{= _.escape(notice.message) }}</td>
                 <td>{{= notice.timestamp }}</td>
               </tr>
               {{ }); }}
@@ -185,7 +185,7 @@
               <tr>
                 <td>{{= log.ts }}</td>
                 <td><img src="/img/dialog-{{= log.lvl_name }}.png" alt="{{= log.lvl_name }}"/></td>
-                <td>{{= log.msg }}</td>
+                <td>{{= _.escape(log.msg) }}</td>
               </tr>
               {{ }); }}
               </tbody>

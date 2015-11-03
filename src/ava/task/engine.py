@@ -43,6 +43,9 @@ class TaskRunner(Greenlet):
     def job_id(self):
         return self._job_id
 
+    def __repr__(self):
+        return "Task[%s]" % self._task_id
+
     def _run(self):
         try:
             return self._action(*self._args, **self._kwargs)
@@ -70,6 +73,8 @@ class TaskRunner(Greenlet):
             res = self.get(block=True, timeout=timeout)
             if res is gevent.GreenletExit:
                 raise res
+
+            return res
         except gevent.Timeout:
             raise Timeout()
         except Exception:

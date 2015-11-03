@@ -13,3 +13,4 @@ from ava.web import resources
 
 # register actions for user module, e.g. 'user.notify'.
 from avame import user
+from avame import requests

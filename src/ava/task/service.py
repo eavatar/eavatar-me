@@ -6,7 +6,7 @@ from ..core import get_core_context, AvaError
 _task_engine = None
 
 
-def _get_task_engine():
+def get_task_engine():
     return get_core_context().lookup('taskengine')
 
 
@@ -17,7 +17,7 @@ def action(func):
     :param func: the function to be called.
     :return: the task wrapping given function object.
     """
-    return _get_task_engine().register(func)
+    return get_task_engine().register(func)
 
 
 def action_key(mod_name, func_name):

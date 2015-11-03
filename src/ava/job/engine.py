@@ -10,14 +10,30 @@ import ast
 import glob
 import logging
 import gevent
+import datetime
+import collections
+import calendar
+import heapq
+import bisect
+import array
+import Queue
+
+import string
+import re
+
+import math
+import random
+
+import json
+import lxml
 
 from gevent import Greenlet
-from datetime import datetime
 
 from avame.schedule import Schedule
 from .validator import ScriptValidator
 from ava.util import time_uuid
 from ava.runtime import environ
+from ava.task.service import get_task_engine
 from . import signals
 from .defines import ENGINE_NAME
 from .errors import JobCancelledError
@@ -36,7 +52,7 @@ class JobInfo(object):
         self._name = name
         self._script = script
         self._code = acode
-        self._started_at = datetime.now()
+        self._started_at = datetime.datetime.now()
 
     @property
     def id(self):
@@ -72,15 +88,16 @@ class JobContext(object):
 
     _logger = logging.getLogger('ava.job')
 
-    def __init__(self, job_info, core_context, parent=None):
+    def __init__(self, job_info, core_context, parent=None, args=[], kwargs={}):
         self._job_info = job_info
         self._scope = {}
         self._core = core_context
         self._scope['ava'] = self
         self._scope['parent'] = parent
-        self._scope['args'] = []
-        self._scope['kwargs'] = {}
-        self._task_engine = core_context.lookup('taskengine')
+        self._scope['args'] = args
+        self._scope['kwargs'] = kwargs
+        self._populate_scope()
+        self._task_engine = get_task_engine()
         self.exception = None
         self.result = None
 
@@ -93,8 +110,24 @@ class JobContext(object):
         return self._job_info.id
 
     @property
-    def logger(self):
+    def log(self):
         return self._logger
+
+    def _populate_scope(self):
+        self._scope['datetime'] = datetime
+        self._scope['collections'] = collections
+        self._scope['calendar'] = calendar
+        self._scope['heapq'] = heapq
+        self._scope['bisect'] = bisect
+        self._scope['array'] = array
+        self._scope['queue'] = Queue
+        self._scope['Queue'] = Queue  # to be compatible with PY2
+        self._scope['string'] = string
+        self._scope['re'] = re
+        self._scope['math'] = math
+        self._scope['random'] = random
+        self._scope['json'] = json
+        self._scope['lxml'] = lxml
 
     def sleep(self, secs):
         time.sleep(secs)

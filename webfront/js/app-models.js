@@ -111,6 +111,10 @@ ava.models.Log = Backbone.Model.extend({
 
         this.set('ts', entry.ts)
         this.set('lvl', entry.lvl)
+
+        if(entry.msg.length > 256) {
+            entry.msg = entry.msg.substring(0, 256)
+        }
         this.set('msg', entry.msg)
 
         if(entry.lvl < 30) {
