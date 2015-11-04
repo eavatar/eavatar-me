@@ -63,3 +63,4 @@ cache
 *.pid
 webfront/node_modules
 webfront/tests/reports
+.doit.db

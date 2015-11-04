@@ -2,6 +2,7 @@ base58==0.2.2
 beautifulsoup4==4.4.1
 click==5.1
 coverage==3.7.1
+doit==0.29.0
 gevent==1.0.2
 greenlet==0.4.9
 libnacl==1.4.3
