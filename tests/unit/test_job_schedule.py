@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import pytest
-from avame.schedule import Schedule
+from ava.job.schedule import Schedule
 
 
 def test_schedule_seconds():

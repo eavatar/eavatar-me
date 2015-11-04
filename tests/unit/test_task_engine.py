@@ -31,7 +31,7 @@ class TestTaskEngine(unittest.TestCase):
             return True
 
         t1 = self.engine.register(mock_action)
-        action_key = service.action_key(__name__, 'mock_action')
+        action_key, mod_name, _ = service.action_key(__name__, 'mock_action')
         self.assertEqual(t1.key, action_key)
 
         self.engine.unregister(action_key)

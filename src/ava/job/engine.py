@@ -2,7 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 """
-Loading modules that provide task codes.
+Job engine
 """
 import os
 import time
@@ -33,7 +33,6 @@ import hmac
 
 from gevent import Greenlet
 
-from avame.schedule import Schedule
 from .validator import ScriptValidator
 from ava.util import time_uuid
 from ava.runtime import environ
@@ -41,6 +40,7 @@ from ava.task.service import get_task_engine
 from . import signals
 from .defines import ENGINE_NAME
 from .errors import JobCancelledError, ScriptSyntaxError
+from .schedule import Schedule
 
 logger = logging.getLogger(__name__)
 
@@ -86,22 +86,66 @@ class JobInfo(object):
         return self._started_at.isoformat()
 
 
+class ActionDoer(object):
+
+    def __init__(self, task_engine, job_id):
+        self._task_engine = task_engine
+        self._job_id = job_id
+        self._mod_name = None
+        self._actions = None
+        self._action = None
+
+    def __getattr__(self, name):
+        if self._mod_name is None:
+            self._actions = self._task_engine.get_module_actions(name)
+
+            if self._actions is None:
+                raise AttributeError(name)
+
+            self._mod_name = name
+            return self
+
+        self._action = self._actions.get(name)
+        if self._action is None:
+                raise AttributeError(name)
+
+        return self
+
+    def __call__(self, *args, **kwargs):
+        task = self._task_engine.do_task(self._job_id, self._action.key, *args, **kwargs)
+
+        # clean up so this object can be reused.
+        self._actions = None
+        self._action = None
+        self._mod_name = None
+
+        return task
+
+
 class JobContext(object):
     """ The context of a task object.
     """
 
     _logger = logging.getLogger('ava.job')
 
-    def __init__(self, job_info, core_context, parent=None, args=[], kwargs={}):
+    def __init__(self, job_info, core_context, parent=None, args=None, kwargs=None):
+        if args is None:
+            args = tuple()
+        if kwargs is None:
+            kwargs = dict()
+
         self._job_info = job_info
         self._scope = {}
         self._core = core_context
+        self._job_engine = core_context.lookup(ENGINE_NAME)
+        self._task_engine = get_task_engine()
         self._scope['ava'] = self
         self._scope['parent'] = parent
         self._scope['args'] = args
         self._scope['kwargs'] = kwargs
+        self._scope['do'] = ActionDoer(self._task_engine, job_info.id)
         self._populate_scope()
-        self._task_engine = get_task_engine()
+
         self.exception = None
         self.result = None
 
@@ -117,6 +161,14 @@ class JobContext(object):
     def log(self):
         return self._logger
 
+    @property
+    def done(self):
+        return self.exception is not None or self.result is not None
+
+    @property
+    def schedule(self):
+        return Schedule()
+
     def _populate_scope(self):
         self._scope['datetime'] = datetime
         self._scope['collections'] = collections
@@ -125,7 +177,7 @@ class JobContext(object):
         self._scope['bisect'] = bisect
         self._scope['array'] = array
         self._scope['queue'] = Queue
-        self._scope['Queue'] = Queue  # to be compatible with PY2
+        self._scope['Queue'] = Queue  # some may be more familiar with this naming
         self._scope['string'] = string
         self._scope['re'] = re
         self._scope['math'] = math
@@ -154,7 +206,7 @@ class JobContext(object):
 
     def wait(self, tasks, timeout=None, count=None):
         """
-        Wait for tasks to finished with optional timeout.
+        Wait for tasks to finish with optional timeout.
         """
 
         assert isinstance(tasks, list)
@@ -162,9 +214,15 @@ class JobContext(object):
 
         gevent.wait(tasks, timeout, count)
 
-    @property
-    def schedule(self):
-        return Schedule()
+    def clone(self, args=None, kwargs=None):
+        """ Clone the current job.
+        """
+        if args is None:
+            args = tuple()
+        if kwargs is None:
+            kwargs = dict()
+
+        return self._job_engine.clone_job(self._job_info, args, kwargs)
 
 
 class JobRunner(Greenlet):
@@ -262,6 +320,34 @@ class JobEngine(object):
     def validate_script(self, script):
         self.validator.validate(script)
 
+    def clone_job(self, parent, args, kwargs):
+        job_id = self._gen_job_id()
+
+        try:
+            job_name = job_id
+            job_info = JobInfo(job_id, job_name, parent.script, parent.code)
+            self.jobs[job_id] = job_info
+            ctx = JobContext(job_info,
+                             self._core_context,
+                             parent=parent,
+                             args=args,
+                             kwargs=kwargs)
+            self.contexts[job_id] = ctx
+            runner = JobRunner(self, job_info, ctx)
+            self.runners[job_id] = runner
+            runner.start()
+            self._core_context.send(signals.JOB_ACCEPTED, job_name=job_id)
+            return job_id
+        except (Exception, SyntaxError) as ex:
+            logger.error("Failed to run job: %s", job_id, exc_info=True)
+            if ex.message is not None and len(ex.message) > 0:
+                reason = ex.message
+            else:
+                reason = str(ex)
+
+            self._core_context.send(signals.JOB_REJECTED, reason=reason)
+            raise ScriptSyntaxError(reason)
+
     def submit_job(self, job):
         job_id = self._gen_job_id()
 
@@ -289,7 +375,6 @@ class JobEngine(object):
             else:
                 reason = str(ex)
 
-            print("REASON:", reason)
             self._core_context.send(signals.JOB_REJECTED, reason=reason)
             raise ScriptSyntaxError(reason)
 

@@ -34,9 +34,11 @@ def action_key(mod_name, func_name):
         idx = -1
 
     if idx < 0:
-        return mod_name + '.' + func_name
+        mn = mod_name
     else:
-        return mod_name[idx+1:] + '.' + func_name
+        mn = mod_name[idx+1:]
+
+    return mn + '.' + func_name, mn, func_name
 
 
 __all__ = ['action', 'action_key', ]

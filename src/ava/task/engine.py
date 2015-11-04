@@ -4,9 +4,9 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import gevent
 
-from uuid import uuid1
 from gevent import Greenlet
 
+from ..util import time_uuid
 from . import ActionNotRegistered, ActionAlreadyRegistered, Timeout
 from . import service
 
@@ -94,6 +94,22 @@ class TaskEngine(object):
         self._actions = {}
         self._tasks = {}
         self._tasks_per_job = {}
+        self._modules = {}
+
+    def get_module_names(self):
+        """
+
+        :return: the list of names of registered action modules.
+        """
+        return self._modules.keys()
+
+    def get_module_actions(self, mod_name):
+        """
+
+        :param mod_name: the module's name
+        :return: the dict of actions in the specified module
+        """
+        return self._modules.get(mod_name)
 
     def start(self, ctx):
         _logger.debug("Starting task engine...")
@@ -106,20 +122,34 @@ class TaskEngine(object):
         gevent.killall(self._tasks.values())
 
     def register(self, func):
-        action_key = service.action_key(func.__module__, func.func_name)
+        action_key, mod_name, func_name = service.action_key(func.__module__, func.func_name)
 
         if self._actions.get(action_key) is not None:
             raise ActionAlreadyRegistered(action_key)
 
         _logger.debug("Action %s registered." % action_key)
+
         proxy = ActionProxy(self, func, action_key)
         self._actions[action_key] = proxy
+        mod = self._modules.get(mod_name)
+        if mod is None:
+            mod = {}
+            self._modules[mod_name] = mod
+
+        mod[func_name] = proxy
         return proxy
 
     def unregister(self, task_key):
         proxy = self._actions.get(task_key)
         if proxy is not None:
             del self._actions[task_key]
+
+        parts = task_key.split('.')
+        mod = self._modules.get(parts[0])
+        if mod:
+            action = mod.get(parts[1])
+            if action:
+                del mod[parts[1]]
 
     def task_done(self, task):
         _logger.debug("Task '%s' is done for job '%s'", task.task_id, task.job_id)
@@ -139,7 +169,7 @@ class TaskEngine(object):
         if action is None:
             raise ActionNotRegistered(action_key)
 
-        task_id = uuid1().hex
+        task_id = time_uuid.oid()
         task = TaskRunner(self, task_id, job_id, action, args, kwargs)
         self._tasks[task_id] = task
 
