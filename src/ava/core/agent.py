@@ -24,7 +24,7 @@ from pydispatch import dispatcher
 # from ava.util import crypto
 from . import context
 from .defines import INSTALLED_ENGINES, AVA_AGENT_SECRET, AVA_SWARM_SECRET
-from .signals import AGENT_STARTED, AGENT_STOPPING
+from .signals import AGENT_STARTED, AGENT_STOPPING, AGENT_STOPPED
 from .errors import AgentStopped
 
 __ssl__ = __import__('ssl')
@@ -247,8 +247,6 @@ class Agent(object):
                 logger.error("Failed to start engine: %s" % name,
                              exc_info=True)
 
-        self._context.send(signal=AGENT_STARTED, sender=self)
-
     def _stop_engines(self):
         self._context.send(signal=AGENT_STOPPING, sender=self)
 
@@ -297,6 +295,8 @@ class Agent(object):
         agent_running.set()
         logger.debug("Agent started.")
 
+        self.send(signal=AGENT_STARTED, sender=self)
+
         while not self.interrupted:
             try:
                 gevent.joinall(self._greenlets, timeout=0.1)
@@ -315,12 +315,14 @@ class Agent(object):
                 pass
 
         # stop engines in reverse order.
+        self.send(signal=AGENT_STOPPING, sender=self)
         self._stop_engines()
 
         gevent.killall(self._greenlets, timeout=1)
 
         self.running = False
         agent_stopped.set()
+        self.send(signal=AGENT_STOPPED, sender=self)
         logger.debug("Agent stopped.")
 
 

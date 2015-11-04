@@ -147,6 +147,9 @@ class Shell(ShellBase):
         self.process_idle_tasks()
         return True
 
+    def _terminate(self):
+        self.statusIcon.quit(None)
+
     def _run(self):
         GLib.timeout_add(1000, self.on_timeout, priority=GLib.PRIORITY_DEFAULT)
 

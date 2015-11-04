@@ -258,6 +258,9 @@ class Shell(ShellBase):
         except:
             logger.error("Failed to send notice", exc_info=True)
 
+    def _terminate(self):
+        self.app.terminate_(None)
+
     def _run(self):
         NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(1, self, 'doIdle:', "", True)
         self.app = NSApplication.sharedApplication()

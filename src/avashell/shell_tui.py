@@ -10,6 +10,6 @@ from ava import exports
 
 if __name__ == '__main__':
 
-    from avashell.cli.shell import Shell
+    from avashell.tui.shell import Shell
     shell = Shell()
     shell.run()

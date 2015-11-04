@@ -19,7 +19,7 @@ pod_path = os.path.join(app_path, 'pod')
 lib_path = os.path.join(app_path, 'plat.libs')
 web_path = os.path.join(app_path, 'webfront')
 
-script = os.path.join(app_path, 'src', 'avashell', 'shell_cli.py')
+script = os.path.join(app_path, 'src', 'avashell', 'shell_tui.py')
 
 if sys.platform == 'win32':
     exe_name = exe_name + '.exe'

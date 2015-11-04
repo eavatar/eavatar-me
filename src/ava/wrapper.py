@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-
-
 import os
 import sys
 import logging
@@ -11,7 +9,7 @@ import multiprocessing
 
 from ava import APP_NAME
 from ava.core.agent import start_agent
-from ava.util import base_path
+from ava.util import base_path, get_app_dir
 
 #makes multiprocessing work when in freeze mode.
 multiprocessing.freeze_support()
@@ -28,27 +26,6 @@ _logger = logging.getLogger(__name__)
 _logger.addHandler(NullHandler())
 
 
-def _posixify(name):
-    return '-'.join(name.split()).lower()
-
-
-def get_app_dir(app_name=APP_NAME, roaming=True, force_posix=False):
-    if sys.platform.startswith(b'win'):
-        key = roaming and 'APPDATA' or 'LOCALAPPDATA'
-        folder = os.environ.get(key)
-        if folder is None:
-            folder = os.path.expanduser('~')
-        return os.path.join(folder, app_name)
-    if force_posix:
-        return os.path.join(os.path.expanduser('~/.' + _posixify(app_name)))
-    if sys.platform.startswith(b'darwin'):
-        return os.path.join(os.path.expanduser(
-            '~/Library/Application Support'), app_name)
-    return os.path.join(
-        os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.config')),
-        _posixify(app_name))
-
-
 def init_app_dir(folder=None):
     """
     Constructs the skeleton of directories if it not there already.
@@ -57,7 +34,7 @@ def init_app_dir(folder=None):
     if folder is None:
         folder = get_app_dir()
 
-    _logger.debug("Initializing app folder...")
+    print("Initializing app folder: %s" % folder)
     if os.path.exists(folder):
         _logger.error("App folder '%s' exists, abort initialization." %
                       folder)

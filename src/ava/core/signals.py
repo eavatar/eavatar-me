@@ -4,9 +4,10 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 Intended to provide the definitions of significant signals.
 """
 
-GREENLET_CREATED = 'greenlet.created'
+GREENLET_CREATED = 'greenlet_created'
 
-AGENT_STARTED = "agent.started"
-AGENT_STOPPING = "agent.stopping"
+AGENT_STARTED = "agent_started"
+AGENT_STOPPING = "agent_stopping"
+AGENT_STOPPED = "agent_stopped"
 
 

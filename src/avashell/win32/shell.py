@@ -416,6 +416,9 @@ class Shell(ShellBase):
         elif (_ID_STATUS_AVAILABLE <= id <= _ID_STATUS_DND):
             self._update_user_status(id)
 
+    def _terminate(self):
+        win32gui.DestroyWindow(self.main_frame.hwnd)
+
 
 if __name__ == '__main__':
     shell = Shell()

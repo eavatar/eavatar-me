@@ -5,6 +5,7 @@ from gevent import monkey
 #monkey.patch_all()
 monkey.patch_all(thread=False)
 
+import sys
 import logging
 import click
 import Queue
@@ -14,7 +15,7 @@ from collections import deque
 import webbrowser
 
 from ava import wrapper
-from ava.core import get_core_context
+from ava.core import get_core_context, AGENT_STOPPED
 from ava.runtime import environ
 from ava.user import Notice, USER_NOTIFIED, status
 from ava.job import JOB_ACCEPTED, JOB_FINISHED, JOB_REJECTED, JOB_FAILED
@@ -79,6 +80,9 @@ class ShellBase(object):
     def on_job_finished(self, job_ctx):
         _logger.info("Job '%s' finished.", job_ctx.name)
 
+    def on_agent_stopped(self):
+        self._terminate()
+
     def get_notice_at(self, index):
         # reserved index
         return self.notices[-(index + 1)]
@@ -94,9 +98,9 @@ class ShellBase(object):
 
         try:
             item = self.outbox.get_nowait()
-            # handle the request
-            _logger.debug("Got item from the agent")
             event = item[0]
+            # handle the request
+            _logger.debug("Got event from the agent: %s", event)
             if event == USER_NOTIFIED:
                 self.on_user_notified(**item[1])
             elif event == JOB_ACCEPTED:
@@ -107,10 +111,16 @@ class ShellBase(object):
                 self.on_job_finished(**item[1])
             elif event == JOB_FAILED:
                 self.on_job_failed(**item[1])
+            elif event == AGENT_STOPPED:
+                self.on_agent_stopped()
 
         except Queue.Empty:
             # ignored.
             pass
+
+    def _terminate(self):
+        _logger.info("Requested to terminate.")
+        sys.exit(0)
 
     @abstractmethod
     def _run(self):

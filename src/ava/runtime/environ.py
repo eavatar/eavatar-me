@@ -8,6 +8,7 @@ import logging
 import shutil
 
 from .. import APP_NAME
+from ava.util import get_app_dir
 
 POD_DIR_ENV = 'AVA_POD'
 
@@ -20,27 +21,6 @@ MODS_DIR_NAME = u'mods'
 
 _logger = logging.getLogger(__name__)
 _logger.addHandler(logging.NullHandler())
-
-
-def _posixify(name):
-    return '-'.join(name.split()).lower()
-
-
-def get_app_dir(app_name=APP_NAME, roaming=True, force_posix=False):
-    if sys.platform.startswith(b'win'):
-        key = roaming and 'APPDATA' or 'LOCALAPPDATA'
-        folder = os.environ.get(key)
-        if folder is None:
-            folder = os.path.expanduser('~')
-        return os.path.join(folder, app_name)
-    if force_posix:
-        return os.path.join(os.path.expanduser('~/.' + _posixify(app_name)))
-    if sys.platform.startswith(b'darwin'):
-        return os.path.join(os.path.expanduser(
-            '~/Library/Application Support'), app_name)
-    return os.path.join(
-        os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.config')),
-        _posixify(app_name))
 
 
 class Environment(object):
