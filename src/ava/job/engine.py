@@ -11,25 +11,6 @@ import glob
 import logging
 import gevent
 import datetime
-import collections
-import calendar
-import heapq
-import bisect
-import array
-import Queue
-
-import string
-import re
-
-import math
-import random
-
-import json
-import lxml
-import base64
-import binascii
-import hashlib
-import hmac
 
 from gevent import Greenlet
 
@@ -37,7 +18,7 @@ from .validator import ScriptValidator
 from ava.util import time_uuid
 from ava.runtime import environ
 from ava.task.service import get_task_engine
-from . import signals
+from . import signals, jobhelper
 from .defines import ENGINE_NAME
 from .errors import JobCancelledError, ScriptSyntaxError
 from .schedule import Schedule
@@ -144,7 +125,8 @@ class JobContext(object):
         self._scope['args'] = args
         self._scope['kwargs'] = kwargs
         self._scope['do'] = ActionDoer(self._task_engine, job_info.id)
-        self._populate_scope()
+
+        jobhelper.populate_scope(self._scope)
 
         self.exception = None
         self.result = None
@@ -169,25 +151,6 @@ class JobContext(object):
     def schedule(self):
         return Schedule()
 
-    def _populate_scope(self):
-        self._scope['datetime'] = datetime
-        self._scope['collections'] = collections
-        self._scope['calendar'] = calendar
-        self._scope['heapq'] = heapq
-        self._scope['bisect'] = bisect
-        self._scope['array'] = array
-        self._scope['queue'] = Queue
-        self._scope['Queue'] = Queue  # some may be more familiar with this naming
-        self._scope['string'] = string
-        self._scope['re'] = re
-        self._scope['math'] = math
-        self._scope['random'] = random
-        self._scope['json'] = json
-        self._scope['lxml'] = lxml
-        self._scope['base64'] = base64
-        self._scope['binascii'] = binascii
-        self._scope['hashlib'] = hashlib
-        self._scope['hmac'] = hmac
 
     def sleep(self, secs):
         time.sleep(secs)
