@@ -6,11 +6,11 @@ Entry-point for command-line interface.
 """
 
 import avacli.cmds
-from avacli.cli import cli
+from avacli.cmds.cli import cli
 
 
 def main():
-    return cli(auto_envvar_prefix=b'AVAME')
+    return cli(auto_envvar_prefix=b'AVA')
 
 
 if __name__ == '__main__':
