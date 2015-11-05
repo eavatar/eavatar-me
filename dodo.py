@@ -2,8 +2,13 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
+import sys
 
 DOIT_CONFIG = {'default_tasks': ['hello']}
+
+
+def is_windows():
+    return sys.platform.startswith('win')
 
 
 def task_hello():
@@ -58,6 +63,20 @@ def task_functional_test():
 
     return {
         'actions': [['py.test', '-s', '-vvv', test_path]],
+        'verbosity': 2
+    }
+
+
+def task_start_agent():
+    script_path = os.path.join('src', 'avashell', 'shell_tui.py')
+
+    if is_windows():
+        os.environ['PYTHONPATH'] = '.;.\\src'
+    else:
+        os.environ['PYTHONPATH'] = '.:./src'
+
+    return {
+        'actions': [['python', script_path]],
         'verbosity': 2
     }
 
