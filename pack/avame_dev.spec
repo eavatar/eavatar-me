@@ -60,7 +60,7 @@ def Datafiles(*filenames, **kw):
         if os.path.isfile(filename))
 
 # declared the extra script files to be added
-shfiles = Datafiles('ava_settings.py', 'ava_startup.py')
+shfiles = Datafiles('src/ava_settings.py', 'src/ava_startup.py')
 
 
 a = Analysis([script],
