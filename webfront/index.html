@@ -140,7 +140,7 @@
         {{= header }}
 
           <div data-role="main" class="ui-content">
-              <ul data-role="listview">
+              <ul data-role="listview" data-filter="true">
               {{ if(jobs.length==0) { }}<li><h3>No running jobs.</h3></li> {{ };}}
               {{ jobs.forEach(function(job) { }}
                 <li><a href="#jobs/{{= job.id }}/view"><img src="/img/job.png"/><h3>{{= job.name }}</h3>id: {{= job.id }} <span class="ui-li-aside">Started at: {{= job.st }}</span></a><a data-icon="delete" href="#jobs/{{= job.id }}/cancel">Cancel</a></li>
