@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import os
 import pytest
 from selenium import webdriver
 
@@ -19,7 +20,13 @@ def access_token(webfront):
 
 @pytest.fixture
 def browser(request):
-    b = webdriver.Firefox()
+    browser_type = os.environ.get('AVA_TEST_BROWSER', 'Firefox')
+
+    if browser_type == 'PhantomJS':
+        b = webdriver.PhantomJS()
+    else:
+        b = webdriver.Firefox()
+
     b.implicitly_wait(3)
 
     def teardown_browser():
