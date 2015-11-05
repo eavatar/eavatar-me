@@ -7,6 +7,8 @@ import sys
 
 app_name = 'avame'
 exe_name = 'avame'
+cli_exe_name = 'ava'
+
 console = True
 run_strip = False
 extra_binaries = []
@@ -20,6 +22,7 @@ lib_path = os.path.join(app_path, 'plat.libs')
 web_path = os.path.join(app_path, 'webfront')
 
 script = os.path.join(app_path, 'src', 'avashell', 'shell_tui.py')
+cli_script = os.path.join(app_path, 'src', 'avacli', 'main.py')
 
 if sys.platform == 'win32':
     exe_name = exe_name + '.exe'
@@ -83,10 +86,32 @@ exe = EXE(pyz,
           icon= os.path.join(res_path, 'icon.ico'),
           console=console)
 
+b = Analysis([cli_script],
+             pathex=[src_path],
+             binaries=None,
+             datas=None,
+             hiddenimports=None,
+             hookspath=None,
+             runtime_hooks=None,
+             excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter', 'ttk', 'wx'])
+
+pyz_b = PYZ(b.pure)
+
+exe_b = EXE(pyz_b,
+          b.scripts,
+          b.dependencies,
+          exclude_binaries=True,
+          name=cli_exe_name,
+          debug=False,
+          strip=run_strip,
+          upx=run_upx,
+          icon= os.path.join(res_path, 'icon.ico'),
+          console=True)
 
 coll = COLLECT(exe,
                a.binaries + extra_binaries,
                a.zipfiles,
+               exe_b,
                Tree(pod_path, 'pod', excludes=['*.pyc', '*.mdb', '*.db']),
                Tree(res_path, 'res', excludes=['*.pyc']),
                Tree(web_path, 'webfront', excludes=['*_dev.*', 'tests', 'node_modules']),
