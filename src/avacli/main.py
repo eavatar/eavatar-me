@@ -5,7 +5,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 Entry-point for command-line interface.
 """
 
-from avacli.cmds.cli import cli
+import avacli.cmds
+from avacli.cli import cli
 
 
 def main():

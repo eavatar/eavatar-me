@@ -12,7 +12,7 @@ setup(
     description="An event-driven agent for task automation.",
     package_dir={'': 'src'},
     packages=find_packages(exclude=['**/tests/*']),
-    include_package_data=True,
+    include_package_data=False,
 
     zip_safe=False,
     entry_points={
@@ -23,5 +23,5 @@ setup(
 
     author="EAvatar Technology Ltd.",
     url="http://www.EAvatar.com",
-
+    license='Apache 2.0',
 )

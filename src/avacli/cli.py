@@ -15,11 +15,11 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 logger = logging.getLogger(__name__)
 
 
-@click.group(invoke_without_command=True, context_settings=CONTEXT_SETTINGS)
+@click.group(invoke_without_command=False, context_settings=CONTEXT_SETTINGS)
 @click.option('-v', '--verbose', count=True)
 @click.pass_context
 def cli(ctx, verbose):
-    """ The command-line interface for Ava.
+    """ The command-line interface for EAvatar ME.
     """
     ctx.obj = dict(verbosity=verbose)
 

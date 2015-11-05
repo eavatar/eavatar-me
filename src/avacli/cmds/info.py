@@ -4,8 +4,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import click
 
-from .cli import cli
-from ava.core.defines import VERSION_STRING
+from ..cli import cli
+from ava import __version__
 
 
 @cli.command()
@@ -14,4 +14,4 @@ def version():
 
     :return:
     """
-    click.echo("EAvatar ME V. %s" % VERSION_STRING)
+    click.echo("EAvatar ME V. %s" % __version__)
