@@ -6,4 +6,6 @@ ADD dist/avame /avame
 EXPOSE 5080 5443
 # ENTRYPOINT ["/avame/avame"]
 ENV AVA_POD /home/ava/.config/avame
-CMD ["/usr/bin/chpst", "-u", "ava:ava", "-U", "ava:ava", "/avame/avame"]
+# CMD ["/usr/bin/chpst", "-u", "ava:ava", "-U", "ava:ava", "/avame/avame"]
+USER ava
+CMD ["/avame/avame"]

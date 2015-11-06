@@ -38,13 +38,6 @@ import msgpack
 # lmdb
 import lmdb
 
-# libnacl
-#import libnacl
-#from libnacl import _get_nacl
-
-# lxml
-import lxml
-from lxml import etree
 
 import xml.etree
 from xml.etree import ElementTree
