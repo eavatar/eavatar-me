@@ -166,6 +166,5 @@ $(document).ready(function () {
     console.log('document ready');
     app = new ava.router();
     Backbone.history.start();
-
 });
 

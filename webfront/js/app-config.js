@@ -18,6 +18,7 @@ ava.config = {
 ava.eventBus = _.extend({}, Backbone.Events);
 
 
+
 $.ajaxSetup({
     statusCode: {
         401: function(){
