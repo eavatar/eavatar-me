@@ -5,7 +5,9 @@ import os
 import logging
 import base58
 import gevent
-from gevent.pywsgi import WSGIServer
+# from gevent.pywsgi import WSGIServer
+from ws4py.server.geventserver import WSGIServer
+
 from ava.runtime.config import settings
 from ava.runtime import environ
 
