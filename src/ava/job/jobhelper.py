@@ -16,7 +16,6 @@ import math
 import random
 
 import json
-import lxml
 import base64
 import binascii
 import hashlib
@@ -41,7 +40,6 @@ def populate_scope(scope):
     scope['math'] = math
     scope['random'] = random
     scope['json'] = json
-    scope['lxml'] = lxml
     scope['base64'] = base64
     scope['binascii'] = binascii
     scope['hashlib'] = hashlib

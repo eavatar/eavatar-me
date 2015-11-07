@@ -56,6 +56,7 @@ import ava.user.engine
 import ava.runtime
 import ava.util
 import ava.web.webfront
+import ava.web.websocket
 
 # Avame
 import avame
