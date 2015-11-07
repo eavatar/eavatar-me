@@ -21,12 +21,6 @@ and then being walked through to detect
 invalid constructs such as 'import', 'print', 'functiondef', etc.
 Without complex constructs, it makes writing scripts more approachable for average users.
 
-XML Parsing
------------
-
-One of the design goals of EAvatar is to support web scraping.
-To this end, 'lxml' package is bundled for efficient XML/HTML parsing.
-
 How Avame integrated with desktop environments
 ----------------------------------------------
 
