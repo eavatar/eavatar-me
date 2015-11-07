@@ -12,6 +12,8 @@ msgpack-python==0.4.6
 py==1.4.30
 pycrypto==2.6.1
 PyDispatcher==2.0.5
+pyflakes==0.9.2
+pylint==1.4.4
 PyInstaller==3.0
 pyscrypt==1.6.2
 pytest==2.8.2

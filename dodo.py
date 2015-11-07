@@ -104,3 +104,9 @@ def task_start_agent():
         'verbosity': 2
     }
 
+
+def task_pylint():
+    return {
+        'actions': [['pylint', 'src/ava', 'src/avame', 'src/avashell']],
+        'verbosity': 2
+    }
