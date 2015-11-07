@@ -8,7 +8,7 @@ from ..core import get_core_context
 from ava.runtime import environ
 from ava.runtime.config import settings
 
-from .bottle import request, response, HTTPError, static_file as _static_file
+from bottle import request, response, HTTPError, static_file as _static_file
 from . import defines as D
 
 

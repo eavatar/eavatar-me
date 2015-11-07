@@ -11,7 +11,6 @@ from ws4py.server.geventserver import WSGIServer
 from ava.runtime.config import settings
 from ava.runtime import environ
 
-from . import bottle
 
 from . import dispatcher
 

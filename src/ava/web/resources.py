@@ -3,8 +3,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os
 
+import bottle
+
 from ..util import resource_path
-from . import bottle
 
 _WEBROOT = resource_path('webfront')
 

@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import logging
 from datetime import datetime
 
+from bottle import Bottle, response, request, HTTPError
 from ava.util.clock import clock
 
 from ava import log
@@ -12,10 +13,8 @@ from ava import data as stores
 from ava.user import Notice
 from ava.job import Script
 from ava.job.errors import ScriptSyntaxError
-from ava.web.bottle import response, request, HTTPError
 
 from .dispatcher import dispatcher
-from .bottle import Bottle
 from .service import require_auth, require_json, get_access_token
 from . import defines as D
 

@@ -48,8 +48,6 @@ def task_make_dmg():
     }
 
 
-
-
 def task_unit_test():
     test_path = os.path.join('tests', 'unit')
     conv_path = os.path.join('src', 'ava')
@@ -69,11 +67,26 @@ def task_int_test():
     }
 
 
-def task_functional_test():
+def task_func_test():
     test_path = os.path.join('tests', 'functional')
 
     return {
         'actions': [['py.test', '-s', '-vvv', test_path]],
+        'verbosity': 2
+    }
+
+
+def task_all_tests():
+    unit_test_path = os.path.join('tests', 'unit')
+    int_test_path = os.path.join('tests', 'integration')
+    func_test_path = os.path.join('tests', 'functional')
+    cov_path = os.path.join('src', 'ava')
+
+    return {
+        'actions': [['py.test', '-s', '--cov', cov_path, '-vvv', unit_test_path],
+                    ['py.test', '-s', '-vvv', int_test_path],
+                    ['py.test', '-s', '-vvv', func_test_path]
+                    ],
         'verbosity': 2
     }
 
