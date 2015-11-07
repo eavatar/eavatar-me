@@ -1,6 +1,10 @@
 EAvatar ME
 ##########
 
+.. image:: https://coveralls.io/repos/eavatar/eavatar-me/badge.svg?branch=develop&service=github
+  :target: https://coveralls.io/github/eavatar/eavatar-me?branch=develop
+
+
 EAvatar ME, or Avame for short, is an event-driven agent for task automation.
 It's designed with following scenarios in mind:
 
