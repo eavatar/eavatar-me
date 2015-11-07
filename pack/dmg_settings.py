@@ -17,7 +17,7 @@ import os.path
 
 # .. Useful stuff ..............................................................
 
-application = defines.get('app', '../dist/AvaME.app')
+application = defines.get('app', './dist/EAvatar.app')
 appname = os.path.basename(application)
 apppath = os.path.abspath(application)
 
@@ -34,11 +34,6 @@ def icon_from_app(app_path):
 
 # .. Basics ....................................................................
 
-# Uncomment to override the output filename
-# filename = '../dist/AvaME.dmg'
-
-# Uncomment to override the output volume name
-# volume_name = 'AvaME'
 
 # Volume format (see hdiutil create -help)
 format = defines.get('format', 'UDBZ')

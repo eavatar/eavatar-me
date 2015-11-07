@@ -39,6 +39,17 @@ def task_pack_tui():
     }
 
 
+def task_make_dmg():
+    settings_file = os.path.join('pack', 'dmg_settings.py')
+
+    return {
+        'actions': [['dmgbuild', '-s', settings_file, '"EAvatar ME"', 'dist/EAvatarME.dmg']],
+        'verbosity': 2
+    }
+
+
+
+
 def task_unit_test():
     test_path = os.path.join('tests', 'unit')
     conv_path = os.path.join('src', 'ava')

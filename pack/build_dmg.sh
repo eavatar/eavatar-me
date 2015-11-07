@@ -1,3 +1,3 @@
 #!/bin/sh
 
-dmgbuild -s dmg_settings.py "AvaME" ../dist/AvaME.dmg
+dmgbuild -s dmg_settings.py "EAvatar ME" ../dist/EAvatarME.dmg
