@@ -13,6 +13,7 @@ dependencies:
     - sudo easy_install -U setuptools
     - pip install -r requirements.txt
     - pip install selenium
+    - pip install coveralls
 
 test:
   override:
@@ -24,6 +25,7 @@ test:
     - PYTHONPATH=".:./src" py.test -vvv tests/functional/
     - PYTHONPATH=".:./src" pyinstaller pack/avame-tui.spec --clean -y
   post:
+    - coveralls
     - cd dist && tar zcvf avame-0.1.0+${CIRCLE_BUILD_NUM}.tgz avame/
 
 deployment:
