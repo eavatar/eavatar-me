@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
-from gevent import monkey
-#monkey.patch_all()
-monkey.patch_all(thread=False)
-
 import sys
 import logging
 import click
@@ -17,10 +13,10 @@ import webbrowser
 from ava import wrapper
 from ava.core import get_core_context, AGENT_STOPPED
 from ava.runtime import environ
-from ava.user import Notice, USER_NOTIFIED, status
+from ava.user import USER_NOTIFIED, status
 from ava.job import JOB_ACCEPTED, JOB_FINISHED, JOB_REJECTED, JOB_FAILED
 
-from .defines import *
+from .defines import NUM_OF_NOTICES
 
 _logger = logging.getLogger(__name__)
 
@@ -75,7 +71,8 @@ class ShellBase(object):
         _logger.error("Job rejected: %s", reason)
 
     def on_job_failed(self, job_ctx):
-        _logger.error("Job '%s' cannot be done: %r", job_ctx.name, job_ctx.exception)
+        _logger.error("Job '%s' cannot be done: %r", job_ctx.name,
+                      job_ctx.exception)
 
     def on_job_finished(self, job_ctx):
         _logger.info("Job '%s' finished.", job_ctx.name)

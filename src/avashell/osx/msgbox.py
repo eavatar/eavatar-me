@@ -2,9 +2,9 @@
 from __future__ import absolute_import, print_function, unicode_literals
 
 
-from AppKit import *
+from AppKit import *  # noqa
 
-from avashell.base import Notice
+from ava.user.models import Notice
 
 
 def inform(title, message):
@@ -82,7 +82,8 @@ def _test():
     alert(message="Alert message", title='msgbox.alert')
     error(message="Error message", title='msgbox.error')
 
-    p = confirm(message="You are trying to do something dangerous", title="Are you sure?")
+    p = confirm(message="You are trying to do something dangerous",
+                title="Are you sure?")
     if p:
         inform("Your answer", "You agreed.")
     else:
@@ -95,5 +96,3 @@ def _test():
 
 if __name__ == '__main__':
     _test()
-
-

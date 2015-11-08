@@ -42,7 +42,8 @@ def confirm(title, message):
 
 def input(title, message):
     dialog = Gtk.MessageDialog(None,
-                               Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                               (Gtk.DialogFlags.MODAL |
+                                Gtk.DialogFlags.DESTROY_WITH_PARENT),
                                Gtk.MessageType.QUESTION,
                                Gtk.ButtonsType.OK_CANCEL,
                                title)
@@ -80,7 +81,8 @@ def _test():
     alert(message="Alert message", title='msgbox.alert')
     error(message="Error message", title='msgbox.error')
 
-    p = confirm(message="You are trying to do something dangerous", title="Are you sure?")
+    p = confirm(message="You are trying to do something dangerous",
+                title="Are you sure?")
     if p:
         inform("Your answer", "You agreed.")
     else:

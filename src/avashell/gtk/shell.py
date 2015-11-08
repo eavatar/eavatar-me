@@ -8,7 +8,7 @@ from gi.repository import AppIndicator3 as appindicator
 
 from avashell.utils import resource_path
 from ava.user import status
-from ..base import *
+from .. import base
 from . import msgbox
 
 _logger = logging.getLogger(__name__)
@@ -17,9 +17,10 @@ _logger = logging.getLogger(__name__)
 class StatusIcon(object):
     def __init__(self, shell):
         self.shell = shell
-        self.ind = appindicator.Indicator.new("EAvatar-indicator",
-                                           resource_path("res/icon.png"),
-                                           appindicator.IndicatorCategory.APPLICATION_STATUS)
+        self.ind = appindicator.Indicator.new(
+            "EAvatar-indicator",
+            resource_path("res/icon.png"),
+            appindicator.IndicatorCategory.APPLICATION_STATUS)
         self.ind.set_icon_theme_path(resource_path('res/'))
 
         self.ind.set_status(appindicator.IndicatorStatus.ACTIVE)
@@ -36,13 +37,14 @@ class StatusIcon(object):
     def menu_setup(self):
         self.menu = Gtk.Menu()
 
-        self.open_item = Gtk.MenuItem.new_with_label(STR_OPEN_FOLDER)
+        self.open_item = Gtk.MenuItem.new_with_label(base.STR_OPEN_FOLDER)
         self.open_item.connect("activate", self.on_open_folder)
         # self.open_item.show()
-        self.open_webfront = Gtk.MenuItem.new_with_label(STR_OPEN_WEBFRONT)
+        self.open_webfront = Gtk.MenuItem.new_with_label(
+            base.STR_OPEN_WEBFRONT)
         self.open_webfront.connect("activate", self.on_open_webfront)
 
-        self.quit_item = Gtk.MenuItem.new_with_label(STR_EXIT)
+        self.quit_item = Gtk.MenuItem.new_with_label(base.STR_EXIT)
         self.quit_item.connect("activate", self.quit)
         # self.quit_item.show()
 
@@ -100,7 +102,10 @@ class StatusIcon(object):
 
     def notify(self, msg, title="Ava Message"):
         if self.notification is None:
-            self.notification = Notify.Notification.new(title, msg, resource_path("res/icon.png"))
+            self.notification = Notify.Notification.new(
+                title,
+                msg,
+                resource_path("res/icon.png"))
             self.notification.set_app_name("EAvatar")
         else:
             self.notification.update(title, msg)
@@ -127,7 +132,7 @@ class StatusIcon(object):
         Gtk.main_quit()
 
 
-class Shell(ShellBase):
+class Shell(base.ShellBase):
     def __init__(self):
         super(Shell, self).__init__()
         self.statusIcon = StatusIcon(self)
@@ -135,7 +140,7 @@ class Shell(ShellBase):
     def on_user_notified(self, notice):
         _logger.debug("User notice received: %s", notice.title)
 
-        pop_last = len(self.notices) >= NUM_OF_NOTICES
+        pop_last = len(self.notices) >= base.NUM_OF_NOTICES
         print(len(self.notices))
         self.notices.append(notice)
         self.statusIcon.add_new_notice(notice, pop_last)
@@ -159,4 +164,3 @@ class Shell(ShellBase):
 if __name__ == '__main__':
     shell = Shell()
     shell.run()
-

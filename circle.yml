@@ -20,6 +20,7 @@ test:
     - sudo cp plat.libs/libsodium.so.13.1.0 /usr/local/lib/
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so.13
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so
+    - PYTHONPATH=".:./src" flake8 src/ava
     - PYTHONPATH=".:./src" py.test -vvv --cov=src/ava tests/unit/
     - PYTHONPATH=".:./src" py.test -vvv tests/integration/
     - PYTHONPATH=".:./src" py.test -vvv tests/functional/

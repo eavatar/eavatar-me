@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function
 
-
 import win32api
 import win32con
 import winerror
@@ -34,6 +33,7 @@ class Console(object):
     """
     Modeless dialog for submitting a job.
     """
+
     def __init__(self, shell):
         win32gui.InitCommonControls()
         self.hinst = win32gui.dllhandle
@@ -60,43 +60,42 @@ class Console(object):
         wc.style = win32con.CS_VREDRAW | win32con.CS_HREDRAW
         wc.hCursor = win32gui.LoadCursor(0, win32con.IDC_ARROW)
         wc.hbrBackground = win32con.COLOR_WINDOW + 1
-        wc.lpfnWndProc = message_map # could also specify a wndproc.
-        # C code: wc.cbWndExtra = DLGWINDOWEXTRA + sizeof(HBRUSH) + (sizeof(COLORREF));
+        wc.lpfnWndProc = message_map  # could also specify a wndproc.
         wc.cbWndExtra = win32con.DLGWINDOWEXTRA + struct.calcsize("Pi")
-        icon_flags = win32con.LR_LOADFROMFILE | win32con.LR_DEFAULTSIZE
-
-        ## py.ico went away in python 2.5, load from executable instead
-        this_app = win32api.GetModuleHandle(None)
-        # wc.hIcon = self.hicon
 
         try:
-            classAtom = win32gui.RegisterClass(wc)
+            self.classAtom = win32gui.RegisterClass(wc)
         except win32gui.error, err_info:
-            if err_info.winerror!=winerror.ERROR_CLASS_ALREADY_EXISTS:
+            if err_info.winerror != winerror.ERROR_CLASS_ALREADY_EXISTS:
                 raise
         return self.className
 
     def _GetDialogTemplate(self, dlgClassName):
-        style = win32con.WS_POPUP | win32con.DS_MODALFRAME | win32con.WS_VISIBLE | win32con.WS_CAPTION | win32con.WS_SYSMENU | win32con.DS_SETFONT | win32con.WS_MINIMIZEBOX
+        style = (win32con.WS_POPUP | win32con.DS_MODALFRAME |
+                 win32con.WS_VISIBLE | win32con.WS_CAPTION |
+                 win32con.WS_SYSMENU | win32con.DS_SETFONT |
+                 win32con.WS_MINIMIZEBOX)
         cs = win32con.WS_CHILD | win32con.WS_VISIBLE
 
         # Window frame and title
         # font_name = 'COURIER'
         font_name = "MS Sans Serif"
-        dlg = [ [self.title, (0, 0, 230, 170), style, None, (11, font_name), None, dlgClassName], ]
+        dlg = [
+            [self.title, (0, 0, 230, 170), style, None, (11, font_name), None,
+             dlgClassName], ]
 
-        # ID label and text box
-        # dlg.append([130, 'Job Name:', -1, (5, 5, 220, 9), cs | win32con.SS_LEFT])
-        # s = cs | win32con.WS_TABSTOP | win32con.WS_BORDER
-        # dlg.append(['EDIT', None, IDC_JOB_NAME, (5, 15, 200, 12), s])
-
-        s = cs | win32con.WS_TABSTOP | win32con.WS_BORDER | win32con.ES_MULTILINE
-        s |= win32con.WS_VSCROLL | win32con.ES_AUTOVSCROLL | win32con.ES_READONLY | win32con.ES_WANTRETURN
+        s = (cs | win32con.WS_TABSTOP | win32con.WS_BORDER |
+             win32con.ES_MULTILINE)
+        s |= (win32con.WS_VSCROLL | win32con.ES_AUTOVSCROLL |
+              win32con.ES_READONLY | win32con.ES_WANTRETURN)
         dlg.append(['EDIT', None, IDC_MESSAGE, (5, 5, 220, 60), s])
 
-        dlg.append([130, 'Instructions:', -1, (5, 70, 220, 9), cs | win32con.SS_LEFT])
-        s = cs | win32con.WS_TABSTOP | win32con.WS_BORDER | win32con.ES_MULTILINE
-        s |= win32con.WS_VSCROLL | win32con.ES_AUTOVSCROLL | win32con.ES_WANTRETURN
+        dlg.append(
+            [130, 'Instructions:', -1, (5, 70, 220, 9), cs | win32con.SS_LEFT])
+        s = (cs | win32con.WS_TABSTOP | win32con.WS_BORDER |
+             win32con.ES_MULTILINE)
+        s |= (win32con.WS_VSCROLL | win32con.ES_AUTOVSCROLL |
+              win32con.ES_WANTRETURN)
         dlg.append(['EDIT', None, IDC_SCRIPT, (5, 80, 220, 70), s])
 
         ss = cs | win32con.SS_ENDELLIPSIS
@@ -106,7 +105,7 @@ class Console(object):
         # (x positions don't matter here)
         s = cs | win32con.WS_TABSTOP
         # dlg.append([128, "Clear", IDC_BUTTON_CLEAR, (5, 155, 50, 14), s])
-        #dlg.append([128, "Close", IDC_BUTTON_CLOSE, (125, 155, 50, 14), s])
+        # dlg.append([128, "Close", IDC_BUTTON_CLOSE, (125, 155, 50, 14), s])
         s = win32con.BS_PUSHBUTTON | s
         dlg.append([128, "Submit", IDC_BUTTON_SUBMIT, (100, 155, 50, 14), s])
 
@@ -132,11 +131,13 @@ class Console(object):
         desktop = win32gui.GetDesktopWindow()
         l, t, r, b = win32gui.GetWindowRect(self.hwnd)
         dt_l, dt_t, dt_r, dt_b = win32gui.GetWindowRect(desktop)
-        centre_x, centre_y = win32gui.ClientToScreen( desktop, ( (dt_r-dt_l)//2, (dt_b-dt_t)//2) )
-        win32gui.MoveWindow(hwnd, centre_x-(r//2), centre_y-(b//2), r-l, b-t, 0)
+        centre_x, centre_y = win32gui.ClientToScreen(desktop, (
+            (dt_r - dt_l) // 2, (dt_b - dt_t) // 2))
+        win32gui.MoveWindow(hwnd, centre_x - (r // 2), centre_y - (b // 2),
+                            r - l, b - t, 0)
         # self._SetupList()
         l, t, r, b = win32gui.GetClientRect(self.hwnd)
-        self._DoSize(r-l, b-t, 1)
+        self._DoSize(r - l, b - t, 1)
 
     def _DoSize(self, cx, cy, repaint=1):
         # right-justify the textbox.
@@ -155,9 +156,8 @@ class Console(object):
         l, t, r, b = win32gui.GetWindowRect(ctrl)
         l, t = win32gui.ScreenToClient(self.hwnd, (l, t))
         r, b = win32gui.ScreenToClient(self.hwnd, (r, b))
-        list_y = b + 10
         w = r - l
-        win32gui.MoveWindow(ctrl, cx - 5 - w, t, w, b-t, repaint)
+        win32gui.MoveWindow(ctrl, cx - 5 - w, t, w, b - t, repaint)
 
     def OnSize(self, hwnd, msg, wparam, lparam):
         x = win32api.LOWORD(lparam)
@@ -169,7 +169,7 @@ class Console(object):
         info = win32gui_struct.UnpackNMITEMACTIVATE(lparam)
         # print("OnNotify: code=", info.code)
         if info.code == commctrl.NM_DBLCLK:
-            print("Double click on item", info.iItem+1)
+            print("Double click on item", info.iItem + 1)
         return 1
 
     def OnCommand(self, hwnd, msg, wparam, lparam):

@@ -50,10 +50,10 @@ def task_make_dmg():
 
 def task_unit_test():
     test_path = os.path.join('tests', 'unit')
-    conv_path = os.path.join('src', 'ava')
+    cov_path = os.path.join('src', 'ava')
 
     return {
-        'actions': [['py.test', '-s', '-vvv', test_path]],
+        'actions': [['py.test', '-s', '--cov', cov_path, '-vvv', test_path]],
         'verbosity': 2
     }
 
@@ -105,8 +105,15 @@ def task_start_agent():
     }
 
 
-def task_pylint():
+def task_flake8_check():
     return {
-        'actions': [['pylint', 'src/ava', 'src/avame', 'src/avashell']],
+        'actions': [['flake8', 'src/ava']],
+        'verbosity': 2
+    }
+
+
+def task_pylint_check():
+    return {
+        'actions': [['pylint', 'src/ava']],
         'verbosity': 2
     }

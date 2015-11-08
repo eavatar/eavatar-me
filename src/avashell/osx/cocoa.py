@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
-from AppKit import *
+import AppKit
 
 
-class Delegate(NSObject):
+class Delegate(AppKit.NSObject):
 
     def init(self):
         return self

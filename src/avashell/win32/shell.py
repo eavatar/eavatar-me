@@ -2,7 +2,6 @@
 from __future__ import print_function, absolute_import
 
 import os
-import time
 import logging
 
 import win32api
@@ -19,8 +18,9 @@ import itertools
 import glob
 
 
+from ava.user.models import Notice
 from avashell.utils import resource_path
-from ..base import *
+from .. import base
 from . import msgbox
 from .console import Console
 
@@ -91,7 +91,7 @@ class StatusIcon(object):
         self.shell = s
 
         self.icons = itertools.cycle(glob.glob(resource_path('res/*.ico')))
-        self.hover_text = STR_STATUS
+        self.hover_text = base.STR_STATUS
 
         self.icon = self.icons.next()
 
@@ -126,7 +126,8 @@ class StatusIcon(object):
 
         self.notify_id = (self.shell.main_frame.hwnd,
                           0,
-                          win32gui.NIF_ICON | win32gui.NIF_MESSAGE | win32gui.NIF_TIP,
+                          (win32gui.NIF_ICON | win32gui.NIF_MESSAGE |
+                           win32gui.NIF_TIP),
                           win32con.WM_USER + 20,
                           self.hicon,
                           self.hover_text)
@@ -137,7 +138,6 @@ class StatusIcon(object):
         self.create_menu(menu)
 
         pos = win32gui.GetCursorPos()
-        # See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/menus_0hdi.asp
         win32gui.SetForegroundWindow(self.shell.main_frame.hwnd)
         win32gui.TrackPopupMenu(menu,
                                 win32con.TPM_LEFTALIGN,
@@ -148,12 +148,12 @@ class StatusIcon(object):
                                 None)
 
     def update_status_menu(self, user_status):
-        for i, s in enumerate(status.STRINGS):
+        for i, s in enumerate(base.status.STRINGS):
             fstate = 0
             if user_status == i:
                 fstate = win32con.MFS_CHECKED
             item, extras = win32gui_struct.PackMENUITEMINFO(
-                text=status.STRINGS[i],
+                text=base.status.STRINGS[i],
                 hbmpItem=None,
                 fState=fstate,
                 wID=_ID_STATUS_AVAILABLE + i)
@@ -161,12 +161,12 @@ class StatusIcon(object):
 
     def _create_status_menu(self):
         menu = win32gui.CreateMenu()
-        for i, s in enumerate(status.STRINGS):
+        for i, s in enumerate(base.status.STRINGS):
             fstate = 0
             if self.shell.user_status == i:
                 fstate = win32con.MFS_CHECKED
             item, extras = win32gui_struct.PackMENUITEMINFO(
-                text=status.STRINGS[i],
+                text=base.status.STRINGS[i],
                 hbmpItem=None,
                 fState=fstate,
                 wID=_ID_STATUS_AVAILABLE + i)
@@ -178,7 +178,7 @@ class StatusIcon(object):
     def create_menu(self, menu):
         #        option_icon = self.prep_menu_icon(option_icon)
         item, extras = win32gui_struct.PackMENUITEMINFO(
-            text=STR_EXIT,
+            text=base.STR_EXIT,
             hbmpItem=None,
             wID=_ID_QUIT)
 
@@ -187,15 +187,16 @@ class StatusIcon(object):
         win32gui.InsertMenu(menu, 0, win32con.MF_BYPOSITION,
                             win32con.MF_SEPARATOR, None)
 
-        win32gui.InsertMenu(menu, 0, win32con.MF_POPUP | win32con.MF_BYPOSITION,
-                            self.notices_menu, STR_NOTICES_MENU)
-
+        win32gui.InsertMenu(menu, 0,
+                            (win32con.MF_POPUP | win32con.MF_BYPOSITION),
+                            self.notices_menu, base.STR_NOTICES_MENU)
 
         win32gui.InsertMenu(menu, 0, win32con.MF_BYPOSITION,
                             win32con.MF_SEPARATOR, None)
 
-        win32gui.InsertMenu(menu, 0, win32con.MF_POPUP | win32con.MF_BYPOSITION,
-                            self.status_menu, STR_STATUS_MENU)
+        win32gui.InsertMenu(menu, 0,
+                            win32con.MF_POPUP | win32con.MF_BYPOSITION,
+                            self.status_menu, base.STR_STATUS_MENU)
 
         win32gui.InsertMenu(menu, 0, win32con.MF_BYPOSITION,
                             win32con.MF_SEPARATOR, None)
@@ -207,14 +208,14 @@ class StatusIcon(object):
         # win32gui.InsertMenuItem(menu, 0, 1, item)
 
         item, extras = win32gui_struct.PackMENUITEMINFO(
-            text=STR_OPEN_FOLDER,
+            text=base.STR_OPEN_FOLDER,
             hbmpItem=None,
             wID=_ID_OPEN_FOLDER)
 
         win32gui.InsertMenuItem(menu, 0, 1, item)
 
         item, extras = win32gui_struct.PackMENUITEMINFO(
-            text=STR_OPEN_WEBFRONT,
+            text=base.STR_OPEN_WEBFRONT,
             hbmpItem=None,
             wID=_ID_OPEN_WEBFRONT)
 
@@ -262,18 +263,19 @@ class StatusIcon(object):
         win32gui.Shell_NotifyIcon(win32gui.NIM_MODIFY, balloon_id)
 
     def addNewNotice(self, notice, pop_last=False):
-        self.notice_index = (self.notice_index + 1) % NUM_OF_NOTICES
+        self.notice_index = (self.notice_index + 1) % base.NUM_OF_NOTICES
         item, extras = win32gui_struct.PackMENUITEMINFO(
             text=notice.title,
             hbmpItem=None,
-            wID=_ID_NOTICE + (self.notice_index % NUM_OF_NOTICES))
+            wID=_ID_NOTICE + (self.notice_index % base.NUM_OF_NOTICES))
 
         win32gui.InsertMenuItem(self.notices_menu, 0, 1, item)
         if pop_last:
-            win32gui.RemoveMenu(self.notices_menu, NUM_OF_NOTICES, win32con.MF_BYPOSITION)
+            win32gui.RemoveMenu(self.notices_menu, base.NUM_OF_NOTICES,
+                                win32con.MF_BYPOSITION)
 
 
-class Shell(ShellBase):
+class Shell(base.ShellBase):
     def __init__(self):
         super(Shell, self).__init__()
 
@@ -291,8 +293,8 @@ class Shell(ShellBase):
         self.destroyed = False
 
     def on_user_notified(self, notice):
-        pop_last = len(self.notices) >= NUM_OF_NOTICES
-        self.notice_index = (self.notice_index + 1) % NUM_OF_NOTICES
+        pop_last = len(self.notices) >= base.NUM_OF_NOTICES
+        self.notice_index = (self.notice_index + 1) % base.NUM_OF_NOTICES
         self.notices.append(notice)
 
         self.status_icon.addNewNotice(notice, pop_last)
@@ -302,15 +304,18 @@ class Shell(ShellBase):
 
     def job_accepted(self, job_name):
         if self.console is not None:
-            self.console.append_message("Job accepted with name: %s" % job_name)
+            self.console.append_message(
+                "Job accepted with name: %s" % job_name)
             self.console.clear_script()
 
     def job_rejected(self, reason):
         if self.console is not None:
-            self.console.append_message("Job rejected with reason: %s" % reason)
+            self.console.append_message(
+                "Job rejected with reason: %s" % reason)
 
     def job_failed(self, job_ctx):
-        msg = "Job '%s' cannot be done: %r" % (job_ctx.name, job_ctx.exception.message)
+        msg = "Job '%s' cannot be done: %r" % (job_ctx.name,
+                                               job_ctx.exception.message)
         _logger.error(msg)
         if self.console is not None:
             self.console.append_message(msg)
@@ -338,16 +343,14 @@ class Shell(ShellBase):
 
     def _run(self):
         timer.set_timer(100, self._timer_func)
-        #while not win32gui.PumpWaitingMessages():
-        #    self.process_idle_tasks()
-        #    time.sleep(0.1)
         win32gui.PumpMessages()
 
     def _show_notice(self, item_id):
         _logger.debug("Show message")
         idx = (item_id - _ID_NOTICE)
 
-        real_idx = (NUM_OF_NOTICES - idx + self.notice_index) % NUM_OF_NOTICES
+        real_idx = ((base.NUM_OF_NOTICES - idx + self.notice_index) %
+                    base.NUM_OF_NOTICES)
         _logger.debug("Menu number: %d", real_idx)
         notice = self.notices[-(real_idx + 1)]
 
@@ -411,7 +414,7 @@ class Shell(ShellBase):
             self.open_ui()
         elif id == _ID_OPEN_CONSOLE:
             self._show_console()
-        elif (_ID_NOTICE <= id < (_ID_NOTICE + NUM_OF_NOTICES)):
+        elif (_ID_NOTICE <= id < (_ID_NOTICE + base.NUM_OF_NOTICES)):
             self._show_notice(id)
         elif (_ID_STATUS_AVAILABLE <= id <= _ID_STATUS_DND):
             self._update_user_status(id)

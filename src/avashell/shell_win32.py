@@ -4,9 +4,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 from ava import wrapper
 
 wrapper.init_app_dir()
-from ava.runtime import environ
 
-from ava import exports
+from ava import exports  # noqa
 
 
 if __name__ == '__main__':

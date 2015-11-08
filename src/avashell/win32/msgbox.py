@@ -63,7 +63,8 @@ if __name__ == '__main__':
     alert(message="Alert message", title='msgbox.alert')
     error(message="Error message", title='msgbox.error')
 
-    p = confirm(message="You are trying to do something dangerous", title="Are you sure?")
+    p = confirm(message="You are trying to do something dangerous",
+                title="Are you sure?")
     if p:
         inform("Your answer", "You agreed.")
     else:

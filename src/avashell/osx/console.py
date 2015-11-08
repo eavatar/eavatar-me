@@ -7,7 +7,7 @@ Ava console for Cocoa GUI
 
 import logging
 
-from AppKit import *
+from AppKit import *  # noqa
 
 from .cocoa import Delegate
 
@@ -52,11 +52,12 @@ class Console(object):
         screen = NSScreen.mainScreen().visibleFrame()
         position = NSMakeRect(
             screen.origin.x + self.position[0],
-            screen.size.height + screen.origin.y - self.position[1] - self.size[1],
+            (screen.size.height + screen.origin.y -
+             self.position[1] - self.size[1]),
             self.size[0],
             self.size[1]
         )
-        self._wnd = NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(
+        self._wnd = NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(  # noqa
             position,
             NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask,
             NSBackingStoreBuffered,
@@ -87,13 +88,11 @@ class Console(object):
 
         self._text = NSTextView.alloc().init()
 
-
         self._text.setEditable_(True)
         self._text.setVerticallyResizable_(True)
         self._text.setHorizontallyResizable_(True)
 
         self._messages = NSTextView.alloc().init()
-
 
         self._messages.setEditable_(False)
         self._messages.setVerticallyResizable_(True)
@@ -123,9 +122,6 @@ class Console(object):
         # Assign the widget to the same app as the window.
         self.content.app = self.app
 
-        # Top level widnow items don't layout well with autolayout (especially when
-        # they are scroll views); so revert to old-style autoresize masks for the
-        # main content view.
         self._content._impl.setTranslatesAutoresizingMaskIntoConstraints_(True)
 
         self._wnd.setContentView_(self._content._impl)

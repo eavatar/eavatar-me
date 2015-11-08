@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
-from Foundation import *
-from AppKit import *
+from Foundation import *  # noqa
+from AppKit import *      # noqa
 
 
 class WindowDelegate(NSObject):
     def windowWillClose_(self, notification):
         self.__dict__['interface'].on_close()
 
-    ######################################################################
-    # Toolbar delegate methods
-    ######################################################################
-
 
 class Window(object):
-    def __init__(self, title=None, position=(100, 100), size=(640, 480), toolbar=None):
+    def __init__(self, title=None, position=(100, 100), size=(640, 480),
+                 toolbar=None):
         self._impl = None
         self._app = None
         self._toolbar = None
@@ -36,13 +33,16 @@ class Window(object):
         screen = NSScreen.mainScreen().visibleFrame()
         position = NSMakeRect(
             screen.origin.x + self.position[0],
-            screen.size.height + screen.origin.y - self.position[1] - self.size[1],
+            (screen.size.height + screen.origin.y -
+             self.position[1] - self.size[1]),
             self.size[0],
             self.size[1]
         )
-        self._impl = NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(
+        self._impl = NSWindow.alloc()
+        self._impl.initWithContentRect_styleMask_backing_defer_(
             position,
-            NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask | NSMiniaturizableWindowMask,
+            (NSTitledWindowMask | NSClosableWindowMask |
+             NSResizableWindowMask | NSMiniaturizableWindowMask),
             NSBackingStoreBuffered,
             False
         )
@@ -72,8 +72,10 @@ class Window(object):
     def toolbar(self, toolbar):
         self._toolbar = toolbar
         if self._toolbar:
-            self._toolbar_items = dict((item.toolbar_identifier, item) for item in self._toolbar)
-            self._toolbar_impl = NSToolbar.alloc().initWithIdentifier_('Toolbar-%s' % id(self))
+            self._toolbar_items = dict((item.toolbar_identifier, item)
+                                       for item in self._toolbar)
+            self._toolbar_impl = NSToolbar.alloc().initWithIdentifier_(
+                'Toolbar-%s' % id(self))
             self._toolbar_impl.setDelegate_(self._delegate)
             self._impl.setToolbar_(self._toolbar_impl)
 
@@ -89,9 +91,6 @@ class Window(object):
         # Assign the widget to the same app as the window.
         self.content.app = self.app
 
-        # Top level widnow items don't layout well with autolayout (especially when
-        # they are scroll views); so revert to old-style autoresize masks for the
-        # main content view.
         self._content._impl.setTranslatesAutoresizingMaskIntoConstraints_(True)
 
         self._impl.setContentView_(self._content._impl)

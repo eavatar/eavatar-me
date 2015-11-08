@@ -2,24 +2,19 @@
 from __future__ import print_function, absolute_import, unicode_literals
 
 import os
-import logging
 import click
-
+import logging
 import AppKit
 
 from collections import Mapping
 
-from Foundation import *
-from AppKit import *
+from Foundation import *  # noqa
+from AppKit import *  # noqa
 
 from avashell.utils import resource_path
-from avashell.osx.window import Window
-from ava import wrapper
-from ava.user import status
-from ..base import *
+from .. import base
 from . import msgbox
 from .cocoa import Delegate
-
 
 _NOTIFICATIONS = True
 try:
@@ -31,7 +26,8 @@ logger = logging.getLogger(__name__)
 
 
 def applicationSupportFolder(self):
-    paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,NSUserDomainMask,True)
+    paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,
+                                                NSUserDomainMask, True)
     basePath = (len(paths) > 0 and paths[0]) or NSTemporaryDirectory()
     fullPath = basePath.stringByAppendingPathComponent_("Ava")
     if not os.path.exists(fullPath):
@@ -40,19 +36,24 @@ def applicationSupportFolder(self):
 
 
 def notification(title, subtitle, message, data=None, sound=True):
-    """Send a notification to Notification Center (Mac OS X 10.8+). If running on a version of Mac OS X that does not
-    support notifications, a ``RuntimeError`` will be raised. Apple says,
+    """Send a notification to Notification Center (Mac OS X 10.8+).
+    If running on a version of Mac OS X that does not support
+    notifications, a ``RuntimeError`` will be raised. Apple says,
 
-        "The userInfo content must be of reasonable serialized size (less than 1k) or an exception will be thrown."
+        "The userInfo content must be of reasonable serialized size
+        (less than 1k) or an exception will be thrown."
 
     So don't do that!
 
     :param title: text in a larger font.
     :param subtitle: text in a smaller font below the `title`.
-    :param message: text representing the body of the notification below the `subtitle`.
-    :param data: will be passed to the application's "notification center" (see :func:`rumps.notifications`) when this
+    :param message: text representing the body of the notification
+                    below the `subtitle`.
+    :param data: will be passed to the application's "notification
+                 center" (see :func:`rumps.notifications`) when this
                  notification is clicked.
-    :param sound: whether the notification should make a noise when it arrives.
+    :param sound: whether the notification should make a noise when
+                  it arrives.
     """
     if not _NOTIFICATIONS:
         raise RuntimeError('Mac OS X 10.8+ is required to send notifications')
@@ -66,7 +67,8 @@ def notification(title, subtitle, message, data=None, sound=True):
     notification.setUserInfo_({} if data is None else data)
     if sound:
         notification.setSoundName_("NSUserNotificationDefaultSoundName")
-    notification.setDeliveryDate_(NSDate.dateWithTimeInterval_sinceDate_(0, NSDate.date()))
+    notification.setDeliveryDate_(
+        NSDate.dateWithTimeInterval_sinceDate_(0, NSDate.date()))
     nc = NSUserNotificationCenter.defaultUserNotificationCenter()
     if nc is not None:
         nc.scheduleNotification_(notification)
@@ -74,8 +76,11 @@ def notification(title, subtitle, message, data=None, sound=True):
 
 def _require_string_or_none(*objs):
     for obj in objs:
-        if not(obj is None or isinstance(obj, basestring)):
-            raise TypeError('a string or None is required but given {0}, a {1}'.format(obj, type(obj).__name__))
+        if not (obj is None or isinstance(obj, basestring)):
+            raise TypeError(
+                'a string or None is required but given {0}, a {1}'.format(
+                    obj,
+                    type(obj).__name__))
 
 
 class AppDelegate(Delegate):
@@ -98,54 +103,51 @@ class AppDelegate(Delegate):
 
         logger.debug("Icon file: %s", resource_path('ava/res/eavatar.png'))
         statusbar = NSStatusBar.systemStatusBar()
-        self.statusicon = statusbar.statusItemWithLength_(NSVariableStatusItemLength)
-        self.icon = NSImage.alloc().initByReferencingFile_(resource_path('res/icon.png'))
+        self.statusicon = statusbar.statusItemWithLength_(
+            NSVariableStatusItemLength)
+        self.icon = NSImage.alloc().initByReferencingFile_(
+            resource_path('res/icon.png'))
         self.icon.setScalesWhenResized_(True)
         self.icon.setSize_((20, 20))
         self.statusicon.setImage_(self.icon)
         self.statusicon.setHighlightMode_(True)
         self.statusicon.setEnabled_(True)
 
-        #make the menu
+        # make the menu
         self.menubarMenu = NSMenu.alloc().init()
 
-        # self.statusItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(self.status, None, '')
-        # self.menubarMenu.addItem_(self.statusItem)
-
-        # self.menuItem = NSMenuItem.separatorItem()
-        # self.menubarMenu.addItem_(self.menuItem)
-
-        self.openItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(STR_OPEN_WEBFRONT, 'openWebfront:', '')
+        self.openItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+            base.STR_OPEN_WEBFRONT, 'openWebfront:', '')
         self.menubarMenu.addItem_(self.openItem)
 
-        self.openItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(STR_OPEN_FOLDER, 'openFolder:', '')
+        self.openItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+            base.STR_OPEN_FOLDER, 'openFolder:', '')
         self.menubarMenu.addItem_(self.openItem)
 
-        # self.openItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(STR_OPEN_CONSOLE, 'openConsole:', '')
-        # self.menubarMenu.addItem_(self.openItem)
+        self.menubarMenu.addItem_(base.NSMenuItem.separatorItem())
 
-        self.menubarMenu.addItem_(NSMenuItem.separatorItem())
-
-        mi = self.menubarMenu.addItemWithTitle_action_keyEquivalent_(STR_STATUS_MENU, None, "")
+        mi = self.menubarMenu.addItemWithTitle_action_keyEquivalent_(
+            base.STR_STATUS_MENU, None, "")
         self.create_status_menu()
         self.menubarMenu.setSubmenu_forItem_(self.status_menu, mi)
 
         self.menubarMenu.addItem_(NSMenuItem.separatorItem())
 
-        mi = self.menubarMenu.addItemWithTitle_action_keyEquivalent_(STR_NOTICES_MENU, None, "")
+        mi = self.menubarMenu.addItemWithTitle_action_keyEquivalent_(
+            base.STR_NOTICES_MENU, None, "")
 
         self.notices_menu = self.create_notices_menu()
         self.menubarMenu.setSubmenu_forItem_(self.notices_menu, mi)
-        # self.menubarMenu.addItemWithTitle_action_keyEquivalent_('Clear All', 'clearNotices:', '')
 
         self.menubarMenu.addItem_(NSMenuItem.separatorItem())
 
-        self.quit = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(STR_EXIT, 'quitApp:', '')
+        self.quit = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+            base.STR_EXIT, 'quitApp:', '')
         self.menubarMenu.addItem_(self.quit)
 
-        #add menu to statusitem
+        # add menu to statusitem
         self.statusicon.setMenu_(self.menubarMenu)
-        self.statusicon.setToolTip_(STR_STATUS)
+        self.statusicon.setToolTip_(base.STR_STATUS)
 
     def applicationWillTerminate_(self, sender):
         logger.debug("Application will terminate.")
@@ -158,7 +160,9 @@ class AppDelegate(Delegate):
         self.shell.console.hide()
         return False
 
-    def userNotificationCenter_didActivateNotification_(self, notification_center, notification):
+    def userNotificationCenter_didActivateNotification_(self,
+                                                        notification_center,
+                                                        notification):
         notification_center.removeDeliveredNotification_(notification)
         data = dict(notification.userInfo())
         logger.debug("Notification: %s", data)
@@ -177,8 +181,11 @@ class AppDelegate(Delegate):
 
     def create_status_menu(self):
         self.status_menu = AppKit.NSMenu.alloc().initWithTitle_("Status")
-        for i, s in enumerate(status.STRINGS):
-            item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(s, 'updateUserStatus:', '')
+        for i, s in enumerate(base.status.STRINGS):
+            item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+                s,
+                'updateUserStatus:',
+                '')
             if self.shell.user_status == i:
                 item.setState_(1)
             self.status_menu.addItem_(item)
@@ -197,7 +204,8 @@ class AppDelegate(Delegate):
         msgbox.show_notice(notice)
 
     def addNewNotice(self, notice, pop_last=False):
-        mi = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(notice.title, 'showNotice:', '')
+        mi = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(
+            notice.title, 'showNotice:', '')
         self.notices_menu.insertItem_atIndex_(mi, 0)
         if pop_last:
             self.notices_menu.removeItemAtIndex_(NUM_OF_NOTICES)
@@ -248,13 +256,14 @@ class Shell(ShellBase):
 
     def on_user_notified(self, notice):
         try:
-            pop_last = len(self.notices) >= NUM_OF_NOTICES
+            pop_last = len(self.notices) >= base.NUM_OF_NOTICES
             print(len(self.notices))
             self.notices.append(notice)
             self.delegate.addNewNotice(notice, pop_last)
 
             if self.should_notify(notice):
-                notification(title=notice.title, subtitle="", message=notice.message)
+                notification(title=notice.title, subtitle="",
+                             message=notice.message)
         except:
             logger.error("Failed to send notice", exc_info=True)
 
@@ -262,7 +271,8 @@ class Shell(ShellBase):
         self.app.terminate_(None)
 
     def _run(self):
-        NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(1, self, 'doIdle:', "", True)
+        NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(  # noqa
+            1, self, 'doIdle:', "", True)
         self.app = NSApplication.sharedApplication()
         self.app.activateIgnoringOtherApps_(True)
         self.delegate = AppDelegate.alloc().init()
@@ -280,4 +290,3 @@ class Shell(ShellBase):
             logger.debug("Platform notification is not enabled.")
 
         self.app.run()
-
