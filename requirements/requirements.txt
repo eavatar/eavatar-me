@@ -4,6 +4,7 @@ bottle==0.12.9
 click==5.1
 coverage==3.7.1
 doit==0.29.0
+jasmine==2.3.0
 gevent==1.0.2
 greenlet==0.4.9
 libnacl==1.4.3

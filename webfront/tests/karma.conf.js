@@ -1,4 +1,4 @@
-var isDebug = process.env.DEBUG || false;
+var isDebug = process.env.DEBUG || true;
 var browsers = [isDebug ? 'Firefox' : 'PhantomJS'];
 
 module.exports = function(config) {

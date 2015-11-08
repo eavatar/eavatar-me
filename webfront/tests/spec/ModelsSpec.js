@@ -20,7 +20,7 @@ describe("Avame Models", function() {
       var log = new ava.models.Log();
       expect(log.get('ts')).toBe(0);
       expect(log.get('lvl')).toBe(20);
-      expect(log.get('lvl_name')).toBe('INFO');
+      expect(log.get('lvl_name')).toBe('info');
       expect(log.get('msg')).toBe('');
     });
   });
