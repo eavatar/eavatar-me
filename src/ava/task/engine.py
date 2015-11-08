@@ -122,7 +122,8 @@ class TaskEngine(object):
         gevent.killall(self._tasks.values())
 
     def register(self, func):
-        action_key, mod_name, func_name = service.action_key(func.__module__, func.func_name)
+        action_key, mod_name, func_name = service.action_key(func.__module__,
+                                                             func.func_name)
 
         if self._actions.get(action_key) is not None:
             raise ActionAlreadyRegistered(action_key)
@@ -152,7 +153,8 @@ class TaskEngine(object):
                 del mod[parts[1]]
 
     def task_done(self, task):
-        _logger.debug("Task '%s' is done for job '%s'", task.task_id, task.job_id)
+        _logger.debug("Task '%s' is done for job '%s'", task.task_id,
+                      task.job_id)
 
         if task.task_id in self._tasks:
             del self._tasks[task.task_id]

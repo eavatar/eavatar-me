@@ -8,6 +8,7 @@ import uuid
 
 from ava import APP_NAME
 
+
 # helper function for constructing paths to resource files.
 def resource_path(relative):
     if hasattr(sys, "_MEIPASS"):
@@ -15,7 +16,6 @@ def resource_path(relative):
 
     abspath = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
     abspath = os.path.dirname(abspath)
-    #print("abspath: ", abspath)
     return os.path.join(abspath, relative)
 
 
@@ -68,4 +68,3 @@ def get_app_dir(app_name=APP_NAME, roaming=True, force_posix=False):
     return os.path.join(
         os.environ.get('XDG_CONFIG_HOME', os.path.expanduser('~/.config')),
         _posixify(app_name))
-

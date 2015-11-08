@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 from datetime import datetime
 from ava.util import time_uuid
@@ -67,5 +67,3 @@ class Notice(object):
         self._priority = d.get('priority')
         self._kind = d.get('kind')
         self._timestamp = d.get('timestamp')
-
-

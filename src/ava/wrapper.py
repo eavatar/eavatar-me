@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 import sys
@@ -7,11 +7,10 @@ import logging
 import shutil
 import multiprocessing
 
-from ava import APP_NAME
 from ava.core.agent import start_agent
 from ava.util import base_path, get_app_dir
 
-#makes multiprocessing work when in freeze mode.
+# makes multiprocessing work when in freeze mode.
 multiprocessing.freeze_support()
 
 try:  # Python 2.7+
@@ -45,7 +44,7 @@ def init_app_dir(folder=None):
     src_dir = os.path.join(base_path(), 'pod')
     # copy files from base_dir to user_dir
     subdirs = os.listdir(src_dir)
-    ignore_pattern = shutil.ignore_patterns("__init__.py")
+    # ignore_pattern = shutil.ignore_patterns("__init__.py")
 
     subdirs.append('logs')
     subdirs.append('data')
@@ -79,5 +78,3 @@ def launch(inbox, outbox):
         sys.exit(-1)
 
     start_agent(inbox, outbox)
-
-

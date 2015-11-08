@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, unicode_literals
+"""
+The agent class acts as the kernel.
+"""
 
-# hack for setting default encoding!
-import sys
-# reload(sys)  # Reload does the trick!
-# sys.setdefaultencoding('UTF8')
+from __future__ import absolute_import, division, unicode_literals
 
 import gevent
 from gevent.event import Event
@@ -45,7 +44,10 @@ agent_running = Event()
 agent_stopped = Event()
 
 
-def new_sslwrap(sock, server_side=False, keyfile=None, certfile=None, cert_reqs=__ssl__.CERT_NONE, ssl_version=__ssl__.PROTOCOL_SSLv23, ca_certs=None, ciphers=None):
+def new_sslwrap(sock, server_side=False, keyfile=None, certfile=None,
+                cert_reqs=__ssl__.CERT_NONE,
+                ssl_version=__ssl__.PROTOCOL_SSLv23, ca_certs=None,
+                ciphers=None):
     context = __ssl__.SSLContext(ssl_version)
     context.verify_mode = cert_reqs or __ssl__.CERT_NONE
     if ca_certs:
@@ -56,7 +58,8 @@ def new_sslwrap(sock, server_side=False, keyfile=None, certfile=None, cert_reqs=
         context.set_ciphers(ciphers)
 
     caller_self = inspect.currentframe().f_back.f_locals['self']
-    return context._wrap_socket(sock, server_side=server_side, ssl_sock=caller_self)
+    return context._wrap_socket(sock, server_side=server_side,
+                                ssl_sock=caller_self)
 
 
 def _mygetfilesystemencoding():
@@ -72,7 +75,8 @@ def _mygetfilesystemencoding():
 
 
 def patch_sys_getfilesystemencoding():
-    # sys.getfilesystemencoding() always returns None when frozen on Ubuntu systems.
+    # sys.getfilesystemencoding() always returns None when frozen
+    # on Ubuntu systems.
     patched_func = _mygetfilesystemencoding()
     sys.getfilesystemencoding = patched_func
 
@@ -83,7 +87,7 @@ def restart_later():
     sys.exit(1)
 
 
-def signal_handler(signum = None, frame = None):
+def signal_handler(signum=None, frame=None):
     logger.debug("Received HUP signal, requests the shell to restart.")
     global __agent
     if __agent:
@@ -145,7 +149,8 @@ class Agent(object):
         return self.__agent_key
 
     def get_security_keys(self):
-        # XXX: PyInstaller has issue in finding DLLs while building if imported directly.
+        # XXX: PyInstaller has issue in finding DLLs while building if
+        # imported directly.
         crypto = importlib.import_module('crypto', 'ava.util')
 
         self.__agent_secret = os.environ.get(AVA_AGENT_SECRET)
@@ -171,7 +176,8 @@ class Agent(object):
         self.__secret_key = crypto.derive_secret_key(self.__swarm_secret,
                                                      self.__swarm_key)
 
-    def send(self, signal=dispatcher.Any, sender=dispatcher.Anonymous, *args, **kwargs):
+    def send(self, signal=dispatcher.Any, sender=dispatcher.Anonymous,
+             *args, **kwargs):
         """
         Send signal/event to registered receivers.
 
@@ -209,7 +215,8 @@ class Agent(object):
 
         self._dispatcher.connect(receiver, signal, sender)
 
-    def disconnect(self, receiver, signal=dispatcher.Any, sender=dispatcher.Any):
+    def disconnect(self, receiver, signal=dispatcher.Any,
+                   sender=dispatcher.Any):
         """
         Disconnect the specified receiver.
 
@@ -330,4 +337,3 @@ def start_agent(inbox, outbox):
     global __agent
     __agent = Agent(inbox, outbox)
     __agent.run()
-

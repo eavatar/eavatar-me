@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
+"""
+The global dispatcher for WSGI applications mounted in the same server.
+"""
 
 import logging
 import bottle
@@ -9,8 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class ApplicationDispatcher(object):
-    """Allows one to mount middlewares or applications in a WSGI application.
-    """
+    """Allows one to mount multiple applications in a WSGI application."""
 
     def __init__(self, app, mounts=None):
         self.app = app
@@ -54,4 +56,3 @@ class ApplicationDispatcher(object):
 
 # the global web application
 dispatcher = ApplicationDispatcher(bottle.app())
-

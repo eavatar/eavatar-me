@@ -5,6 +5,9 @@ and then starting or stopping extensions.
 
 Some packages provides no extension but acts as libraries for other packages.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
+
+# flake8: noqa
+
+from __future__ import absolute_import, print_function, unicode_literals
 
 from .service import *

@@ -4,6 +4,8 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import pkg_resources
 
+__all__ = ['Extension', 'ExtensionManager']
+
 logger = logging.getLogger(__name__)
 
 
@@ -24,8 +26,10 @@ class ExtensionManager(object):
         self.extensions = []
 
     def load_extensions(self, invoke_on_load=True):
-        for it in pkg_resources.working_set.iter_entry_points(self.namespace, name=None):
-            logger.debug("Loading extension: %s at module: %s", it.name, it.module_name)
+        for it in pkg_resources.working_set.iter_entry_points(self.namespace,
+                                                              name=None):
+            logger.debug("Loading extension: %s at module: %s", it.name,
+                         it.module_name)
             logger.debug("")
             ext = Extension(it.name, it)
             ext.cls = it.load()
@@ -52,7 +56,3 @@ class ExtensionManager(object):
                     stopfun(context)
                 except Exception:
                     pass
-                    #IGNORED.
-
-
-__all__ = ['Extension', 'ExtensionManager']

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 
@@ -7,7 +7,6 @@ from ava.data import get_store
 from ava.util.clock import clock
 
 from .signals import USER_NOTIFIED
-from .models import Notice
 
 _logger = logging.getLogger(__name__)
 

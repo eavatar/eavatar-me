@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+"""
+Various symmetric and asymmetric crypto routines.
+"""
+from __future__ import absolute_import, print_function, unicode_literals
 
-import six
-import hashlib
 import pyscrypt
 import base58
 import hashlib
-#from Crypto.Hash import RIPEMD
 import libnacl.public
 import libnacl.secret
 
-# The public key used for verifying peer tokens which are the identify certificates.
+
+# The public key used for verifying peer tokens which are the identify
+# certificates.
 TOKEN_PUBLIC_KEY = ''
 
 XID_PREFIX = b'\x5f'
@@ -93,7 +95,6 @@ def validate_xid(addr):
     :return:
     """
     val = base58.b58decode(addr)
-    #assert len(val) == 35
 
     if len(val) != 35:
         return False
@@ -114,27 +115,20 @@ def validate_xid(addr):
 
 
 def key_to_fingerprint(key):
-    """
-    Fingerprint is used to uniquely identify an entity without exposing extra information.
+    """ Fingerprint is used to uniquely identify an entity without exposing
+    extra information.
+
     :param key: the public key
     :return:
     """
-    #assert len(key) == 32
 
     sha256 = hashlib.sha256()
     sha256.update(key)
     key_hash = sha256.digest()
 
-    #print('%r' % key_hash)
-
-    #assert len(key_hash) == 32
-
-
     ripemd = hashlib.new('ripemd')
     ripemd.update(key_hash)
     key_hash = ripemd.digest()
-
-    #assert len(key_hash) == 20
 
     sha256 = hashlib.sha256()
     sha256.update(FINGER_PREFIX)
@@ -146,7 +140,6 @@ def key_to_fingerprint(key):
 
 def validate_fingerprint(fingerprint):
     val = base58.b58decode(fingerprint)
-    #print("Length: %d" % len(val) )
     if len(val) != 25:
         return False
 
@@ -178,10 +171,6 @@ def key_to_peer_id(key):
     sha256 = hashlib.sha256()
     sha256.update(key)
     key_hash = sha256.digest()
-
-    #print('%r' % key_hash)
-
-    #assert len(key_hash) == 32
 
     ripemd = hashlib.new('ripemd')
     ripemd.update(key_hash)
@@ -371,7 +360,6 @@ def validate_key_string(pk_str):
     :return:
     """
     val = base58.b58decode(pk_str)
-    #assert len(val) == 35
 
     if len(val) != 35:
         return False

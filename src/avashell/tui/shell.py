@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 import sys
 import time
 import logging
 
-from avashell.base.shell import ShellBase, STR_EXIT, STR_OPEN_HELP
+from avashell.base.shell import ShellBase
 
 _logger = logging.getLogger(__name__)
 

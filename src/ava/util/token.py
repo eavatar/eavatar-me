@@ -2,7 +2,7 @@
 """
 The module provides functions for access token manipulation.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 import json
 import binascii
@@ -61,8 +61,6 @@ def sign(msg, issuer_sk, audience_pk):
 
 
 def _verify(msg, issuer_pk, audience_sk, sig):
-#    if isinstance(issuer_pk, text_type):
-#        issuer_pk = string_to_key(issuer_pk)
     if isinstance(audience_sk, string_types):
         logger.debug("audience_sk: %s", audience_sk)
         audience_sk = string_to_secret(audience_sk)
@@ -110,7 +108,8 @@ def encode(payload, issuer_sk, audience_pk, headers=None):
 def decode(tok, audience_sk, verify=True, **kwargs):
     payload, signing_input, header, signature = load(tok)
     if verify:
-        verify_signature(payload, signing_input, header, signature, audience_sk, **kwargs)
+        verify_signature(payload, signing_input, header, signature,
+                         audience_sk, **kwargs)
 
     return payload
 

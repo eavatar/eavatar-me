@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
+
+"""
+Code derived from asteval library.
+"""
 
 import ast
 import logging
@@ -56,67 +60,67 @@ class ScriptValidator(ast.NodeVisitor):
             self.visit(tnode)
 
     def on_expr(self, node):
-        "expression"
+        """expression"""
         return self.visit(node.value)  # ('value',)
 
     def on_index(self, node):
-        "index"
+        """index"""
         return self.visit(node.value)  # ('value',)
 
     def on_return(self, node):  # ('value',)
-        "return statement: look for None, return special sentinal"
+        """return statement: look for None, return special sentinal"""
         self.visit(node.value)
 
     def on_repr(self, node):
-        "repr "
+        """repr """
         self.visit(node.value)
 
     def on_pass(self, node):
-        "pass statement"
+        """pass statement"""
         pass
 
     def on_ellipsis(self, node):
-        "ellipses"
+        """ellipses"""
         pass
 
     # for break and continue: set the instance variable _interrupt
     def on_interrupt(self, node):    # ()
-        "interrupt handler"
+        """interrupt handler"""
         pass
 
     def on_break(self, node):
-        "break"
+        """break"""
         pass
 
     def on_continue(self, node):
-        "continue"
+        """continue"""
         pass
 
     def on_assert(self, node):    # ('test', 'msg')
-        "assert statement"
+        """assert statement"""
         self.visit(node.test)
 
     def on_list(self, node):    # ('elt', 'ctx')
-        "list"
+        """list"""
         for e in node.elts:
             self.visit(e)
 
     def on_tuple(self, node):    # ('elts', 'ctx')
-        "tuple"
+        """tuple"""
         self.on_list(node)
 
     def on_dict(self, node):    # ('keys', 'values')
-        "dictionary"
+        """dictionary"""
         for k, v in zip(node.keys, node.values):
             self.visit(k)
             self.visit(v)
 
     def on_num(self, node):   # ('n',)
-        'return number'
+        """return number"""
         pass
 
     def on_str(self, node):   # ('s',)
-        'return string'
+        """return string"""
         pass
 
     def on_name(self, node):    # ('id', 'ctx')
@@ -126,7 +130,8 @@ class ScriptValidator(ast.NodeVisitor):
             return
 
         if name.startswith('__'):
-            raise RuntimeError("Name with double underscores is not allowed: %s" % name)
+            raise RuntimeError(
+                "Name with double underscores is not allowed: %s" % name)
 
         if name in reserved_names:
             raise RuntimeError("Reserved name: %s" % name)
@@ -140,49 +145,49 @@ class ScriptValidator(ast.NodeVisitor):
         pass
 
     def on_assign(self, node):    # ('targets', 'value')
-        "simple assignment"
+        """simple assignment"""
         self.visit(node.value)
 
     def on_augassign(self, node):    # ('target', 'op', 'value')
-        "augmented assign"
+        """augmented assign"""
         pass
 
     def on_slice(self, node):    # ():('lower', 'upper', 'step')
-        "simple slice"
+        """simple slice"""
         self.visit(node.lower)
         self.visit(node.upper)
         self.visit(node.step)
 
     def on_extslice(self, node):    # ():('dims',)
-        "extended slice"
+        """extended slice"""
         for tnode in node.dims:
             self.visit(tnode)
 
     def on_subscript(self, node):    # ('value', 'slice', 'ctx')
-        "subscript handling -- one of the tricky parts"
-        val = self.visit(node.value)
-        nslice = self.visit(node.slice)
+        """subscript handling -- one of the tricky parts"""
+        self.visit(node.value)
+        self.visit(node.slice)
 
     def on_delete(self, node):    # ('targets',)
-        "delete statement"
+        """delete statement"""
         pass
 
     def on_unaryop(self, node):    # ('op', 'operand')
-        "unary operator"
+        """unary operator"""
         self.visit(node.operand)
 
     def on_binop(self, node):    # ('left', 'op', 'right')
-        "binary operator"
+        """binary operator"""
         self.visit(node.left)
         self.visit(node.right)
 
     def on_boolop(self, node):    # ('op', 'values')
-        "boolean operator"
+        """boolean operator"""
         for n in node.values:
             self.visit(n)
 
     def on_compare(self, node):    # ('left', 'ops', 'comparators')
-        "comparison operators"
+        """comparison operators"""
         self.visit(node.left)
         for op, rnode in zip(node.ops, node.comparators):
             self.visit(rnode)
@@ -195,7 +200,7 @@ class ScriptValidator(ast.NodeVisitor):
             self.visit(tnode)
 
     def on_if(self, node):    # ('test', 'body', 'orelse')
-        "regular if-then-else statement"
+        """regular if-then-else statement"""
         self.visit(node.test)
 
         for tnode in node.orelse:
@@ -205,14 +210,13 @@ class ScriptValidator(ast.NodeVisitor):
             self.visit(tnode)
 
     def on_ifexp(self, node):    # ('test', 'body', 'orelse')
-        "if expressions"
-        expr = node.orelse
+        """if expressions"""
         self.visit(node.test)
         self.visit(node.orelse)
         self.visit(node.body)
 
     def on_while(self, node):    # ('test', 'body', 'orelse')
-        "while blocks"
+        """while blocks"""
         self.visit(node.test)
         for tnode in node.body:
             self.visit(tnode)
@@ -221,26 +225,26 @@ class ScriptValidator(ast.NodeVisitor):
             self.visit(tnode)
 
     def on_for(self, node):    # ('target', 'iter', 'body', 'orelse')
-        "for blocks"
+        """for blocks"""
 
         for tnode in node.body:
             self.visit(tnode)
 
     def on_listcomp(self, node):    # ('elt', 'generators')
-        "list comprehension"
+        """list comprehension"""
         pass
 
     def on_excepthandler(self, node):  # ('type', 'name', 'body')
-        "exception handler..."
+        """exception handler..."""
         self.visit(node.type)
 
     def on_try(self, node):    # ('body', 'handlers', 'orelse', 'finalbody')
-        "try/except/else/finally blocks"
+        """try/except/else/finally blocks"""
         for tnode in node.body:
             self.visit(tnode)
 
     def on_raise(self, node):    # ('type', 'inst', 'tback')
-        "raise statement: note difference for python 2 and 3"
+        """raise statement: note difference for python 2 and 3"""
         if version_info[0] == 3:
             excnode = node.exc
             msgnode = node.cause
@@ -251,11 +255,10 @@ class ScriptValidator(ast.NodeVisitor):
         self.visit(msgnode)
 
     def on_call(self, node):
-        "function execution"
+        """function execution"""
         #  ('func', 'args', 'keywords', 'starargs', 'kwargs')
         self.visit(node.func)
 
     def on_arg(self, node):    # ('test', 'msg')
-        "arg for function definitions"
+        """arg for function definitions"""
         pass
-

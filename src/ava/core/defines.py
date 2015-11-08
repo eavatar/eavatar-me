@@ -2,7 +2,7 @@
 """
 Various definitions used across different packages.
 """
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 from .. import VERSION_STRING
 
@@ -32,7 +32,7 @@ INSTALLED_ENGINES = [
 ]
 
 
-##### Environment variable ####
+# Environment variable
 AVA_POD_FOLDER = 'AVA_POD'  # where the working directory.
 AVA_AGENT_SECRET = 'AVA_AGENT_SECRET'  # the agent's own secret key.
 AVA_SWARM_SECRET = 'AVA_SWARM_SECRET'  # the swarm's secret key.
@@ -42,6 +42,6 @@ AVA_USER_XID = 'AVA_USER_XID'  # the user's XID.
 # tries to import definitions from the global settings.
 
 try:
-    from ava_settings import *
+    from ava_settings import *  # noqa
 except ImportError:
     pass

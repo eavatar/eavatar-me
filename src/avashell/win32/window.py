@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
-import win32api
 import win32con
-import win32gui_struct
-import win32ui
 
 try:
     import winxpgui as win32gui
@@ -27,11 +24,7 @@ class Window(object):
 
     def default_message_map(self):
         message_map = {
-        #    win32con.WM_SIZE: self._on_size,
             win32con.WM_COMMAND: self._on_command,
-        #    win32con.WM_NOTIFY: self._on_notify,
-        #    win32con.WM_INITDIALOG: self._on_init_dialog,
-        #    win32con.WM_CLOSE: self._on_close,
             win32con.WM_DESTROY: self._on_destroy,
         }
 
@@ -66,7 +59,8 @@ class Window(object):
         window_class.lpfnWndProc = message_map  # could also specify a wndproc.
         return win32gui.RegisterClass(window_class)
 
-    def _create_window(self, style=win32con.WS_OVERLAPPED | win32con.WS_SYSMENU):
+    def _create_window(self,
+                       style=win32con.WS_OVERLAPPED | win32con.WS_SYSMENU):
         # Create the Window.
         hwnd = win32gui.CreateWindow(self.class_atom,
                                      self.window_class_name,

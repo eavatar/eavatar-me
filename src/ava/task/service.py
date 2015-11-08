@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 
-from ..core import get_core_context, AvaError
+from ..core import get_core_context
 
 _task_engine = None
 
@@ -22,7 +22,8 @@ def action(func):
 
 def action_key(mod_name, func_name):
     """
-    Generate a key uniquely identify the action defined by the module and function.
+    Generate a key uniquely identify the action defined by the module
+    and function.
 
     :param mod_name: the module's full package name
     :param func_name: the function name

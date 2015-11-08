@@ -13,14 +13,15 @@ try:
 except ImportError:
     import win32gui
 
-import struct, array
+import struct
+import array
 import commctrl
 
 IDC_SEARCHTEXT = 1024
 IDC_BUTTON_CANCEL = 1025
 IDC_BUTTON_OK = 1026
 
-desktop_pidl = shell.SHGetFolderLocation (0, shellcon.CSIDL_DESKTOP, 0, 0)
+desktop_pidl = shell.SHGetFolderLocation(0, shellcon.CSIDL_DESKTOP, 0, 0)
 
 WM_SEARCH_RESULT = win32con.WM_USER + 512
 WM_SEARCH_FINISHED = win32con.WM_USER + 513
@@ -38,7 +39,8 @@ class _WIN32MASKEDSTRUCT:
                 full_fmt += fmt
         for name, val in kw.iteritems():
             if name not in self.__dict__:
-                raise ValueError("LVITEM structures do not have an item '%s'" % (name,))
+                raise ValueError("LVITEM structures do not have an item '%s'"
+                                 % (name,))
             self.__dict__[name] = val
 
     def __setattr__(self, attr, val):
@@ -74,7 +76,7 @@ class _WIN32MASKEDSTRUCT:
                     str_buf = array.array("b", val)
                     vals.append(str_buf.buffer_info()[0])
                     vals.append(len(val))
-                    self._buffs.append(str_buf) # keep alive during the call.
+                    self._buffs.append(str_buf)  # keep alive during the call.
             else:
                 if val is None:
                     val = default
@@ -112,7 +114,9 @@ class LVCOLUMN(_WIN32MASKEDSTRUCT):
 
 
 def MakeLoginDlgTemplate(title):
-    style = win32con.DS_MODALFRAME | win32con.WS_POPUP | win32con.WS_VISIBLE | win32con.WS_CAPTION | win32con.WS_SYSMENU | win32con.DS_SETFONT
+    style = (win32con.DS_MODALFRAME | win32con.WS_POPUP |
+             win32con.WS_VISIBLE | win32con.WS_CAPTION |
+             win32con.WS_SYSMENU | win32con.DS_SETFONT)
     cs = win32con.WS_CHILD | win32con.WS_VISIBLE
 
     # Window frame and title
@@ -139,7 +143,9 @@ def MakeLoginDlgTemplate(title):
 
 
 def MakePasswordDlgTemplate(title):
-    style = win32con.DS_MODALFRAME | win32con.WS_POPUP | win32con.WS_VISIBLE | win32con.WS_CAPTION | win32con.WS_SYSMENU | win32con.DS_SETFONT
+    style = (win32con.DS_MODALFRAME | win32con.WS_POPUP |
+             win32con.WS_VISIBLE | win32con.WS_CAPTION |
+             win32con.WS_SYSMENU | win32con.DS_SETFONT)
     cs = win32con.WS_CHILD | win32con.WS_VISIBLE
     # Window frame and title
     dlg = [[title, (0, 0, 177, 45), style, None, (8, "MS Sans Serif")], ]
@@ -178,33 +184,40 @@ class InputDialog(object):
         wc.style = win32con.CS_VREDRAW | win32con.CS_HREDRAW
         wc.hCursor = win32gui.LoadCursor(0, win32con.IDC_ARROW)
         wc.hbrBackground = win32con.COLOR_WINDOW + 1
-        wc.lpfnWndProc = message_map # could also specify a wndproc.
-        # C code: wc.cbWndExtra = DLGWINDOWEXTRA + sizeof(HBRUSH) + (sizeof(COLORREF));
-        wc.cbWndExtra = win32con.DLGWINDOWEXTRA + struct.calcsize("Pi")
-        icon_flags = win32con.LR_LOADFROMFILE | win32con.LR_DEFAULTSIZE
+        wc.lpfnWndProc = message_map    # could also specify a wndproc.
 
-        ## py.ico went away in python 2.5, load from executable instead
+        # C code: wc.cbWndExtra = DLGWINDOWEXTRA + sizeof(HBRUSH) +
+        #                         (sizeof(COLORREF));
+        wc.cbWndExtra = win32con.DLGWINDOWEXTRA + struct.calcsize("Pi")
+
+        #  py.ico went away in python 2.5, load from executable instead
         this_app = win32api.GetModuleHandle(None)
         try:
-            wc.hIcon = win32gui.LoadIcon(this_app, 1)    ## python.exe and pythonw.exe
+            # python.exe and pythonw.exe
+            wc.hIcon = win32gui.LoadIcon(this_app, 1)
         except win32gui.error:
-            wc.hIcon=win32gui.LoadIcon(this_app, 135)  ## pythonwin's icon
+            # pythonwin's icon
+            wc.hIcon = win32gui.LoadIcon(this_app, 135)
         try:
-            classAtom = win32gui.RegisterClass(wc)
+            self.classAtom = win32gui.RegisterClass(wc)
         except win32gui.error, err_info:
-            if err_info.winerror!=winerror.ERROR_CLASS_ALREADY_EXISTS:
+            if err_info.winerror != winerror.ERROR_CLASS_ALREADY_EXISTS:
                 raise
         return self.className
 
     def _GetDialogTemplate(self, dlgClassName):
-        style =  win32con.WS_POPUP | win32con.WS_VISIBLE | win32con.WS_CAPTION | win32con.WS_SYSMENU | win32con.DS_SETFONT | win32con.WS_MINIMIZEBOX
+        style = (win32con.WS_POPUP | win32con.WS_VISIBLE |
+                 win32con.WS_CAPTION | win32con.WS_SYSMENU |
+                 win32con.DS_SETFONT | win32con.WS_MINIMIZEBOX)
         cs = win32con.WS_CHILD | win32con.WS_VISIBLE
 
         # Window frame and title
-        dlg = [ [self.title, (0, 0, 210, 60), style, None, (8, "MS Sans Serif"), None, dlgClassName], ]
+        dlg = [[self.title, (0, 0, 210, 60), style, None,
+               (8, "MS Sans Serif"), None, dlgClassName], ]
 
         # ID label and text box
-        dlg.append([130, self.message, -1, (5, 5, 200, 9), cs | win32con.SS_LEFT])
+        dlg.append([130, self.message, -1, (5, 5, 200, 9),
+                    cs | win32con.SS_LEFT])
         s = cs | win32con.WS_TABSTOP | win32con.WS_BORDER
         dlg.append(['EDIT', None, IDC_SEARCHTEXT, (5, 15, 200, 12), s])
 
@@ -213,7 +226,8 @@ class InputDialog(object):
         s = cs | win32con.WS_TABSTOP
         dlg.append([128, "Cancel", IDC_BUTTON_CANCEL, (100, 35, 50, 14), s])
         s = win32con.BS_PUSHBUTTON | s
-        dlg.append([128, "OK", IDC_BUTTON_OK, (100, 35, 50, 14), s | win32con.BS_DEFPUSHBUTTON])
+        dlg.append([128, "OK", IDC_BUTTON_OK, (100, 35, 50, 14),
+                    s | win32con.BS_DEFPUSHBUTTON])
 
         return dlg
 
@@ -235,34 +249,36 @@ class InputDialog(object):
         self.hwnd = hwnd
         # centre the dialog
         desktop = win32gui.GetDesktopWindow()
-        l,t,r,b = win32gui.GetWindowRect(self.hwnd)
+        l, t, r, b = win32gui.GetWindowRect(self.hwnd)
         dt_l, dt_t, dt_r, dt_b = win32gui.GetWindowRect(desktop)
-        centre_x, centre_y = win32gui.ClientToScreen( desktop, ( (dt_r-dt_l)//2, (dt_b-dt_t)//2) )
-        win32gui.MoveWindow(hwnd, centre_x-(r//2), centre_y-(b//2), r-l, b-t, 0)
+        centre_x, centre_y = win32gui.ClientToScreen(
+            desktop,
+            ((dt_r-dt_l)//2, (dt_b-dt_t)//2))
+        win32gui.MoveWindow(hwnd, centre_x-(r//2),
+                            centre_y-(b//2), r-l, b-t, 0)
         # self._SetupList()
-        l,t,r,b = win32gui.GetClientRect(self.hwnd)
+        l, t, r, b = win32gui.GetClientRect(self.hwnd)
         self._DoSize(r-l, b-t, 1)
 
-    def _DoSize(self, cx, cy, repaint = 1):
+    def _DoSize(self, cx, cy, repaint=1):
         # right-justify the textbox.
         ctrl = win32gui.GetDlgItem(self.hwnd, IDC_SEARCHTEXT)
         l, t, r, b = win32gui.GetWindowRect(ctrl)
-        l, t = win32gui.ScreenToClient(self.hwnd, (l,t) )
-        r, b = win32gui.ScreenToClient(self.hwnd, (r,b) )
+        l, t = win32gui.ScreenToClient(self.hwnd, (l, t))
+        r, b = win32gui.ScreenToClient(self.hwnd, (r, b))
         win32gui.MoveWindow(ctrl, l, t, cx-l-5, b-t, repaint)
         # The button.
         ctrl = win32gui.GetDlgItem(self.hwnd, IDC_BUTTON_OK)
         l, t, r, b = win32gui.GetWindowRect(ctrl)
-        l, t = win32gui.ScreenToClient(self.hwnd, (l,t) )
-        r, b = win32gui.ScreenToClient(self.hwnd, (r,b) )
-        list_y = b + 10
+        l, t = win32gui.ScreenToClient(self.hwnd, (l, t))
+        r, b = win32gui.ScreenToClient(self.hwnd, (r, b))
         w = r - l
         win32gui.MoveWindow(ctrl, cx - 5 - w, t, w, b-t, repaint)
 
     def OnSize(self, hwnd, msg, wparam, lparam):
         x = win32api.LOWORD(lparam)
         y = win32api.HIWORD(lparam)
-        self._DoSize(x,y)
+        self._DoSize(x, y)
         return 1
 
     def OnNotify(self, hwnd, msg, wparam, lparam):
@@ -296,7 +312,7 @@ class InputDialog(object):
 
 
 def getTextInput(title='Input Dialog', message='Enter text:'):
-    w=InputDialog(title, message)
+    w = InputDialog(title, message)
     return w.DoModal()
 
 
@@ -307,8 +323,8 @@ def chooseOpenFolder():
     :return: the path to the folder, or None if not selected.
     """
 
-    pidl, display_name, image_list = shell.SHBrowseForFolder (
-        win32gui.GetDesktopWindow (),
+    pidl, display_name, image_list = shell.SHBrowseForFolder(
+        win32gui.GetDesktopWindow(),
         desktop_pidl,
         "Choose a folder",
         0,

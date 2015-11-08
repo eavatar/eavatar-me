@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 import logging
 from datetime import datetime
 
-from bottle import Bottle, response, request, HTTPError
+from bottle import Bottle, response, request
 from ava.util.clock import clock
 
 from ava import log
 from ava.job import get_job_engine
 from ava import data as stores
-from ava.user import Notice
 from ava.job import Script
 from ava.job.errors import ScriptSyntaxError
 
@@ -62,8 +61,7 @@ def log_list():
         rec = dict(id=i, msg=msg, lvl=it.levelno, ts=isotime)
         entries.append(rec)
         i += 1
-    #response.content_type = b'application/json'
-    # return json.dumps(entries)
+
     return dict(data=entries, status=D.SUCCESS)
 
 
@@ -111,7 +109,9 @@ def job_retrieve(job_id):
     if job_info is None:
         return _not_found_error("Job not found")
 
-    data = dict(id=job_info.id, name=job_info.name, st=job_info.started_time_iso)
+    data = dict(id=job_info.id,
+                name=job_info.name,
+                st=job_info.started_time_iso)
     return dict(status=D.SUCCESS, data=data)
 
 
@@ -132,7 +132,9 @@ def job_delete(job_id):
 @require_auth
 def script_list():
     result = []
-    s = Script(title="Check GMail every 1 minute", text="script contents", auto_start=True)
+    s = Script(title="Check GMail every 1 minute",
+               text="script contents",
+               auto_start=True)
     result.append(s.to_dict())
     # with script_store.cursor() as cur:
     #    for k in cur.iternext(keys=True, values=True):
@@ -213,6 +215,7 @@ def script_check():
     except Exception as ex:
         response.status = D.HTTP_STATUS_BAD_REQUEST
         return dict(status=D.ERROR, reason=str(ex))
+
 
 # Notices
 @api.route("/notices", method=['GET'])

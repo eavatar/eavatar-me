@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 """
 Job engine
@@ -93,7 +93,8 @@ class ActionDoer(object):
         return self
 
     def __call__(self, *args, **kwargs):
-        task = self._task_engine.do_task(self._job_id, self._action.key, *args, **kwargs)
+        task = self._task_engine.do_task(self._job_id, self._action.key,
+                                         *args, **kwargs)
 
         # clean up so this object can be reused.
         self._actions = None
@@ -109,7 +110,8 @@ class JobContext(object):
 
     _logger = logging.getLogger('ava.job')
 
-    def __init__(self, job_info, core_context, parent=None, args=None, kwargs=None):
+    def __init__(self, job_info, core_context, parent=None, args=None,
+                 kwargs=None):
         if args is None:
             args = tuple()
         if kwargs is None:
@@ -151,7 +153,6 @@ class JobContext(object):
     def schedule(self):
         return Schedule()
 
-
     def sleep(self, secs):
         time.sleep(secs)
 
@@ -165,7 +166,8 @@ class JobContext(object):
         return time.gmtime()
 
     def do(self, action, *args, **kwargs):
-        return self._task_engine.do_task(self._job_info.id, action, *args, **kwargs)
+        return self._task_engine.do_task(self._job_info.id, action,
+                                         *args, **kwargs)
 
     def wait(self, tasks, timeout=None, count=None):
         """
@@ -206,7 +208,8 @@ class JobRunner(Greenlet):
             if 'result' in self.job_ctx._scope:
                 self.job_ctx.result = self.job_ctx._scope.get('result')
         except Exception as ex:
-            logger.error("Error in running job: %s", self.job_ctx.name, exc_info=True)
+            logger.error("Error in running job: %s", self.job_ctx.name,
+                         exc_info=True)
             self.job_ctx.exception = ex
         finally:
             self.engine.job_done(self.job_ctx)
@@ -378,9 +381,11 @@ class JobEngine(object):
 
         try:
             if job_context.exception is not None:
-                self._core_context.send(signals.JOB_FAILED, job_ctx=job_context)
+                self._core_context.send(signals.JOB_FAILED,
+                                        job_ctx=job_context)
             else:
-                self._core_context.send(signals.JOB_FINISHED, job_ctx=job_context)
+                self._core_context.send(signals.JOB_FINISHED,
+                                        job_ctx=job_context)
         finally:
             self._task_engine.release_for_job(job_id)
 

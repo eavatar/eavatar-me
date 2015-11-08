@@ -64,7 +64,8 @@ class Store(IStore):
 
         assert self._db is not None
 
-        _txn = self._engine.database.begin(db=self._db, write=_write, buffers=False)
+        _txn = self._engine.database.begin(db=self._db, write=_write,
+                                           buffers=False)
         return Cursor(_txn, self._db, _readonly=readonly)
 
 
@@ -159,7 +160,8 @@ class Cursor(ICursor):
 
     def seek(self, key):
         """
-        Finds the document with the provided ID and moves position to its first revision.
+        Finds the document with the provided ID and moves position to
+        its first revision.
 
         :param key:
         :return: True if found; False, otherwise.

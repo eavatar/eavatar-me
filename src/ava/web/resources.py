@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
+"""
+Provides routines for handling static resources.
+"""
 
 import os
 
@@ -10,6 +13,7 @@ from ..util import resource_path
 _WEBROOT = resource_path('webfront')
 
 _JSROOT = os.path.join(_WEBROOT, 'js')
+
 
 @bottle.route('/')
 @bottle.route('/index.html')
@@ -25,4 +29,3 @@ def serve_favicon():
 @bottle.route('/<filename:path>')
 def serve_static_files(filename):
     return bottle.static_file(filename, root=_WEBROOT)
-

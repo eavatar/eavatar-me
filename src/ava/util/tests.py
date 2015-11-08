@@ -81,16 +81,12 @@ class AgentTest(unittest.TestCase):
         os.environ.setdefault(AVA_SWARM_SECRET, swarm_secret)
         os.environ.setdefault(AVA_AGENT_SECRET, agent_secret)
         AgentTest.agent = Agent(None, None)
-        agent_greenlet = gevent.spawn(AgentTest.agent.run)
-        # while not AgentTest.agent.running:
-        #    gevent.sleep(0.5)
+        gevent.spawn(AgentTest.agent.run)
         agent_running.wait(10)
 
     @classmethod
     def tearDownClass(cls):
         AgentTest.agent.interrupted = True
-        # while AgentTest.agent.running:
-        #    gevent.sleep(0.5)
         agent_stopped.wait(10)
         context._context = None
         shutil.rmtree(cls.pod_folder)
@@ -107,7 +103,7 @@ def agent(request):
     os.environ.setdefault(AVA_SWARM_SECRET, swarm_secret)
     os.environ.setdefault(AVA_AGENT_SECRET, agent_secret)
     _agent = Agent(None, None)
-    agent_greenlet = gevent.spawn(_agent.run)
+    gevent.spawn(_agent.run)
     agent_running.wait(10)
 
     def teardown_agent():

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, print_function, unicode_literals
 
 from ava.task import action
 
@@ -35,4 +35,3 @@ def patch(url, data=None, **kwargs):
 @action
 def delete(url, **kwargs):
     return requests.delete(url, **kwargs)
-

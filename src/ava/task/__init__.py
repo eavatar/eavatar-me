@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
+from __future__ import absolute_import, print_function, unicode_literals
 
-from .errors import *
-from .service import *
+from .errors import *   # noqa
+from .service import *  # noqa

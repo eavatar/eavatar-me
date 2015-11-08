@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 
 from ..runtime.package import PackageManager
-from .service import *
+from .service import ExtensionManager
 
 logger = logging.getLogger(__name__)
 

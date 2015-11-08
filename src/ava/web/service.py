@@ -6,15 +6,12 @@ import os
 import logging
 from ..core import get_core_context
 from ava.runtime import environ
-from ava.runtime.config import settings
 
 from bottle import request, response, HTTPError, static_file as _static_file
 from . import defines as D
 
 
-
 logger = logging.getLogger(__name__)
-
 
 static_folder = os.path.join(environ.pod_dir(), 'webroot')
 
@@ -61,7 +58,8 @@ def require_json(callback):
             logger.warning("JSON type expected, instead received: %s", ct)
             response.status = D.HTTP_STATUS_UNSUPPORTED_TYPE
             response.content_type = D.JSON_CONTENT_TYPE
-            return dict(status='error', reason='Request data type is not supported.')
+            return dict(status='error',
+                        reason='Request data type is not supported.')
 
         body = callback(*args, **kwargs)
         return body
@@ -69,8 +67,10 @@ def require_json(callback):
     return wrapper
 
 
-def static_file(filepath, root=static_folder, mimetype='auto', download=False, charset='utf-8'):
-    return _static_file(filepath, root=root, mimetype=mimetype, download=download, charset=charset)
+def static_file(filepath, root=static_folder, mimetype='auto', download=False,
+                charset='utf-8'):
+    return _static_file(filepath, root=root, mimetype=mimetype,
+                        download=download, charset=charset)
 
 
 def swap_root_app(wsgiapp):
