@@ -22,6 +22,7 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages('src', exclude=['**/tests/**']),
     include_package_data=True,
+    data_files=[('', ['src/ava_settings.py', 'src/ava_startup.py'])],
 
     zip_safe=False,
     entry_points={
@@ -44,6 +45,6 @@ setup(
         "Intended Audience :: System Administrators",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python"
-    ]
+        "Programming Language :: Python :: 2.7",
+    ],
 )

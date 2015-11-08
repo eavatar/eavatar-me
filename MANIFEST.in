@@ -1,0 +1,2 @@
+include src/ava_settings.py
+include src/ava_startup.py
