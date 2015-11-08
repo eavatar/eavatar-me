@@ -101,12 +101,11 @@ class AppDelegate(Delegate):
     def applicationDidFinishLaunching_(self, sender):
         logger.debug("Application did finish launching.")
 
-        logger.debug("Icon file: %s", resource_path('ava/res/eavatar.png'))
         statusbar = NSStatusBar.systemStatusBar()
         self.statusicon = statusbar.statusItemWithLength_(
             NSVariableStatusItemLength)
         self.icon = NSImage.alloc().initByReferencingFile_(
-            resource_path('res/icon.png'))
+            resource_path(base.AVARES_PATH + '/icon.png'))
         self.icon.setScalesWhenResized_(True)
         self.icon.setSize_((20, 20))
         self.statusicon.setImage_(self.icon)
@@ -124,7 +123,7 @@ class AppDelegate(Delegate):
             base.STR_OPEN_FOLDER, 'openFolder:', '')
         self.menubarMenu.addItem_(self.openItem)
 
-        self.menubarMenu.addItem_(base.NSMenuItem.separatorItem())
+        self.menubarMenu.addItem_(NSMenuItem.separatorItem())
 
         mi = self.menubarMenu.addItemWithTitle_action_keyEquivalent_(
             base.STR_STATUS_MENU, None, "")
@@ -208,7 +207,7 @@ class AppDelegate(Delegate):
             notice.title, 'showNotice:', '')
         self.notices_menu.insertItem_atIndex_(mi, 0)
         if pop_last:
-            self.notices_menu.removeItemAtIndex_(NUM_OF_NOTICES)
+            self.notices_menu.removeItemAtIndex_(base.NUM_OF_NOTICES)
 
     def status_(self, sender):
         pass
@@ -220,21 +219,11 @@ class AppDelegate(Delegate):
         self.shell.user_status = index
         sender.setState_(1)
 
-    def openFolder_(self, sender):
-
-        click.launch(launcher.get_app_dir())
-
     def openWebfront_(self, sender):
         self.shell.open_ui()
 
-    def openConsole_(self, sender):
-        if self.shell.console is None:
-            self.shell.console = Console(self.shell)
-        self.shell.console.show()
-
-    def openHelp_(self, notification):
-
-        self.shell.open_help()
+    def openFolder_(self, sender):
+        self.shell.open_folder()
 
     def quitApp_(self, notification):
         nsapplication = NSApplication.sharedApplication()
@@ -242,7 +231,7 @@ class AppDelegate(Delegate):
         nsapplication.terminate_(notification)
 
 
-class Shell(ShellBase):
+class Shell(base.ShellBase):
     def __init__(self):
         super(Shell, self).__init__()
 

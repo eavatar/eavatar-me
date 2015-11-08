@@ -14,7 +14,7 @@ import pytest
 import logging
 
 from ava.core.defines import AVA_SWARM_SECRET, AVA_AGENT_SECRET
-from ava.util import base_path
+from ava.util import base_path, defines
 from ava.core import context, agent_running, agent_stopped
 
 from gevent import monkey
@@ -29,16 +29,16 @@ def prepare_agent_test_env():
     :return:
     """
     pod_folder = tempfile.mkdtemp()
-    if 'AVA_POD' in os.environ:
-        del os.environ['AVA_POD']
-    os.environ.setdefault('AVA_POD', pod_folder)
+    if defines.POD_ENV_NAME in os.environ:
+        del os.environ[defines.POD_ENV_NAME]
+    os.environ.setdefault(defines.POD_ENV_NAME, pod_folder)
     assert os.path.exists(pod_folder)
     from ava.runtime import environ
     environ.get_environ(reset=True)
 
     base_dir = base_path()
 
-    src_dir = os.path.join(base_dir, 'pod')
+    src_dir = os.path.join(base_dir, defines.POD_FOLDER_NAME)
 
     # copy files from base_dir to user_dir
     subdirs = os.listdir(src_dir)

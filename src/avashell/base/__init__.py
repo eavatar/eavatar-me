@@ -5,3 +5,4 @@ from gevent import monkey
 monkey.patch_all(thread=False)
 
 from .shell import *  # noqa
+from .defines import *  # noqa

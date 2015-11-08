@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, absolute_import
 
+import os
 import logging
 
 from gi.repository import Gtk, Notify, GLib
@@ -19,9 +20,9 @@ class StatusIcon(object):
         self.shell = shell
         self.ind = appindicator.Indicator.new(
             "EAvatar-indicator",
-            resource_path("res/icon.png"),
+            resource_path(os.path.join(base.AVARES_PATH, "icon.png")),
             appindicator.IndicatorCategory.APPLICATION_STATUS)
-        self.ind.set_icon_theme_path(resource_path('res/'))
+        self.ind.set_icon_theme_path(resource_path(base.AVARES_PATH))
 
         self.ind.set_status(appindicator.IndicatorStatus.ACTIVE)
         self.ind.set_attention_icon("icon.png")
@@ -85,9 +86,6 @@ class StatusIcon(object):
 
     def on_open_webfront(self, sender):
         self.shell.open_ui()
-
-    def on_open_help(self, sender):
-        self.shell.open_help()
 
     def on_update_user_status(self, sender):
         if self.old_status_item is sender:

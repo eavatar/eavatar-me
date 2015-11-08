@@ -16,8 +16,8 @@ extra_binaries = []
 app_path = os.path.abspath('.')
 
 src_path = os.path.join(app_path, 'src')
-res_path = os.path.join(app_path, 'res')
-pod_path = os.path.join(app_path, 'pod')
+res_path = os.path.join(app_path, 'avares')
+pod_path = os.path.join(app_path, 'avapod')
 lib_path = os.path.join(app_path, 'plat.libs')
 web_path = os.path.join(app_path, 'webfront')
 
@@ -112,8 +112,8 @@ coll = COLLECT(exe,
                a.binaries + extra_binaries,
                a.zipfiles,
                exe_b,
-               Tree(pod_path, 'pod', excludes=['*.pyc', '*.mdb', '*.db']),
-               Tree(res_path, 'res', excludes=['*.pyc']),
+               Tree(pod_path, 'avapod', excludes=['*.pyc', '*.mdb', '*.db']),
+               Tree(res_path, 'avares', excludes=['*.pyc']),
                Tree(web_path, 'webfront', excludes=['*_dev.*', 'tests', 'node_modules']),
                a.datas,
                shfiles,          # add script files to the collection.

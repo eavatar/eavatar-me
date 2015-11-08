@@ -15,3 +15,5 @@ STR_NOTICES_MENU = u'Notices'
 STR_STATUS_MENU = u'Status'
 
 NUM_OF_NOTICES = 10
+
+AVARES_PATH = u'avares/'

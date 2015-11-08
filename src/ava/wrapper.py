@@ -41,7 +41,7 @@ def init_app_dir(folder=None):
 
     os.makedirs(folder)
 
-    src_dir = os.path.join(base_path(), 'pod')
+    src_dir = os.path.join(base_path(), 'avapod')
     # copy files from base_dir to user_dir
     subdirs = os.listdir(src_dir)
     # ignore_pattern = shutil.ignore_patterns("__init__.py")

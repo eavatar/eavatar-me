@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 
 from gi.repository import Gtk
-from avashell.base import Notice
+from ava.user.models import Notice
 
 
 def inform(title, message):

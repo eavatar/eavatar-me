@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import win32api
 import win32con
 
-from avashell.base import Notice
+from ava.user.models import Notice
 
 
 def inform(title, message, wnd=None):

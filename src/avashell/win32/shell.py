@@ -90,7 +90,8 @@ class StatusIcon(object):
     def __init__(self, s):
         self.shell = s
 
-        self.icons = itertools.cycle(glob.glob(resource_path('res/*.ico')))
+        self.icons = itertools.cycle(glob.glob(
+            resource_path(base.AVARES_PATH + '/*.ico')))
         self.hover_text = base.STR_STATUS
 
         self.icon = self.icons.next()
