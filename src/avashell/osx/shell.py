@@ -11,7 +11,7 @@ from collections import Mapping
 from Foundation import *  # noqa
 from AppKit import *  # noqa
 
-from avashell.utils import resource_path
+from ava.util import resource_path
 from .. import base
 from . import msgbox
 from .cocoa import Delegate

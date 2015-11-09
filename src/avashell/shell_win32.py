@@ -5,11 +5,12 @@ from ava import wrapper
 
 wrapper.init_app_dir()
 
-from ava import exports  # noqa
 
-
-if __name__ == '__main__':
-
+def main():
     from avashell.win32.shell import Shell
     shell = Shell()
     shell.run()
+
+
+if __name__ == '__main__':
+    main()

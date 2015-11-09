@@ -5,8 +5,6 @@ from ava import wrapper
 
 wrapper.init_app_dir()
 
-from ava import exports  # noqa
-
 
 def main():
     from avashell.tui.shell import Shell

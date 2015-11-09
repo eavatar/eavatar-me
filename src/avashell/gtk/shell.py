@@ -7,7 +7,7 @@ import logging
 from gi.repository import Gtk, Notify, GLib
 from gi.repository import AppIndicator3 as appindicator
 
-from avashell.utils import resource_path
+from ava.util import resource_path
 from ava.user import status
 from .. import base
 from . import msgbox

@@ -18,8 +18,8 @@ import itertools
 import glob
 
 
+from ava.util import resource_path
 from ava.user.models import Notice
-from avashell.utils import resource_path
 from .. import base
 from . import msgbox
 from .console import Console
