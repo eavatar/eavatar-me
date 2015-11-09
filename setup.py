@@ -28,6 +28,7 @@ setup(
     entry_points={
         'console_scripts': [
             'ava = avacli.main:main',
+            'avame = avashell.shell_tui:main',
         ],
     },
 
@@ -46,5 +47,22 @@ setup(
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: Apache Software License",
         "Programming Language :: Python :: 2.7",
+    ],
+    install_requires=[
+        "base58>=0.2,<1.0",
+        "beautifulsoup4>=4.4,<4.5",
+        "bottle>=0.12,<1.0",
+        "libnacl>=1.4,<1.5",
+        "click>=5.0,<5.1",
+        "gevent>=1.0,<1.1",
+        "lmdb==0.8,<1.0",
+        "msgpack-python>=0.4,<1.0",
+        "pycrypto>=2.6,<2.7",
+        "PyDispatcher>=2.0,<2.1",
+        "pyscrypt>=1.6,<1.7",
+        "pytz>=2015.6",
+        "requests>=2.8,<3.0",
+        "six>=1.10",
+        "ws4py>=0.3,<1.0",
     ],
 )
