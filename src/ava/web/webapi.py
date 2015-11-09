@@ -15,7 +15,7 @@ from ava.job.errors import ScriptSyntaxError
 
 from .dispatcher import dispatcher
 from .service import require_auth, require_json, get_access_token
-from . import defines as D
+from . import defines
 
 
 _logger = logging.getLogger(__name__)
@@ -28,22 +28,22 @@ job_engine = get_job_engine()
 
 
 def _not_found_error(reason='Resource not found.'):
-    response.status = D.HTTP_STATUS_NOT_FOUND
-    return dict(status=D.ERROR, reason=reason)
+    response.status = defines.HTTP_STATUS_NOT_FOUND
+    return dict(status=defines.ERROR, reason=reason)
 
 
 @api.route("/ping")
 def ping():
     """ Simple ping test
     """
-    return dict(status=D.SUCCESS)
+    return dict(status=defines.SUCCESS)
 
 
 @api.route("/auth")
 @require_auth
 def auth():
     print("Authenticated")
-    return dict(status=D.SUCCESS, token=get_access_token())
+    return dict(status=defines.SUCCESS, token=get_access_token())
 
 
 # logs
@@ -62,7 +62,7 @@ def log_list():
         entries.append(rec)
         i += 1
 
-    return dict(data=entries, status=D.SUCCESS)
+    return dict(data=entries, status=defines.SUCCESS)
 
 
 # jobs
@@ -76,7 +76,7 @@ def job_list():
         rec = dict(id=it.id, name=it.name, st=it.started_time_iso)
         entries.append(rec)
 
-    return dict(data=entries, status=D.SUCCESS)
+    return dict(data=entries, status=defines.SUCCESS)
 
 
 @api.route("/jobs", method=['POST'])
@@ -87,19 +87,19 @@ def job_create():
     try:
         job_data = request.json
     except ValueError:
-        response.status = D.HTTP_STATUS_BAD_REQUEST
-        return dict(status=D.ERROR, reason='No valid JSON object.')
+        response.status = defines.HTTP_STATUS_BAD_REQUEST
+        return dict(status=defines.ERROR, reason='No valid JSON object.')
 
     if job_data is None:
-        response.status = D.HTTP_STATUS_BAD_REQUEST
-        return dict(status=D.ERROR, reason='No script provided.')
+        response.status = defines.HTTP_STATUS_BAD_REQUEST
+        return dict(status=defines.ERROR, reason='No script provided.')
 
     try:
         job_id = get_job_engine().submit_job(job_data)
-        return dict(status=D.SUCCESS, data=job_id)
+        return dict(status=defines.SUCCESS, data=job_id)
     except (ScriptSyntaxError, SyntaxError) as ex:
-        response.status = D.HTTP_STATUS_BAD_REQUEST
-        return dict(status=D.ERROR, reason=str(ex))
+        response.status = defines.HTTP_STATUS_BAD_REQUEST
+        return dict(status=defines.ERROR, reason=str(ex))
 
 
 @api.route("/jobs/<job_id>", method="get")
@@ -112,7 +112,7 @@ def job_retrieve(job_id):
     data = dict(id=job_info.id,
                 name=job_info.name,
                 st=job_info.started_time_iso)
-    return dict(status=D.SUCCESS, data=data)
+    return dict(status=defines.SUCCESS, data=data)
 
 
 @api.route("/jobs/<job_id>", method="delete")
@@ -124,7 +124,7 @@ def job_delete(job_id):
     try:
         job_engine.cancel_job(job_id)
     finally:
-        return dict(status=D.SUCCESS, data=job_id)
+        return dict(status=defines.SUCCESS, data=job_id)
 
 
 # Scripts
@@ -140,7 +140,7 @@ def script_list():
     #    for k in cur.iternext(keys=True, values=True):
     #        rec = cur.value()
     #        result.append(rec[0])
-    return dict(status=D.SUCCESS, data=result)
+    return dict(status=defines.SUCCESS, data=result)
 
 
 @api.route("/scripts", method=['POST'])
@@ -151,15 +151,15 @@ def script_create():
     d = request.json
 
     if d.get('id') is not None:
-        response.status = D.HTTP_STATUS_BAD_REQUEST
-        return dict(status=D.ERROR, reason="Invalid data.")
+        response.status = defines.HTTP_STATUS_BAD_REQUEST
+        return dict(status=defines.ERROR, reason="Invalid data.")
 
     script = Script(**d)
     assert script.id is not None
     with script_store.cursor(readonly=False) as cur:
         cur.put(script.id, [script.to_dict(), clock.tick()])
 
-    return dict(status=D.SUCCESS, data=script.id)
+    return dict(status=defines.SUCCESS, data=script.id)
 
 
 @api.route("/scripts/<script_id>", method=['PUT'])
@@ -175,7 +175,7 @@ def script_update(script_id):
     script.update(request.json)
     script_store[script.id] = [script.to_dict(), clock.tick()]
 
-    return dict(status=D.SUCCESS, data=script_id)
+    return dict(status=defines.SUCCESS, data=script_id)
 
 
 @api.route("/scripts/<script_id>", method=['GET'])
@@ -188,7 +188,7 @@ def script_get(script_id):
     if rec is None:
         return _not_found_error("Script not found")
 
-    return dict(status=D.SUCCESS, data=rec[0])
+    return dict(status=defines.SUCCESS, data=rec[0])
 
 
 @api.route("/scripts/<script_id>", method=['DELETE'])
@@ -200,7 +200,7 @@ def script_remove(script_id):
         return _not_found_error("Script not found")
 
     store.remove(script_id)
-    return dict(status=D.SUCCESS, data=script_id)
+    return dict(status=defines.SUCCESS, data=script_id)
 
 
 @api.route("/scripts/check", method=['POST'])
@@ -211,10 +211,10 @@ def script_check():
     d = request.json
     try:
         get_job_engine().validate_script(d.get('script'))
-        return dict(status=D.SUCCESS)
+        return dict(status=defines.SUCCESS)
     except Exception as ex:
-        response.status = D.HTTP_STATUS_BAD_REQUEST
-        return dict(status=D.ERROR, reason=str(ex))
+        response.status = defines.HTTP_STATUS_BAD_REQUEST
+        return dict(status=defines.ERROR, reason=str(ex))
 
 
 # Notices
@@ -233,7 +233,7 @@ def notice_list():
             if count == 0:
                 break
 
-    return dict(status=D.SUCCESS, data=result)
+    return dict(status=defines.SUCCESS, data=result)
 
 
 @api.route("/notices/<notice_id>", method=['DELETE'])
@@ -245,8 +245,8 @@ def notice_delete(notice_id):
     rec = store.get(notice_id)
     if rec is None:
         response.status_code = 404
-        return dict(status=D.ERROR, reason="Notice not found")
+        return dict(status=defines.ERROR, reason="Notice not found")
 
     store.remove(notice_id)
 
-    return dict(status=D.SUCCESS, data=notice_id)
+    return dict(status=defines.SUCCESS, data=notice_id)

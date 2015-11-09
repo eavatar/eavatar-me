@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<testsuite name="PhantomJS 1.9.8 (Mac OS X 0.0.0)" package="" timestamp="2015-11-08T12:31:12" id="0" hostname="Sams-Mac.local" tests="6" errors="0" failures="0" time="0.005">
+  <properties>
+    <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.8 Safari/534.34"/>
+  </properties>
+  <testcase name="Can be created with default values for its attributes." time="0.002" classname="PhantomJS_1_9_8_(Mac_OS_X_0_0_0).Avame Models"/>
+  <testcase name="Can be created with default values for its attributes." time="0" classname="PhantomJS_1_9_8_(Mac_OS_X_0_0_0).Avame Models"/>
+  <testcase name="Can be created with default values for its attributes." time="0.001" classname="PhantomJS_1_9_8_(Mac_OS_X_0_0_0).Avame Models"/>
+  <testcase name="Can be created with default values for its attributes." time="0" classname="PhantomJS_1_9_8_(Mac_OS_X_0_0_0).Avame Models"/>
+  <testcase name="Can be created with default values for its attributes." time="0" classname="PhantomJS_1_9_8_(Mac_OS_X_0_0_0).Avame Models"/>
+  <testcase name="Can add Model instances as objects and arrays." time="0.002" classname="PhantomJS_1_9_8_(Mac_OS_X_0_0_0).Avame Models"/>
+  <system-out>
+    <![CDATA[
+]]>
+  </system-out>
+  <system-err/>
+</testsuite>

@@ -72,7 +72,7 @@ spec_files:
 #
 # src_dir: public
 #
-src_dir: "webfront"
+src_dir: "src/webfront"
 
 # spec_dir
 #
@@ -83,4 +83,4 @@ src_dir: "webfront"
 #
 # spec_dir: spec/javascripts
 #
-spec_dir: webfront/tests/spec
+spec_dir: src/webfront/tests/spec

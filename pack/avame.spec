@@ -19,7 +19,7 @@ src_path = os.path.join(app_path, 'src')
 res_path = os.path.join(src_path, 'avares')
 pod_path = os.path.join(src_path, 'avapod')
 lib_path = os.path.join(app_path, 'libs')
-web_path = os.path.join(app_path, 'webfront')
+web_path = os.path.join(src_path, 'webfront')
 
 
 cli_script = os.path.join(app_path, 'src', 'avacli', 'main.py')
@@ -73,8 +73,7 @@ a = Analysis([script],
              pathex=[src_path],
              binaries=None,
              datas=None,
-             hiddenimports=['avame.user',
-                            'ava_startup', 'ava.exports'],
+             hiddenimports=['ava_startup', 'ava.exports'],
              hookspath=None,
              runtime_hooks=None,
              excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter', 'ttk', 'wx'])

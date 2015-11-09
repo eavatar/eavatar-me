@@ -19,7 +19,7 @@ src_path = os.path.join(app_path, 'src')
 res_path = os.path.join(src_path, 'avares')
 pod_path = os.path.join(src_path, 'avapod')
 lib_path = os.path.join(app_path, 'libs')
-web_path = os.path.join(app_path, 'webfront')
+web_path = os.path.join(src_path, 'webfront')
 
 script = os.path.join(app_path, 'src', 'avashell', 'shell_tui.py')
 cli_script = os.path.join(app_path, 'src', 'avacli', 'main.py')
