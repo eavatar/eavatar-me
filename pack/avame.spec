@@ -136,4 +136,6 @@ if sys.platform.startswith('darwin'):
                 info_plist={
                     'LSUIElement': '1',
                     'LSBackgroundOnly': '0',
+                    'LSMinimumSystemVersion': '10.8',
+                    'LSApplicationCategoryType': 'public.app-category.utilities',
                 })
