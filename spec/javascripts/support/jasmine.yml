@@ -83,4 +83,4 @@ src_dir: "src/webfront"
 #
 # spec_dir: spec/javascripts
 #
-spec_dir: src/webfront/tests/spec
+spec_dir: spec/javascripts

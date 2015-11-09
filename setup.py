@@ -20,7 +20,7 @@ setup(
     description="An event-driven agent for task automation.",
     long_description=read("README.rst"),
     package_dir={'': 'src'},
-    packages=find_packages('src', exclude=['**/tests/**']),
+    packages=find_packages('src', exclude=['**/tests/**']) + ["webfront"],
     include_package_data=True,
     data_files=[('', ['src/ava_settings.py', 'src/ava_startup.py'])],
 
