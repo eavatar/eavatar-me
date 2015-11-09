@@ -89,7 +89,7 @@ This can be done by setting an environment variable `PYTHONPATH` to be like this
 
 .. code-block:: bash
 
-    export PYTHONPATH=".;./src"
+    export PYTHONPATH="./src"
 
 Note that this is assumed to be run from the `Git for Windows` shell.
 If you use an IDE, the root and the 'src' sub-folder of the project should be in the paths
@@ -116,6 +116,7 @@ On OS X Platform
 
 System Requirements
 ^^^^^^^^^^^^^^^^^^^
+The instructions are tested on following configuration.
 
 +-------------------+------------------+
 | Operating system  | CPU Architecture |
@@ -126,13 +127,10 @@ System Requirements
 Python Distribution
 ^^^^^^^^^^^^^^^^^^^
 
-OS X platform has built-in Python distribution, a Homebrew-managed version is used, however.
-Assume `Homebrew <http://brew.sh/>`_ tool has already installed on the system, use following command to install
-Python:
+Although OS X has a bundled Python runtime, the one used should be from python.org.
+Please download version 2.7.10 from that site.
 
-.. code-block:: bash
-
-    brew install python
+Note that it's assumed you have XCode command-line tools installed already.
 
 Virtual Environment
 ^^^^^^^^^^^^^^^^^^^
@@ -163,6 +161,16 @@ It's assumed that source code is cloned to the local host at $WORKDIR directory.
 Installing Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^^
 
+On OS X development machine, should you encountered an error
+with message like `error: '_Noreturn' keyword must precede function declarator`,
+then `gevent` package needs to be installed with following instruction:
+
+.. code-block:: bash
+
+    CFLAGS='-std=c99' pip install gevent==1.0.2
+
+Install other dependencies:
+
 .. code-block:: bash
 
     pip install -r requirements/requirements_osx.txt
@@ -182,7 +190,7 @@ This can be done by setting an environment variable `PYTHONPATH` to be like this
 
 .. code-block:: bash
 
-    export PYTHONPATH=".:./src"
+    export PYTHONPATH="./src"
 
 If you use an IDE, the root and the 'src' subfolder of the project should be in the paths
 as mentioned above.
@@ -270,7 +278,7 @@ This can be done by setting an environment variable `PYTHONPATH` to be like this
 
 .. code-block:: bash
 
-    export PYTHONPATH=".:./src"
+    export PYTHONPATH="./src"
 
 If you use an IDE, the root and the 'src' subfolder of the project should be in the paths
 as mentioned above.
