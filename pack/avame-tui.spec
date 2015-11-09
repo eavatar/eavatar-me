@@ -16,9 +16,9 @@ extra_binaries = []
 app_path = os.path.abspath('.')
 
 src_path = os.path.join(app_path, 'src')
-res_path = os.path.join(app_path, 'avares')
-pod_path = os.path.join(app_path, 'avapod')
-lib_path = os.path.join(app_path, 'plat.libs')
+res_path = os.path.join(src_path, 'avares')
+pod_path = os.path.join(src_path, 'avapod')
+lib_path = os.path.join(app_path, 'libs')
 web_path = os.path.join(app_path, 'webfront')
 
 script = os.path.join(app_path, 'src', 'avashell', 'shell_tui.py')
@@ -68,7 +68,7 @@ a = Analysis([script],
              pathex=[src_path],
              binaries=None,
              datas=None,
-             hiddenimports=['avame.user','avame.schedule', 'ava_startup'],
+             hiddenimports=['avame.user', 'ava_startup', 'ava.exports'],
              hookspath=None,
              runtime_hooks=None,
              excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter', 'ttk', 'wx'])

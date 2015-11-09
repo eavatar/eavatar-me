@@ -6,22 +6,16 @@ import sys
 import logging
 import shutil
 import multiprocessing
+from logging import NullHandler
 
 from ava.core.agent import start_agent
 from ava.util import base_path, get_app_dir
+from ava.util.defines import POD_FOLDER_NAME
 
 # makes multiprocessing work when in freeze mode.
 multiprocessing.freeze_support()
 
-try:  # Python 2.7+
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
-
 _logger = logging.getLogger(__name__)
-
 _logger.addHandler(NullHandler())
 
 
@@ -33,15 +27,16 @@ def init_app_dir(folder=None):
     if folder is None:
         folder = get_app_dir()
 
-    print("Initializing app folder: %s" % folder)
+    print("Initializing app user folder: %s" % folder)
     if os.path.exists(folder):
-        _logger.error("App folder '%s' exists, abort initialization." %
-                      folder)
+        _logger.warning("App user folder '%s' exists, abort initialization." %
+                        folder)
         return
 
     os.makedirs(folder)
 
-    src_dir = os.path.join(base_path(), 'avapod')
+    src_dir = os.path.join(base_path(), POD_FOLDER_NAME)
+
     # copy files from base_dir to user_dir
     subdirs = os.listdir(src_dir)
     # ignore_pattern = shutil.ignore_patterns("__init__.py")

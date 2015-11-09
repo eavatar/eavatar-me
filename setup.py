@@ -55,7 +55,7 @@ setup(
         "libnacl>=1.4,<1.5",
         "click>=5.0,<5.1",
         "gevent>=1.0,<1.1",
-        "lmdb==0.8,<1.0",
+        "lmdb>=0.8,<1.0",
         "msgpack-python>=0.4,<1.0",
         "pycrypto>=2.6,<2.7",
         "PyDispatcher>=2.0,<2.1",

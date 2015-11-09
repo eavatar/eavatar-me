@@ -3,10 +3,10 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 from ava import wrapper
 
-wrapper.init_app_dir()
-
 
 def main():
+    wrapper.init_app_dir()
+
     from avashell.tui.shell import Shell
     shell = Shell()
     shell.run()

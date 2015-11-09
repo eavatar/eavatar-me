@@ -44,6 +44,10 @@ from xml.etree import ElementTree
 import requests
 from bs4 import BeautifulSoup
 
+# Bottle framework
+import bottle
+from bottle import Request, Response, HTTPError
+
 # Ava
 import ava.wrapper
 import ava.job.engine

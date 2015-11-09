@@ -28,7 +28,3 @@ class Shell(ShellBase):
             except KeyboardInterrupt:
                 _logger.info("Interrupted.")
                 break
-
-if __name__ == '__main__':
-    shell = Shell()
-    shell.run()

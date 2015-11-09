@@ -13,6 +13,7 @@ import sys
 import logging
 import importlib
 import inspect
+from logging import NullHandler
 
 from Queue import Empty
 from collections import OrderedDict
@@ -37,6 +38,7 @@ KEYFILE = 'ava-keys.yml'
 
 
 logger = logging.getLogger(__name__)
+logger.addHandler(NullHandler())
 
 __agent = None
 

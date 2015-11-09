@@ -14,7 +14,7 @@ def resource_path(relative):
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative)
 
-    abspath = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
+    abspath = os.path.abspath(os.path.join(__file__, "..", ".."))
     abspath = os.path.dirname(abspath)
     return os.path.join(abspath, relative)
 
@@ -24,8 +24,8 @@ def base_path():
     if hasattr(sys, "_MEIPASS"):
         return sys._MEIPASS
     else:
-        # assumes this file is located at src/eavatar/util/__init__.py
-        abspath = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
+        # assumes this file is located at src/ava/util/__init__.py
+        abspath = os.path.abspath(os.path.join(__file__, "..", ".."))
         abspath = os.path.dirname(abspath)
         return abspath
 
