@@ -50,7 +50,7 @@ class WebPage(object):
     def login(self):
         self.browser.get(self.base_url + '#login/' + self.access_token)
         header = self.find_element_by_tag_name('h1')
-        assert 'Console' in header.text
+        assert 'EAvatar' in header.text
 
     def find_element_by_id(self, elmt_id):
         return self.browser.find_element_by_id(elmt_id)
@@ -75,7 +75,7 @@ class WebPage(object):
 
     def assert_home_page(self):
         header = self.find_element_by_tag_name('h1')
-        assert 'Console' in header.text
+        assert 'EAvatar' in header.text
 
 
 class RootPage(WebPage):
@@ -91,6 +91,8 @@ class ConsolePage(WebPage):
 
     def open(self):
         self.login()
+        link = self.browser.find_element_by_id('console_link')
+        link.click()
 
 
 class NoticesPage(WebPage):
@@ -100,7 +102,7 @@ class NoticesPage(WebPage):
 
     def open(self):
         self.login()
-        link = self.browser.find_element_by_xpath("//a[@href='#notices']")
+        link = self.browser.find_element_by_id('notices_link')
         link.click()
 
 
@@ -122,8 +124,7 @@ class JobsPage(WebPage):
 
     def open(self):
         self.login()
-        link = self.browser.find_element_by_xpath("//a[@href='#jobs']")
-        print("Jobs link found!")
+        link = self.browser.find_element_by_id("jobs_link")
         link.click()
 
 
@@ -134,7 +135,7 @@ class LogsPage(WebPage):
 
     def open(self):
         self.login()
-        link = self.browser.find_element_by_xpath("//a[@href='#logs']")
+        link = self.browser.find_element_by_id("logs_link")
         link.click()
 
 

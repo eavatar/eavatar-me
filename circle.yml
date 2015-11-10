@@ -24,6 +24,7 @@ test:
     - PYTHONPATH=".:./src" flake8 src/ava
     - PYTHONPATH=".:./src" py.test -vvv --cov=src/ava tests/unit/
     - PYTHONPATH=".:./src" py.test -vvv tests/integration/
+    - PYTHONPATH=".:./src" py.test -vvv tests/functional/
     - PYTHONPATH=".:./src" pyinstaller pack/avame-tui.spec --clean -y
   post:
     - coveralls

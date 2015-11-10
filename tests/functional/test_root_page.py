@@ -32,8 +32,7 @@ class TestRootPage(object):
         login_btn = page.find_element_by_id('loginBtn')
         # page.sleep(3)
         login_btn.click()
-        page.sleep(5)
         header2 = page.find_element_by_tag_name('h1')
         assert header2 is not None
         # print("Header:", header2.text)
-        # assert 'Console' in header2.text
+        assert 'EAvatar' in header2.text
