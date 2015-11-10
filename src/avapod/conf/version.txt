@@ -1,0 +1,6 @@
+#
+# DO NOT MODIFY THIS FILE MANUALLY!
+#
+# For keeping track of the directory structure and file formats used
+# in the app user folder.
+POD_VERSION=1.0
