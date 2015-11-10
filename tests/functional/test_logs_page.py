@@ -16,3 +16,5 @@ class TestLogsPage(object):
         div = page.find_element_by_id('logs')
         assert div is not None
 
+
+

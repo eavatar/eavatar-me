@@ -10,8 +10,10 @@ def page_under_test(browser, server_url, access_token):
 
 
 class TestConsolePage(object):
+
     def test_should_find_page_div(self, browser, page_under_test):
         page_under_test.open()
+
         div = browser.find_element_by_id('console')
         assert div is not None
 

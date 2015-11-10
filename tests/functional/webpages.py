@@ -6,6 +6,7 @@ import time
 import pytest
 from selenium import webdriver
 
+
 @pytest.fixture(scope='module')
 def webfront(agent):
     return agent.context().lookup('webfront')
@@ -13,11 +14,13 @@ def webfront(agent):
 
 @pytest.fixture(scope='module')
 def server_url(webfront):
-    return webfront.local_base_url
+    return os.environ.get('AVA_TEST_URL', webfront.local_base_url)
+
 
 @pytest.fixture(scope='module')
 def access_token(webfront):
     return webfront.access_token
+
 
 @pytest.fixture
 def browser(request):
@@ -28,7 +31,7 @@ def browser(request):
     else:
         b = webdriver.Firefox()
 
-    b.implicitly_wait(5)
+    b.implicitly_wait(3)
 
     def teardown_browser():
         b.quit()
@@ -49,8 +52,32 @@ class WebPage(object):
 
     def login(self):
         self.browser.get(self.base_url + '#login/' + self.access_token)
-        header = self.find_element_by_tag_name('h1')
-        assert 'EAvatar' in header.text
+
+    def click_user_panel_btn(self):
+        btn = self.find_element_by_xpath("//a[@href='#user_panel']")
+        btn.click()
+
+    def click_logout_button(self):
+        logout_btn = self.find_element_by_xpath("//a[@href='#logout']")
+        logout_btn.click()
+
+    def click_yes_on_confirm(self):
+        yes_btn = self.find_element_by_id('yesBtn')
+        yes_btn.click()
+
+    def click_no_on_confirm(self):
+        no_btn = self.find_element_by_id('noBtn')
+        no_btn.click()
+
+    def click_ok_on_message_box(self):
+        ok_btn = self.find_element_by_id('noBtn')
+        ok_btn.click()
+
+    def logout(self):
+        self.click_user_panel_btn()
+        self.click_logout_button()
+        self.click_yes_on_confirm()
+        self.click_ok_on_message_box()
 
     def find_element_by_id(self, elmt_id):
         return self.browser.find_element_by_id(elmt_id)
@@ -73,15 +100,25 @@ class WebPage(object):
     def sleep(self, secs):
         time.sleep(secs)
 
-    def assert_home_page(self):
-        header = self.find_element_by_tag_name('h1')
+    def assert_front_page(self):
+        header = self.find_element_by_xpath("//div/div/h1[@class='ui-title']")
         assert 'EAvatar' in header.text
 
 
-class RootPage(WebPage):
+class FrontPage(WebPage):
 
     def __init__(self, *args, **kwargs):
-        super(RootPage, self).__init__(*args, **kwargs)
+        super(FrontPage, self).__init__(*args, **kwargs)
+
+
+class HomePage(WebPage):
+
+    def __init__(self, *args, **kwargs):
+        super(HomePage, self).__init__(*args, **kwargs)
+
+    def open(self):
+        self.login()
+        self.assert_front_page()
 
 
 class ConsolePage(WebPage):
@@ -91,6 +128,8 @@ class ConsolePage(WebPage):
 
     def open(self):
         self.login()
+        self.assert_front_page()
+
         link = self.browser.find_element_by_id('console_link')
         link.click()
 
@@ -102,6 +141,7 @@ class NoticesPage(WebPage):
 
     def open(self):
         self.login()
+        self.assert_front_page()
         link = self.browser.find_element_by_id('notices_link')
         link.click()
 
@@ -113,6 +153,8 @@ class ScriptsPage(WebPage):
 
     def open(self):
         self.login()
+        self.assert_front_page()
+
         link = self.browser.find_element_by_xpath("//a[@href='#scripts']")
         link.click()
 
@@ -124,6 +166,8 @@ class JobsPage(WebPage):
 
     def open(self):
         self.login()
+        self.assert_front_page()
+
         link = self.browser.find_element_by_id("jobs_link")
         link.click()
 
@@ -135,6 +179,7 @@ class LogsPage(WebPage):
 
     def open(self):
         self.login()
+        self.assert_front_page()
         link = self.browser.find_element_by_id("logs_link")
         link.click()
 

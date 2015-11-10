@@ -99,6 +99,43 @@ ava.views.Confirm = Backbone.View.extend({
     }
 });
 
+ava.views.Front = Backbone.View.extend({
+
+    render: function () {
+        msg = ava.config.flash_message;
+        var params = {
+            'flash_message': msg
+         };
+
+        ava.config.flash_message = '';
+        var template = _.template($("#frontPage").html());
+
+        $(this.el).html(template(params));
+        $(this.el).trigger("create");
+        return this;
+    },
+
+    events: {
+        "submit": "handleSubmit"
+    },
+
+    handleSubmit: function(e) {
+        console.log("Login submit")
+        e.preventDefault();
+        token = $('#token').val()
+        ava.session.set('token', token)
+        ava.session.fetch()
+        window.location.hash = 'home'
+    },
+
+
+    initialize: function (options) {
+        _.bindAll(this, "render");
+        $(this.el).attr('data-dialog', 'true');
+        $(this.el).attr('data-close-btn', 'no');
+    }
+});
+
 ava.views.Home = Backbone.View.extend({
 
     render: function () {
@@ -562,41 +599,4 @@ ava.views.Options = Backbone.View.extend({
     }
 });
 
-ava.views.About = Backbone.View.extend({
-
-    render: function () {
-        msg = ava.config.flash_message;
-        var params = {
-            'flash_message': msg
-         };
-
-        ava.config.flash_message = '';
-        var template = _.template($("#aboutPage").html());
-
-        $(this.el).html(template(params));
-        return this;
-    },
-
-    events: {
-        "submit": "handleSubmit"
-    },
-
-    handleSubmit: function(e) {
-        console.log("Login submit")
-        e.preventDefault();
-        token = $('#token').val()
-        ava.session.set('token', token)
-        ava.session.fetch()
-        window.location.hash = 'home'
-    },
-
-
-    initialize: function (options) {
-        _.bindAll(this, "render");
-        $(this.el).attr('data-dialog', 'true');
-        $(this.el).attr('data-close-btn', 'none');
-
-        this.render();
-    }
-});
 

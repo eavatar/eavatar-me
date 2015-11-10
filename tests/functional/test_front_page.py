@@ -6,25 +6,25 @@ from webpages import *
 
 @pytest.fixture
 def page(browser, server_url, access_token):
-    return RootPage(browser, server_url, access_token)
+    return FrontPage(browser, server_url, access_token)
 
 
-class TestRootPage(object):
+class TestFrontPage(object):
 
-    def test_should_show_a_dialog_when_opened(self, page):
+    def test_should_find_page_div(self, page):
         page.open()
+        div = page.find_element_by_id('front')
+        assert div is not None
 
         header = page.find_element_by_tag_name('h1')
         # time.sleep(5)
         # print(header.text)
         assert 'EAvatar ME' in header.text
 
-    def test_can_log_in(self, page):
+    def test_can_login_and_logout(self, page):
         page.open()
 
-        header = page.find_element_by_tag_name('h1')
-        # time.sleep(5)
-        assert 'EAvatar ME' in header.text
+        page.assert_front_page()
 
         token_input = page.find_element_by_xpath("//input[@name='token']")
         token_input.send_keys(page.access_token)
@@ -36,3 +36,7 @@ class TestRootPage(object):
         assert header2 is not None
         # print("Header:", header2.text)
         assert 'EAvatar' in header2.text
+
+        page.logout()
+        # page.sleep(120)
+        # page.assert_front_page()

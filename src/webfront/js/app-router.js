@@ -1,7 +1,7 @@
 // main
 ava.router = Backbone.Router.extend({
     routes:{
-        "":"about",
+        "":"front",
         "home": "home",
         "notices": "notices",
         "scripts": "scripts",
@@ -14,7 +14,7 @@ ava.router = Backbone.Router.extend({
         "login/:token": "login",
         "logout": "logout",
         "denied": "denied",
-        "*other" : "about"
+        "*other" : "front"
     },
 
     route: function(route, name, callback) {
@@ -25,7 +25,7 @@ ava.router = Backbone.Router.extend({
             // check token existence for all except 'login' page.
             if(name != 'login' && name !='' && ava.session.get('token') == null) {
                 console.log("Routing to page:", name)
-                this.changePage(this.aboutPage);
+                this.changePage(this.frontPage);
                 return
             }
             callback.apply(router, arguments);
@@ -39,13 +39,13 @@ ava.router = Backbone.Router.extend({
         this.currentPage = 'notices'
         ava.session = new ava.models.Session()
 
+        this.frontPage = new ava.views.Front()
         this.homePage = new ava.views.Home()
         this.consolePage = new ava.views.Console()
         this.noticeList = new ava.views.NoticeList()
         this.jobList = new ava.views.JobList()
         this.logList = new ava.views.LogList()
         this.scriptList = new ava.views.ScriptList()
-        this.aboutPage = new ava.views.About()
     },
 
     message: function(message, title) {
@@ -129,18 +129,19 @@ ava.router = Backbone.Router.extend({
     },
 
     logs: function () {
-        this.currentPage = 'logs'
-        this.logList.logs.fetch()
+        this.currentPage = 'logs';
+        this.logList.logs.fetch();
         this.changePage(this.logList);
     },
 
     options: function () {
-        this.currentPage = 'options'
+        this.currentPage = 'options';
         this.changePage(new ava.views.Options({}), 'pop');
     },
 
-    about: function () {
-        this.changePage(new ava.views.About( {} ));
+    front: function () {
+        this.currentPage = '';
+        this.changePage(this.frontPage);
     },
 
     defaultRoute: function() {
@@ -153,7 +154,6 @@ ava.router = Backbone.Router.extend({
 
         page.render();
 
-        // console.log('page.el', $(page.el))
         $('body').append(page.$el);
 
         var transition = transition || $.mobile.defaultPageTransition;
