@@ -10,8 +10,8 @@ Avame's source code is hosted on GitHub at https://github.com/eavatar/eavatar-me
 Therefore, Git is used for management of the source code.
 
 `virtualenv` is used to have a relatively isolated Python runtime during development.
-However, it becomes tricky due to the fact that Avame needs to access some packages that cannot be installed
-via `pip`. So, event `virtualenv` is used, the `--system-site-packages` argument is set
+However, it becomes tricky due to the fact that Avame needs access to some packages that cannot be installed
+via `pip`. So, even `virtualenv` is used, the `--system-site-packages` argument is set
 for all supported platforms.
 
 
@@ -192,7 +192,7 @@ This can be done by setting an environment variable `PYTHONPATH` to be like this
 
     export PYTHONPATH="./src"
 
-If you use an IDE, the root and the 'src' subfolder of the project should be in the paths
+If you use an IDE, the the 'src' subfolder of the project should be in the paths
 as mentioned above.
 
 Build the Binaries
