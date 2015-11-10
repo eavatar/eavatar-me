@@ -233,7 +233,7 @@ class DataEngine(object):
         if not self.datapath:
             self.datapath = os.path.join(environ.data_dir(), 'stores')
             if not os.path.exists(self.datapath):
-                os.mkdir(self.datapath)
+                os.makedirs(self.datapath)
         logger.debug("Data path: %s", self.datapath)
 
         try:
