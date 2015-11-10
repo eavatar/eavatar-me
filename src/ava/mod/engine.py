@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 _MODULES_DIR = os.path.join('mods')
 
 # the package name for modules.
-_MODULE_PKG = ''
+_MODULE_PKG = 'mods'
 
 
 class ModuleInfo(object):

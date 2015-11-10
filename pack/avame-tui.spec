@@ -71,7 +71,8 @@ a = Analysis([script],
              hiddenimports=['avame.user', 'ava_startup', 'ava.exports'],
              hookspath=None,
              runtime_hooks=None,
-             excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter', 'ttk', 'wx'])
+             excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter',
+                       'ttk', 'wx', 'avashell'])
 
 pyz = PYZ(a.pure)
 
@@ -93,7 +94,8 @@ b = Analysis([cli_script],
              hiddenimports=None,
              hookspath=None,
              runtime_hooks=None,
-             excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter', 'ttk', 'wx'])
+             excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter',
+                       'ttk', 'wx', 'avashell'])
 
 pyz_b = PYZ(b.pure)
 

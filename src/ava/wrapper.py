@@ -45,6 +45,8 @@ def init_app_dir(folder=None):
     subdirs.append('data')
     subdirs.append('mods')
     subdirs.append('jobs')
+    subdirs.append('pkgs')
+    subdirs.append('scripts')
 
     for d in subdirs:
         src_path = os.path.join(src_dir, d)
@@ -52,7 +54,7 @@ def init_app_dir(folder=None):
         if os.path.isdir(src_path):
             if not os.path.exists(dst_path):
                 shutil.copytree(src_path, dst_path)
-        else:
+        elif os.path.isfile(src_path):
             shutil.copy2(src_path, dst_path)
 
     for d in subdirs:
