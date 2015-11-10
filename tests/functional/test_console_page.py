@@ -5,18 +5,18 @@ from webpages import *
 
 
 @pytest.fixture
-def home_page(browser, server_url, access_token):
-    return HomePage(browser, server_url, access_token)
+def page_under_test(browser, server_url, access_token):
+    return ConsolePage(browser, server_url, access_token)
 
 
-class TestHomePage(object):
-    def test_should_find_page_div(self, browser, home_page):
-        home_page.open()
-        div = browser.find_element_by_id('home')
+class TestConsolePage(object):
+    def test_should_find_page_div(self, browser, page_under_test):
+        page_under_test.open()
+        div = browser.find_element_by_id('console')
         assert div is not None
 
-    def test_can_submit_script(self, browser, home_page):
-        home_page.open()
+    def test_can_submit_script(self, browser, page_under_test):
+        page_under_test.open()
         scriptEl = browser.find_element_by_id('script')
         assert scriptEl is not None
         submitBtn = browser.find_element_by_id('submitBtn')

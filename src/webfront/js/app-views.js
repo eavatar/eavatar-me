@@ -18,6 +18,24 @@ ava.views.Footer = Backbone.View.extend({
     },
 });
 
+ava.views.UserPanel = Backbone.View.extend({
+    render: function () {
+        var template = _.template($("#user-panel-template").html());
+        $(this.el).html(template());
+
+        return this;
+    },
+});
+
+ava.views.MenuPanel = Backbone.View.extend({
+    render: function () {
+        var template = _.template($("#menu-panel-template").html());
+        $(this.el).html(template());
+
+        return this;
+    },
+});
+
 ava.views.Message = Backbone.View.extend({
     render: function () {
         var template = _.template($("#messageBox").html());
@@ -82,13 +100,54 @@ ava.views.Confirm = Backbone.View.extend({
 });
 
 ava.views.Home = Backbone.View.extend({
+
     render: function () {
-        var params = { title: "EAvatar " + Math.random(),
+        var params = {
             header: this.header,
-            footer: this.footer
+            footer: this.footer,
+            user_panel: this.user_panel,
+            menu_panel: this.menu_panel
          };
 
         var template = _.template($("#homePage").html());
+
+        $(this.el).html(template(params));
+        $(this.el).trigger("create");
+        return this;
+    },
+
+    initialize: function (options) {
+        _.bindAll(this, "render");
+
+        header = new ava.views.Header()
+        header.render({title: "EAvatar ME"})
+        this.header = header.$el.html()
+        footer = new ava.views.Footer()
+        footer.render()
+        this.footer = footer.$el.html()
+
+        user_panel = new ava.views.UserPanel()
+        user_panel.render()
+        this.user_panel = user_panel.$el.html()
+
+        menu_panel = new ava.views.MenuPanel()
+        menu_panel.render()
+        this.menu_panel = menu_panel.$el.html()
+
+        this.render();
+    }
+});
+
+ava.views.Console = Backbone.View.extend({
+    render: function () {
+        var params = {
+            header: this.header,
+            footer: this.footer,
+            user_panel: this.user_panel,
+            menu_panel: this.menu_panel,
+         };
+
+        var template = _.template($("#consolePage").html());
         $(this.el).html(template(params));
         $(this.el).trigger("create");
         return this;
@@ -193,12 +252,20 @@ ava.views.Home = Backbone.View.extend({
 
         _.bindAll(this, "render");
         header = new ava.views.Header()
-        header.render({title: "EAvatar ME"})
+        header.render({title: "Console"})
 
         this.header = header.$el.html()
         footer = new ava.views.Footer()
         footer.render()
         this.footer = footer.$el.html()
+
+        user_panel = new ava.views.UserPanel()
+        user_panel.render()
+        this.user_panel = user_panel.$el.html()
+
+        menu_panel = new ava.views.MenuPanel()
+        menu_panel.render()
+        this.menu_panel = menu_panel.$el.html()
 
         this.render();
     }
@@ -211,6 +278,8 @@ ava.views.NoticeList = Backbone.View.extend({
         var params = {
             header: this.header,
             footer: this.footer,
+            user_panel: this.user_panel,
+            menu_panel: this.menu_panel,
             notices: data
          };
 
@@ -233,6 +302,14 @@ ava.views.NoticeList = Backbone.View.extend({
         footer.render()
         this.footer = footer.$el.html()
 
+        user_panel = new ava.views.UserPanel()
+        user_panel.render()
+        this.user_panel = user_panel.$el.html()
+
+        menu_panel = new ava.views.MenuPanel()
+        menu_panel.render()
+        this.menu_panel = menu_panel.$el.html()
+
         this.render();
     }
 });
@@ -244,6 +321,8 @@ ava.views.ScriptList = Backbone.View.extend({
         var params = {
             header: this.header,
             footer: this.footer,
+            user_panel: this.user_panel,
+            menu_panel: this.menu_panel,
             scripts: data
          };
 
@@ -266,6 +345,14 @@ ava.views.ScriptList = Backbone.View.extend({
         footer = new ava.views.Footer()
         footer.render()
         this.footer = footer.$el.html()
+
+        user_panel = new ava.views.UserPanel()
+        user_panel.render()
+        this.user_panel = user_panel.$el.html()
+
+        menu_panel = new ava.views.MenuPanel()
+        menu_panel.render()
+        this.menu_panel = menu_panel.$el.html()
 
         this.render();
     }
@@ -318,6 +405,8 @@ ava.views.JobList = Backbone.View.extend({
         var params = {
             header: this.header,
             footer: this.footer,
+            user_panel: this.user_panel,
+            menu_panel: this.menu_panel,
             'jobs': data
          };
 
@@ -338,6 +427,15 @@ ava.views.JobList = Backbone.View.extend({
         footer = new ava.views.Footer()
         footer.render()
         this.footer = footer.$el.html()
+
+        user_panel = new ava.views.UserPanel()
+        user_panel.render()
+        this.user_panel = user_panel.$el.html()
+
+        menu_panel = new ava.views.MenuPanel()
+        menu_panel.render()
+        this.menu_panel = menu_panel.$el.html()
+
         // this.render();
     }
 });
@@ -351,6 +449,8 @@ ava.views.JobView = Backbone.View.extend({
         var params = {
             header: this.header,
             footer: this.footer,
+            user_panel: this.user_panel,
+            menu_panel: this.menu_panel,
             'job': data
          };
 
@@ -380,6 +480,15 @@ ava.views.JobView = Backbone.View.extend({
         footer = new ava.views.Footer()
         footer.render()
         this.footer = footer.$el.html()
+
+        user_panel = new ava.views.UserPanel()
+        user_panel.render()
+        this.user_panel = user_panel.$el.html()
+
+        menu_panel = new ava.views.MenuPanel()
+        menu_panel.render()
+        this.menu_panel = menu_panel.$el.html()
+
         // this.render();
     }
 });
@@ -392,6 +501,8 @@ ava.views.LogList = Backbone.View.extend({
         var params = {
             header: this.header,
             footer: this.footer,
+            user_panel: this.user_panel,
+            menu_panel: this.menu_panel,
             'logs': data
          };
 
@@ -414,6 +525,14 @@ ava.views.LogList = Backbone.View.extend({
 
         this.logs = new ava.models.LogCollection()
         this.logs.on('sync', this.render)
+        user_panel = new ava.views.UserPanel()
+        user_panel.render()
+        this.user_panel = user_panel.$el.html()
+
+        menu_panel = new ava.views.MenuPanel()
+        menu_panel.render()
+        this.menu_panel = menu_panel.$el.html()
+
         //this.render();
     }
 });

@@ -2,13 +2,14 @@
 ava.router = Backbone.Router.extend({
     routes:{
         "":"about",
-        "home": "home",
+        "home": "console",
         "notices": "notices",
         "scripts": "scripts",
         "scriptEdit/:script_id": "scriptEdit",
         "jobs": "jobs",
         "jobs/:job_id/:action": "jobs",
         "logs": "logs",
+        "console": "console",
         "options": "options",
         "login/:token": "login",
         "logout": "logout",
@@ -35,10 +36,10 @@ ava.router = Backbone.Router.extend({
     initialize: function () {
         console.log('router.initialize')
         this.firstPage = true;
-        this.currentPage = 'home'
+        this.currentPage = 'notices'
         ava.session = new ava.models.Session()
 
-        this.homePage = new ava.views.Home()
+        this.consolePage = new ava.views.Console()
         this.noticeList = new ava.views.NoticeList()
         this.jobList = new ava.views.JobList()
         this.logList = new ava.views.LogList()
@@ -58,7 +59,7 @@ ava.router = Backbone.Router.extend({
         console.log("router.login")
         ava.session.set('token', token)
         ava.session.fetch()
-        window.location.hash = 'home'
+        window.location.hash = 'console'
     },
 
     logout: function() {
@@ -79,9 +80,9 @@ ava.router = Backbone.Router.extend({
         this.message("Authorization is required to access.", "Access Denied")
     },
 
-    home: function () {
-        this.currentPage = 'home'
-        this.changePage(this.homePage);
+    console: function () {
+        this.currentPage = 'console'
+        this.changePage(this.consolePage);
     },
 
     notices: function () {

@@ -21,8 +21,28 @@
     <script id="header-template" type="text/template">
         <div data-role="header">
             <h1>{{= title }}</h1>
-            <a href="#home" data-icon="home">Home</a>
-            <a href="#logout" data-transition="pop" class="ui-btn ui-btn-icon-notext ui-icon-power">Logout</a>
+            <a href="#menu_panel" class="ui-btn ui-btn-icon-notext ui-icon-bars">Menu</a>
+            <a href="#user_panel" class="ui-btn ui-btn-right ui-btn-icon-notext ui-icon-user">User</a>
+        </div>
+    </script>
+
+    <script id="user-panel-template" type="text/template">
+        <div data-role="panel" id="user_panel" data-position="right" data-display="overlay">
+            <a href="http://docs.eavatar.me/en/latest/userguide.html" target="_blank" class="ui-btn">Documentation</a>
+            <a href="https://groups.google.com/forum/#!forum/eavatar" target="_blank" class="ui-btn">Support Forum</a>
+            <a href="#logout" data-transition="pop" class="ui-btn ui-btn-icon-power">Logout</a>
+        </div>
+    </script>
+
+    <script id="menu-panel-template" type="text/template">
+        <div data-role="panel" id="menu_panel" data-display="overlay">
+            <ul data-role="listview">
+                <li><a href="#console">Console</a></li>
+                <li><a href="#notices">User Notices</a></li>
+                <li><a href="#jobs">Running Jobs</a></li>
+                <li><a href="#logs">Recent Logs</a></li>
+            </ul>
+
         </div>
     </script>
 
@@ -30,6 +50,7 @@
         <div data-role="footer" data-position="fixed">
           <div data-role="navbar">
           <ul>
+            <li><a href="#console" class="ui-btn ui-icon-home ui-btn-icon-left">Console</a></li>
             <li><a href="#notices" class="ui-btn ui-icon-comment ui-btn-icon-left">Notices</a></li>
             <li><a href="#jobs" class="ui-btn ui-icon-clock ui-btn-icon-left">Jobs</a></li>
             <li><a href="#logs" class="ui-btn ui-icon-bullets ui-btn-icon-left">Logs</a></li>
@@ -68,9 +89,29 @@
 
     <script type="text/template" id="homePage">
         <div id="home">
+        {{= menu_panel }}
+        {{= user_panel }}
+        {{= header }}
+
+        <div data-role="main" class="ui-content">
+            <ul data-role="listview" data-inset="true">
+                <li><a target="_blank" href="http://docs.eavatar.me">Documentation</a></li>
+                <li><a target="_blank" href="https://github.com/eavatar/eavatar-me">Code Repository</a></li>
+
+            </ul>
+        </div>
+
+        {{= footer }}
+        </div>
+    </script>
+
+    <script type="text/template" id="consolePage">
+        <div id="console">
+        {{= menu_panel }}
+        {{= user_panel }}
         {{= header }}
         <div data-role="main" class="ui-content">
-            <div><h3 id="submit_message">Ava: What can I do for you?</h3></div>
+            <div><h3 id="submit_message">What can I do for you?</h3></div>
             <form id="submit_form" method="post">
                 <label class="ui-field-contain" for="script">Instructions:</label>
                 <textarea name="script" id="script"></textarea>
@@ -88,6 +129,8 @@
 
     <script type="text/template" id="noticesPage">
         <div id="notices">
+        {{= menu_panel }}
+        {{= user_panel }}
         {{= header }}
 
           <div data-role="main" class="ui-content">
@@ -114,8 +157,11 @@
         {{= footer }}
         </div>
     </script>
+
     <script type="text/template" id="scriptsPage">
         <div id="scripts">
+        {{= menu_panel }}
+        {{= user_panel }}
         {{= header }}
 
           <div data-role="main" class="ui-content">
@@ -136,6 +182,8 @@
 
     <script type="text/template" id="jobsPage">
         <div id="jobs">
+        {{= menu_panel }}
+        {{= user_panel }}
         {{= header }}
 
           <div data-role="main" class="ui-content">
@@ -171,6 +219,8 @@
 
     <script type="text/template" id="logsPage">
         <div id="logs">
+        {{= menu_panel }}
+        {{= user_panel }}
         {{= header }}
           <div data-role="main" class="ui-content">
             <table data-role="table" class="ui-responsive">
@@ -257,8 +307,14 @@
           </div>
           <div data-role="main" class="ui-content">
             <h3><img src="/img/favicon-96x96.png" align="middle">EAvatar ME version 0.1.0</h3>
-            <p>EAvatar ME, also known as Avame, is a versatile agent for task automation. To access the UI, please log in.</p>
+            <p>EAvatar ME, also known as Avame, is a versatile agent for task automation. </p>
+            <ul data-role="listview" data-inset="true">
+                <li><a target="_blank" href="http://docs.eavatar.me">Documentation</a></li>
+                <li><a target="_blank" href="https://github.com/eavatar/eavatar-me">Code Repository</a></li>
+
+            </ul>
             <form action="" method="get">
+              <p>To access the UI, please log in.</p>
               <div id="flash_message">{{= flash_message }}</div>
               <div class="ui-field-contain">
 	            <label class="ui-field-contain" for="token">Token:</label>

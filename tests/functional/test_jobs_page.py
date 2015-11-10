@@ -10,7 +10,7 @@ def page(browser, server_url, access_token):
 
 class TestJobsPage(object):
 
-    def test_should_find_page_div(self, page, browser):
+    def test_should_find_page_div(self, page):
         page.open()
-        div = browser.find_element_by_id('jobs')
+        div = page.find_element_by_id('jobs')
         assert div is not None

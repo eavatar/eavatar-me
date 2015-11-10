@@ -2,6 +2,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
+import time
 import pytest
 from selenium import webdriver
 
@@ -27,7 +28,7 @@ def browser(request):
     else:
         b = webdriver.Firefox()
 
-    b.implicitly_wait(3)
+    b.implicitly_wait(5)
 
     def teardown_browser():
         b.quit()
@@ -48,8 +49,8 @@ class WebPage(object):
 
     def login(self):
         self.browser.get(self.base_url + '#login/' + self.access_token)
-        header = self.browser.find_element_by_tag_name('h1')
-        assert 'EAvatar ME' in header.text
+        header = self.find_element_by_tag_name('h1')
+        assert 'Console' in header.text
 
     def find_element_by_id(self, elmt_id):
         return self.browser.find_element_by_id(elmt_id)
@@ -67,7 +68,14 @@ class WebPage(object):
         return self.browser.find_element_by_xpath(xpath)
 
     def find_elements_by_xpath(self, xpath):
-        return self.find_elements_by_xpath(xpath)
+        return self.browser.find_elements_by_xpath(xpath)
+
+    def sleep(self, secs):
+        time.sleep(secs)
+
+    def assert_home_page(self):
+        header = self.find_element_by_tag_name('h1')
+        assert 'Console' in header.text
 
 
 class RootPage(WebPage):
@@ -76,10 +84,10 @@ class RootPage(WebPage):
         super(RootPage, self).__init__(*args, **kwargs)
 
 
-class HomePage(WebPage):
+class ConsolePage(WebPage):
 
     def __init__(self, *args, **kwargs):
-        super(HomePage, self).__init__(*args, **kwargs)
+        super(ConsolePage, self).__init__(*args, **kwargs)
 
     def open(self):
         self.login()
@@ -115,6 +123,7 @@ class JobsPage(WebPage):
     def open(self):
         self.login()
         link = self.browser.find_element_by_xpath("//a[@href='#jobs']")
+        print("Jobs link found!")
         link.click()
 
 
