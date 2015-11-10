@@ -14,10 +14,10 @@ from .signals import MODULE_LOADED
 
 logger = logging.getLogger(__name__)
 
-_MODULES_DIR = os.path.join('mods')
+_MODULES_DIR = 'mods'
 
 # the package name for modules.
-_MODULE_PKG = 'mods'
+_MODULE_PKG = 'mods.'
 
 
 class ModuleInfo(object):
@@ -54,7 +54,7 @@ class ModuleEngine(object):
         return glob.glob(pattern)
 
     def _load_modules(self, ctx):
-        sys.path.append(self.modules_path)
+        sys.path.append(environ.pod_dir())
         logger.debug("Module directory: %s", self.modules_path)
 
         module_files = self._scan_modules()
