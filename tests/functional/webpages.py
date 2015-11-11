@@ -31,7 +31,7 @@ def browser(request):
     else:
         b = webdriver.Firefox()
 
-    b.implicitly_wait(3)
+    b.implicitly_wait(5)
 
     def teardown_browser():
         b.quit()
