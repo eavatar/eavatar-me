@@ -21,7 +21,7 @@ class TestFrontPage(object):
         # print(header.text)
         assert 'EAvatar ME' in header.text
 
-    def test_can_login_and_logout(self, page):
+    def test_can_login(self, page):
         page.open()
 
         page.assert_front_page()
@@ -37,6 +37,3 @@ class TestFrontPage(object):
         # print("Header:", header2.text)
         assert 'EAvatar' in header2.text
 
-        page.logout()
-        # page.sleep(120)
-        # page.assert_front_page()
