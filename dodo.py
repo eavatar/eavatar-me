@@ -6,6 +6,8 @@ import sys
 
 DOIT_CONFIG = {'default_tasks': ['hello']}
 
+sys.path.append(os.path.join('.', 'src'))
+
 
 def is_windows():
     return sys.platform.startswith('win')
@@ -60,9 +62,10 @@ def task_unit_test():
 
 def task_int_test():
     test_path = os.path.join('tests', 'integration')
+    cov_path = os.path.join('src', 'ava')
 
     return {
-        'actions': [['py.test', '-s', '-vvv', test_path]],
+        'actions': [['py.test', '-s', '--cov-append', '--cov', cov_path, '-vvv', test_path]],
         'verbosity': 2
     }
 
@@ -84,7 +87,7 @@ def task_all_tests():
 
     return {
         'actions': [['py.test', '-s', '--cov', cov_path, '-vvv', unit_test_path],
-                    ['py.test', '-s', '-vvv', int_test_path],
+                    ['py.test', '-s', '--cov-append', '--cov', cov_path, '-vvv', int_test_path],
                     ['py.test', '-s', '-vvv', func_test_path]
                     ],
         'verbosity': 2

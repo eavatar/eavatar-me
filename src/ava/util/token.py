@@ -23,7 +23,6 @@ from .crypto import (
 )
 
 from .codecs import base64url_decode, base64url_encode
-from .compat import string_types
 
 logger = logging.getLogger(__name__)
 
@@ -61,9 +60,7 @@ def sign(msg, issuer_sk, audience_pk):
 
 
 def _verify(msg, issuer_pk, audience_sk, sig):
-    if isinstance(audience_sk, string_types):
-        logger.debug("audience_sk: %s", audience_sk)
-        audience_sk = audience_sk
+    audience_sk = audience_sk
 
     hashval = sha256(msg).digest()
     verifyval = public_key_decrypt(audience_sk, issuer_pk, sig)
