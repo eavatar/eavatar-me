@@ -86,10 +86,12 @@ def task_all_tests():
     cov_path = os.path.join('src', 'ava')
 
     return {
-        'actions': [['py.test', '-s', '--cov', cov_path, '-vvv', unit_test_path],
-                    ['py.test', '-s', '--cov-append', '--cov', cov_path, '-vvv', int_test_path],
-                    ['py.test', '-s', '-vvv', func_test_path]
-                    ],
+        'actions': [
+            ['flake8', 'src/ava'],
+            ['py.test', '-s', '--cov', cov_path, '-vvv', unit_test_path],
+            ['py.test', '-s', '--cov-append', '--cov', cov_path, '-vvv', int_test_path],
+            ['py.test', '-s', '-vvv', func_test_path]
+        ],
         'verbosity': 2
     }
 

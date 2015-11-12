@@ -3,8 +3,6 @@ from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 import sys
-import base58
-import uuid
 
 from ava import APP_NAME
 

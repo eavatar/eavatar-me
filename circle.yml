@@ -21,11 +21,8 @@ test:
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so.13
     - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so
     - jasmine-ci
-    - PYTHONPATH=".:./src" flake8 src/ava
-    - PYTHONPATH=".:./src" py.test -vvv --cov=src/ava tests/unit/
-    - PYTHONPATH=".:./src" py.test -vvv tests/integration/
-    - PYTHONPATH=".:./src" py.test -vvv tests/functional/
-    - PYTHONPATH=".:./src" pyinstaller pack/avame-tui.spec --clean -y
+    - doit all_tests
+    - doit pack_tui
   post:
     - coveralls
     - cd dist && tar zcvf avame-0.1.0+${CIRCLE_BUILD_NUM}.tgz avame/
