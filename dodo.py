@@ -43,7 +43,7 @@ def task_make_dmg():
     settings_file = os.path.join('pack', 'dmg_settings.py')
 
     return {
-        'actions': [['dmgbuild', '-s', settings_file, '"EAvatar ME"', 'dist/EAvatarME.dmg']],
+        'actions': [['dmgbuild', '-s', settings_file, 'EAvatar ME', 'dist/avame.dmg']],
         'verbosity': 2
     }
 
