@@ -17,11 +17,13 @@ from .crypto import (
     string_to_secret,
     xid_to_key,
     public_key_encrypt,
-    public_key_decrypt
+    public_key_decrypt,
+    SECRET_PREFIX,
+    KEY_PREFIX,
 )
 
 from .codecs import base64url_decode, base64url_encode
-from .compat import text_type, string_types
+from .compat import string_types
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +50,9 @@ class ExpiredSignatureError(ValueError):
 
 
 def sign(msg, issuer_sk, audience_pk):
-    if isinstance(issuer_sk, string_types):
-        logger.debug("issuer_sk: %s", issuer_sk)
+    if issuer_sk.startswith(SECRET_PREFIX):
         issuer_sk = string_to_secret(issuer_sk)
-    if isinstance(audience_pk, string_types):
-        logger.debug("audience_pk: %s", audience_pk)
+    if audience_pk.startswith(KEY_PREFIX):
         audience_pk = string_to_key(audience_pk)
 
     h = sha256(msg).digest()
@@ -63,7 +63,7 @@ def sign(msg, issuer_sk, audience_pk):
 def _verify(msg, issuer_pk, audience_sk, sig):
     if isinstance(audience_sk, string_types):
         logger.debug("audience_sk: %s", audience_sk)
-        audience_sk = string_to_secret(audience_sk)
+        audience_sk = audience_sk
 
     hashval = sha256(msg).digest()
     verifyval = public_key_decrypt(audience_sk, issuer_pk, sig)
@@ -107,6 +107,10 @@ def encode(payload, issuer_sk, audience_pk, headers=None):
 
 def decode(tok, audience_sk, verify=True, **kwargs):
     payload, signing_input, header, signature = load(tok)
+
+    if audience_sk.startswith(SECRET_PREFIX):
+        audience_sk = string_to_secret(audience_sk)
+
     if verify:
         verify_signature(payload, signing_input, header, signature,
                          audience_sk, **kwargs)
@@ -116,7 +120,6 @@ def decode(tok, audience_sk, verify=True, **kwargs):
 
 def verify_signature(payload, signing_input, header, signature, audience_sk,
                      verify_expiration=True, leeway=0, audience=None):
-    logger.debug("audience_sk: %s", audience_sk)
 
     if isinstance(leeway, timedelta):
         leeway = timedelta_total_seconds(leeway)
@@ -124,8 +127,10 @@ def verify_signature(payload, signing_input, header, signature, audience_sk,
     issuer_pk = payload.get('iss')
     if issuer_pk is None:
         issuer_pk = payload.get('sub')
+
     if issuer_pk is None:
         raise DecodeError("Issuer or subject not found.")
+
     issuer_pk = xid_to_key(issuer_pk)
 
     if not _verify(signing_input, issuer_pk, audience_sk, signature):
@@ -145,8 +150,9 @@ def verify_signature(payload, signing_input, header, signature, audience_sk,
 
 
 def load(tok):
-    if isinstance(tok, text_type):
-        tok = tok.encode('utf-8')
+    # if isinstance(tok, text_type):
+    #     tok = tok.encode('utf-8')
+
     try:
         signing_input, crypto_segment = tok.rsplit(b'.', 1)
         header_segment, payload_segment = signing_input.split(b'.', 1)
@@ -157,10 +163,12 @@ def load(tok):
         header_data = base64url_decode(header_segment)
     except (TypeError, binascii.Error):
         raise DecodeError('Invalid header padding')
+
     try:
-        header = json.loads(header_data.unpack_from('utf-8'))
+        header = json.loads(header_data)
     except ValueError as e:
         raise DecodeError('Invalid header string: %s' % e)
+
     if not isinstance(header, Mapping):
         raise DecodeError('Invalid header string: must be a json object')
 
@@ -168,10 +176,12 @@ def load(tok):
         payload_data = base64url_decode(payload_segment)
     except (TypeError, binascii.Error):
         raise DecodeError('Invalid payload padding')
+
     try:
-        payload = json.loads(payload_data.unpack_from('utf-8'))
+        payload = json.loads(payload_data)
     except ValueError as e:
         raise DecodeError('Invalid payload string: %s' % e)
+
     if not isinstance(payload, Mapping):
         raise DecodeError('Invalid payload string: must be a json object')
 
@@ -180,4 +190,4 @@ def load(tok):
     except (TypeError, binascii.Error):
         raise DecodeError('Invalid crypto padding')
 
-    return (payload, signing_input, header, signature)
+    return payload, signing_input, header, signature
