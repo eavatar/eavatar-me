@@ -30,7 +30,7 @@ def test_is_frizon_should_return_false():
 def test_get_app_dir():
 
     app_dir = misc.get_app_dir('TestApp')
-    assert 'TestApp' in app_dir
+    assert 'TestApp'.lower() in app_dir.lower()
 
 
 def test_get_app_dir_via_env():
