@@ -19,7 +19,8 @@ def server_url(webfront):
 
 @pytest.fixture(scope='module')
 def access_token(webfront):
-    return webfront.access_token
+    token = os.environ.get("AVA_TOKEN", webfront.access_token)
+    return token
 
 
 @pytest.fixture
