@@ -64,3 +64,6 @@ import ava.web.websocket
 
 # Avame
 import avame
+
+import avashell.tui.shell
+

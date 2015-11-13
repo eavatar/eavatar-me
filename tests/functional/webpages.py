@@ -28,6 +28,16 @@ def browser(request):
 
     if browser_type == 'PhantomJS':
         b = webdriver.PhantomJS()
+    if browser_type == 'Chrome':
+        b = webdriver.Chrome()
+    elif browser_type == 'Opera':
+        b = webdriver.Opera()
+    elif browser_type == 'IE':
+        b = webdriver.Ie()
+    elif browser_type == 'Safari':
+        b = webdriver.Safari()
+    elif browser_type == 'Remote':
+        b = webdriver.Remote()
     else:
         b = webdriver.Firefox()
 

@@ -72,7 +72,7 @@ a = Analysis([script],
              hookspath=None,
              runtime_hooks=None,
              excludes=['PySide.QtNetwork', 'PyQt4', 'Tkinter',
-                       'ttk', 'wx', 'avashell'])
+                       'ttk', 'wx',])
 
 pyz = PYZ(a.pure)
 

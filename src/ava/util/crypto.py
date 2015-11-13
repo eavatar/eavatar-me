@@ -24,7 +24,7 @@ FINGER_PREFIX = b'\xef'
 def generate_keypair(sk=None):
     """
     Generate a random key pair.
-    :return:
+    :return: the (public key, secret key) tuple
     """
     if sk:
         keypair = libnacl.public.SecretKey(sk=sk)
@@ -89,9 +89,9 @@ def xid_to_key(xid):
 
 def validate_xid(addr):
     """
-    Check if the provided address is valid or not.
+    Check if the provided XID is valid or not.
 
-    :param addr: address in base58 string.
+    :param addr: XID in base58 string.
     :return:
     """
     val = base58.b58decode(addr)
