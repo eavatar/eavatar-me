@@ -39,3 +39,15 @@ A portion of module 'webutils' is copied from this libraries.
 
 * License:
     https://github.com/mitsuhiko/werkzeug/blob/master/LICENSE
+
+
+wsgidav
+-------
+
+wsgidav is used for providing access to pod folder via WebDAV protocol.
+
+* Website:
+    https://github.com/mar10/wsgidav
+
+* License: MIT
+    https://github.com/mar10/wsgidav/blob/master/LICENSE

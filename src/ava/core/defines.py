@@ -29,6 +29,7 @@ INSTALLED_ENGINES = [
     "ava.job.engine:JobEngine",
     "ava.web.webfront:WebfrontEngine",
     "ava.web.websocket:WebsocketEngine",
+    "ava.web.webdav:WebDavEngine",
 ]
 
 
