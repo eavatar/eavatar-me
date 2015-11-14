@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function
 
-# (c) 2009-2015 Martin Wendt and contributors; see WsgiDAV https://github.com/mar10/wsgidav
+# (c) 2009-2015 Martin Wendt and contributors; see WsgiDAV
+# https://github.com/mar10/wsgidav
 # Original PyFileServer (c) 2005 Ho Chun Wei.
-# Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+# Licensed under the MIT license:
+# http://www.opensource.org/licenses/mit-license.php
 """
 Implementation of a DAV provider that serves resource from a file system.
 
@@ -35,9 +37,10 @@ _logger = util.getModuleLogger(__name__)
 BUFFER_SIZE = 8192
 
 
-# ===============================================================================
+# ===========================================================================
 # FileResource
-# ===============================================================================
+# ===========================================================================
+
 class FileResource(DAVNonCollection):
     """Represents a single existing DAV resource instance.
 
@@ -83,9 +86,9 @@ class FileResource(DAVNonCollection):
         See DAVResource.getContent()
         """
         assert not self.isCollection
-        # GC issue 28, 57: if we open in text mode, \r\n is converted to one byte.
-        # So the file size reported by Windows differs from len(..), thus
-        # content-length will be wrong.
+        # GC issue 28, 57: if we open in text mode, \r\n is converted
+        # to one byte.So the file size reported by Windows differs from
+        # len(..), thus content-length will be wrong.
         #        mime = self.getContentType()
         #        if mime.startswith("text"):
         #            return file(self._filePath, "r", BUFFER_SIZE)
@@ -137,7 +140,8 @@ class FileResource(DAVNonCollection):
                 propMan.copyProperties(self.getRefUrl(), destRes.getRefUrl())
 
     def supportRecursiveMove(self, destPath):
-        """Return True, if moveRecursive() is available (see comments there)."""
+        """Return True, if moveRecursive() is available (see comments there).
+        """
         return True
 
     def moveRecursive(self, destPath):
@@ -158,9 +162,9 @@ class FileResource(DAVNonCollection):
                                                      withChildren=True)
 
 
-# ===============================================================================
+# ===========================================================================
 # FolderResource
-# ===============================================================================
+# ===========================================================================
 class FolderResource(DAVCollection):
     """Represents a single existing file system folder DAV resource.
 
@@ -237,14 +241,14 @@ class FolderResource(DAVCollection):
             res = None
         return res
 
-    # --- Read / write ---------------------------------------------------------
+    # --- Read / write -----------------------------------------------------
 
     def createEmptyResource(self, name):
         """Create an empty (length-0) resource.
 
         See DAVResource.createEmptyResource()
         """
-        assert not "/" in name
+        assert "/" not in name
         if self.provider.readonly:
             raise DAVError(HTTP_FORBIDDEN)
         path = util.joinUri(self.path, name)
@@ -258,7 +262,7 @@ class FolderResource(DAVCollection):
 
         See DAVResource.createCollection()
         """
-        assert not "/" in name
+        assert "/" not in name
         if self.provider.readonly:
             raise DAVError(HTTP_FORBIDDEN)
         path = util.joinUri(self.path, name)
@@ -286,7 +290,8 @@ class FolderResource(DAVCollection):
         if not os.path.exists(fpDest):
             os.mkdir(fpDest)
         try:
-            # may raise: [Error 5] Permission denied: u'C:\\temp\\litmus\\ccdest'
+            # may raise: [Error 5] Permission denied:
+            # u'C:\\temp\\litmus\\ccdest'
             shutil.copystat(self._filePath, fpDest)
         except Exception, e:
             _logger.debug("Could not copy folder stats: %s" % e)
@@ -302,7 +307,8 @@ class FolderResource(DAVCollection):
                 propMan.copyProperties(self.getRefUrl(), destRes.getRefUrl())
 
     def supportRecursiveMove(self, destPath):
-        """Return True, if moveRecursive() is available (see comments there)."""
+        """Return True, if moveRecursive() is available (see comments there).
+        """
         return True
 
     def moveRecursive(self, destPath):
@@ -323,9 +329,9 @@ class FolderResource(DAVCollection):
                                                      withChildren=True)
 
 
-# ===============================================================================
+# ===========================================================================
 # FilesystemProvider
-# ===============================================================================
+# ===========================================================================
 class FilesystemProvider(DAVProvider):
     def __init__(self, rootFolderPath, readonly=False):
         # Expand leading '~' as user home dir; expand %VAR%, $Var, ..
