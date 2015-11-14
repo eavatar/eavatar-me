@@ -17,9 +17,7 @@ dependencies:
 
 test:
   override:
-    - sudo cp libs/libsodium.so.13.1.0 /usr/local/lib/
-    - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so.13
-    - sudo ln -s /usr/local/lib/libsodium.so.13.1.0 /usr/local/lib/libsodium.so
+    - sudo cp libs/linux-x86-64/libsodium.so /usr/local/lib/
     - jasmine-ci
     - doit all_tests
     - doit pack_tui

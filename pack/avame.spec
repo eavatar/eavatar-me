@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 import sys
+import platform
 
 app_name = 'avame'
 exe_name = 'avame'
@@ -24,20 +25,47 @@ web_path = os.path.join(src_path, 'webfront')
 
 cli_script = os.path.join(app_path, 'src', 'avacli', 'main.py')
 
-if sys.platform == 'win32':
+def detect_platform():
+    osname = 'none'
+    cpu = 'x86'
+    bits = '64'
+
+    if sys.platform.startswith('win'):
+        osname = 'win32'
+    elif sys.platform.startswith('linux'):
+        osname = 'linux'
+    elif sys.platform.startswith('darwin'):
+        osname = 'darwin'
+
+    if platform.machine().startswith('armv6'):
+        cpu = 'armv6'
+    elif platform.machine().startswith('armv7'):
+        cpu = 'armv7'
+
+    if '32' in platform.architecture()[0]:
+        bits = '32'
+
+    return osname, cpu, bits
+
+osname, cpu, bits = detect_platform()
+
+lib_dir = osname + '-' + cpu + '-' + bits
+lib_path = os.path.join(lib_path, lib_dir)
+
+if osname == 'win32':
     exe_name = exe_name + '.exe'
     run_upx = False
     console = False
     script = os.path.join(app_path, 'src', 'avashell', 'shell_win32.py')
     extra_binaries.append( ('libsodium.dll', os.path.join(lib_path, 'libsodium.dll'), 'BINARY'))
 
-elif sys.platform.startswith('linux'):
+elif osname == 'linux':
     run_strip = True
     run_upx = True
     script = os.path.join(app_path, 'src', 'avashell', 'shell_gtk.py')
-    extra_binaries.append( ('libsodium.so', os.path.join(lib_path, 'libsodium.so.13.1.0'), 'BINARY' ))
+    extra_binaries.append( ('libsodium.so', os.path.join(lib_path, 'libsodium.so'), 'BINARY' ))
 
-elif sys.platform.startswith('darwin'):
+elif osname == 'darwin':
     console=True
     run_upx = False
     run_strip = True
