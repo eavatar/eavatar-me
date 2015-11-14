@@ -3,9 +3,11 @@ from __future__ import absolute_import, print_function
 
 import logging
 
+from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
+
 from ava.runtime import environ
 from ava.web.webfront import dispatcher
-from wsgidav.wsgidav_app import DEFAULT_CONFIG, WsgiDAVApp
+from ava.web import get_webfront_engine
 
 from .ava_dav_provider import FilesystemProvider
 
@@ -17,9 +19,12 @@ class WebDavEngine(object):
 
     def __init__(self):
         _logger.debug("WebDav engine created.")
+        self._token = None
 
     def start(self, ctx):
         _logger.debug('Starting WebDAV engine...')
+
+        self._token = get_webfront_engine().access_token
 
         root_folder = environ.get_app_dir()
         if isinstance(root_folder, unicode):
@@ -30,10 +35,10 @@ class WebDavEngine(object):
             "mount_path": '/dav',
             "provider_mapping": {'/': provider},
             "port": 5080,
-            "user_mapping": {"/conf": {"tester": {"password": "secret",
-                                                  "description": "",
-                                                  "roles": [],
-                                                  },
+            "user_mapping": {"/": {"avame": {"password": self._token,
+                                                 "description": "",
+                                                 "roles": [],
+                                                 },
                                        },
                              },
             "verbose": 1,
