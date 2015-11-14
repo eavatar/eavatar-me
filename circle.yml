@@ -18,7 +18,6 @@ dependencies:
 test:
   override:
     - sudo cp libs/linux-x86-64/libsodium.so /usr/local/lib/
-    - jasmine-ci
     - doit all_tests
     - doit pack_tui
   post:
