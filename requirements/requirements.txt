@@ -28,3 +28,4 @@ WebTest==2.0.18
 wheel==0.24.0
 ws4py==0.3.4
 wsaccel==0.6.2
+WsgiDAV==1.2.0

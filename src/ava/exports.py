@@ -49,6 +49,7 @@ import bottle
 from bottle import Request, Response, HTTPError
 
 import wsgidav
+from wsgidav import wsgidav_app
 
 # Ava
 import ava.wrapper
