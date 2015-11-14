@@ -48,6 +48,8 @@ from bs4 import BeautifulSoup
 import bottle
 from bottle import Request, Response, HTTPError
 
+import wsgidav
+
 # Ava
 import ava.wrapper
 import ava.job.engine
@@ -61,6 +63,7 @@ import ava.runtime
 import ava.util
 import ava.web.webfront
 import ava.web.websocket
+import ava.web.webdav
 
 # Avame
 import avame
